@@ -1,0 +1,368 @@
+/* style.css - Professional Hair Training Manual */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(145deg, #f6efe3 0%, #ede3d4 100%);
+    color: #1e2a32;
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/*  Header */
+.clean-header {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(2px);
+    padding: 12px 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 1px solid #e9dfd1;
+    position: sticky;
+    top: 0;
+    z-index: 60;
+}
+
+.title-section h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e3a5f;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+}
+
+.title-section .eng-sub {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #7c6e5d;
+    letter-spacing: 0.3px;
+    margin-top: 4px;
+}
+
+.page-indicator-compact {
+    background: #f0e7dc;
+    padding: 6px 14px;
+    border-radius: 60px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e3a5f;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+}
+
+/* Book Container */
+.book-container {
+    height: calc(100vh - 76px);
+    position: relative;
+    overflow: hidden;
+    padding: 12px 12px 20px 12px;
+}
+
+#pages-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0,0,0,0.05);
+    padding: 20px 22px;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    transition: opacity 0.3s ease, transform 0.2s;
+    scroll-behavior: smooth;
+}
+
+.page.active {
+    display: flex;
+    animation: fadeSlide 0.35s ease-out;
+}
+
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(6px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* စာမျက်နှာအားလုံးရဲ့ အောက်ခြေမှာ logo ထည့်ရန် */
+.page::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 50px;
+    background-image: url('img/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.5;
+    margin-top: 20px;
+}
+/* Page Header */
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0e2d0;
+    padding-bottom: 12px;
+}
+
+.page-number {
+    background: #1e3a5f;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.page h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e3a5f;
+    line-height: 1.25;
+    flex: 1;
+}
+
+.page-image {
+    width: 100%;
+    border-radius: 20px;
+    margin: 12px 0 18px 0;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    object-fit: cover;
+    background: #f9f3ea;
+    max-height: 350px;
+    border: 1px solid #f1e5d8;
+}
+
+.page-content {
+    flex: 1;
+    line-height: 1.65;
+    font-size: 1rem;
+    color: #2c3e2f;
+}
+
+.page-content p {
+    margin-bottom: 12px;
+}
+
+.page-content ul, .page-content ol {
+    padding-left: 22px;
+    margin: 14px 0;
+}
+
+.page-content li {
+    margin-bottom: 8px;
+}
+
+/* 极简导航栏：只有左右箭头 - 背景完全透明/隐藏 */
+.nav-simple {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: transparent; /* 完全透明背景 */
+    backdrop-filter: none;   /* 移除模糊效果 */
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 10px 26px;
+    z-index: 100;
+    box-shadow: none;        /* 移除阴影 */
+    border: none;            /* 移除边框 */
+}
+
+.arrow-btn {
+    background: transparent; /* 透明背景 */
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #1e3a5f;          /* 深蓝色箭头，与主题色一致 */
+    font-size: 2.2rem;
+    font-weight: 300;
+    backdrop-filter: none;   /* 移除模糊 */
+    opacity: 0.7;
+}
+
+.arrow-btn:active {
+    transform: scale(0.94);
+    opacity: 1;
+    background: transparent; /* 点击时保持透明 */
+}
+
+.counter-simple {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e3a5f;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 5px 14px;
+    border-radius: 40px;
+    letter-spacing: 0.5px;
+    min-width: 70px;
+    text-align: center;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* FAB 按钮 + 菜单 */
+.fab {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    width: 54px;
+    height: 54px;
+    background: #1e3a5f;
+    color: white;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 400;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    z-index: 200;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.fab:active {
+    transform: scale(0.94);
+    background: #0f2b46;
+}
+
+.fab-menu {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 280px;
+    background: #fffef7;
+    border-radius: 28px;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: none;
+    z-index: 300;
+    max-height: 70vh;
+    overflow-y: auto;
+    backdrop-filter: blur(2px);
+    border: 1px solid #e9dbcc;
+}
+
+.fab-menu.active {
+    display: block;
+    animation: menuPop 0.2s ease;
+}
+
+@keyframes menuPop {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-header {
+    background: #1e3a5f;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+}
+
+#close-menu {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+#toc-list {
+    list-style: none;
+}
+
+#toc-list li {
+    padding: 14px 20px;
+    border-bottom: 1px solid #f0e2d4;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #2c3e2f;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+#toc-list li:hover {
+    background: #f9efe5;
+}
+
+/* 滚动条 */
+.page::-webkit-scrollbar {
+    width: 4px;
+}
+.page::-webkit-scrollbar-track {
+    background: #f0e2d4;
+    border-radius: 10px;
+}
+.page::-webkit-scrollbar-thumb {
+    background: #c0aa8a;
+    border-radius: 10px;
+}
+
+@media (max-width: 500px) {
+    .clean-header {
+        padding: 10px 16px;
+    }
+    .title-section h1 {
+        font-size: 1.2rem;
+    }
+    .page {
+        padding: 16px;
+        border-radius: 24px;
+    }
+    .page h2 {
+        font-size: 1.1rem;
+    }
+    .arrow-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 2rem;
+    }
+    .nav-simple {
+        padding: 6px 20px;
+        gap: 16px;
+        bottom: 18px;
+    }
+    .fab {
+        width: 48px;
+        height: 48px;
+        bottom: 18px;
+        right: 16px;
+        font-size: 1.6rem;
+    }
+}
