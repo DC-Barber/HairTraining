@@ -1,87 +1,100 @@
 /**
- * noss.js - Prevent Copy-Paste, Right-Click and Basic Screenshot Protection
+ * noss.js - Advanced Content Protection (Copy/Paste, Right-Click, Print, Blur on Screenshot/Gestures)
  */
 
 (function() {
-    // ၁။ Right-click ပိတ်ခြင်း
-    document.addEventListener('contextmenu', e => e.preventDefault());
-
-    // ၂။ စာသား Copy ကူးခြင်း၊ ဖြတ်ခြင်း၊ Selection မှတ်ခြင်းများကို ပိတ်ခြင်း
-    document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('copy', e => e.preventDefault());
-    document.addEventListener('cut', e => e.preventDefault());
-
-    // ၃။ Keyboard Shortcuts များ (F12, Ctrl+Shift+I, Ctrl+U, Ctrl+P, PrintScreen) ကို ပိတ်ခြင်း
-    document.addEventListener('keydown', function(e) {
-        // F12 (Developer Tools)
-        if (e.key === 'F12') {
-            e.preventDefault();
-            return false;
-        }
-
-        // Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console), Ctrl+U (View Source)
-        if (e.ctrlKey && (e.shiftKey && (e.key === 'I' || e.key === 'J') || e.key === 'u' || e.key === 'U')) {
-            e.preventDefault();
-            return false;
-        }
-
-        // Ctrl+P (Print - Print screen ရိုက်ရင် ဒါကနေ ရိုက်လေ့ရှိလို့ ပိတ်ထားသင့်ပါတယ်)
-        if (e.ctrlKey && (e.key === 'p' || e.key === 'P')) {
-            alert('Printing is disabled.');
-            e.preventDefault();
-            return false;
-        }
-        
-        // Ctrl+S (Save page)
-        if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
-            e.preventDefault();
-            return false;
-        }
-    });
-
-    // ၄။ Screenshot ရိုက်ရန် ကြိုးစားပါက (Print Screen) Content ကို ဝှက်ခြင်း
-    // ဒါက Windows မှာ PrintScreen နှိပ်လိုက်ရင် Clipboard ထဲ Content မရောက်အောင် ကူညီပေးနိုင်ပါတယ်
-    document.addEventListener('keyup', function(e) {
-        if (e.key === 'PrintScreen') {
-            navigator.clipboard.writeText(""); // Clipboard ကို ဖျက်ထုတ်ပစ်ခြင်း
-            alert('Screenshots are restricted on this website.');
-        }
-    });
-
-    // ၅။ Print ထုတ်တဲ့အခါ Black Screen သို့မဟုတ် ပုံတစ်ပုံပဲ ပေါ်စေခြင်း (CSS Injection)
+    // ၁။ CSS Injection - စာသားရွေးမရအောင်နှင့် Blur effect အတွက် style များထည့်ခြင်း
     const style = document.createElement('style');
     style.innerHTML = `
+        /* စာသား selection ပိတ်ခြင်း */
+        * {
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            -khtml-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+        
+        /* Blur effect class */
+        .content-blur {
+            filter: blur(20px) !important;
+            transition: filter 0.2s ease;
+        }
+
+        /* Print ထုတ်ရင် အမည်းရောင်ပဲပေါ်စေရန် */
         @media print {
             body { display: none !important; }
             html::after {
-                content: "";
-                position: fixed;
-                top: 0; left: 0; width: 100%; height: 100%;
-                background-color: black;
-                background-image: url('img/noss.png'); /* ဤနေရာတွင် သင့်ပုံလမ်းကြောင်း ပြောင်းနိုင်သည် */
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: contain;
-                z-index: 99999;
+                content: "Unauthorized Access";
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: black; color: white;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 30px; z-index: 99999;
             }
-        }
-        /* စာသားတွေကို selection မှတ်လို့မရအောင် CSS နဲ့ပါ ထပ်ပိတ်ခြင်း */
-        body {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
     `;
     document.head.appendChild(style);
 
-    // ၆။ Console ဖွင့်မရအောင် လှည့်စားခြင်း
+    // ၂။ လက်သုံးချောင်း Gestures စစ်ဆေးခြင်း (Mobile Screenshot Detection Trick)
+    // လက်သုံးချောင်း screen ပေါ်ထိလိုက်တာနဲ့ content ကို blur လုပ်ပစ်ပါမယ်
+    document.addEventListener('touchstart', function(e) {
+        if (e.touches.length >= 3) {
+            document.body.classList.add('content-blur');
+            // ၃ စက္ကန့်ကြာရင် blur ပြန်ဖြုတ်မယ် (သို့မဟုတ် user က လက်ပြန်လွှတ်ရင်)
+            setTimeout(() => {
+                document.body.classList.remove('content-blur');
+            }, 3000);
+        }
+    }, {passive: false});
+
+    document.addEventListener('touchend', function() {
+        document.body.classList.remove('content-blur');
+    });
+
+    // ၃။ App switching လုပ်ရင် (သို့မဟုတ်) Screenshot ခလုတ်နှိပ်ရင် Blur လုပ်ခြင်း
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.body.classList.add('content-blur');
+        } else {
+            document.body.classList.remove('content-blur');
+        }
+    });
+
+    // ၄။ Right-click, Copy, Cut, Paste ပိတ်ခြင်း
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('copy', e => e.preventDefault());
+    document.addEventListener('cut', e => e.preventDefault());
+    document.addEventListener('paste', e => e.preventDefault());
+
+    // ၅။ Keyboard Shortcut များ ပိတ်ခြင်း (PC အတွက်)
+    document.addEventListener('keydown', function(e) {
+        // F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Ctrl+P
+        if (
+            e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 'p' || e.key === 'P' || e.key === 's' || e.key === 'S'))
+        ) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // ၆။ Print Screen ခလုတ်နှိပ်ပါက Clipboard ရှင်းလင်းခြင်း
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'PrintScreen') {
+            navigator.clipboard.writeText("");
+            document.body.classList.add('content-blur');
+            alert('Screenshot restricted!');
+            setTimeout(() => document.body.classList.remove('content-blur'), 2000);
+        }
+    });
+
+    // ၇။ Developer Tools (Inspect Element) ဖွင့်ထားခြင်း ရှိမရှိ စစ်ဆေးခြင်း
     setInterval(() => {
-        const start = Date.now();
-        debugger;
-        const end = Date.now();
-        if (end - start > 100) {
-            document.body.innerHTML = "<h1>Security Alert: Developer Tools Detected!</h1>";
+        const threshold = 160;
+        if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+            document.body.innerHTML = "<div style='display:flex; justify-content:center; align-items:center; height:100vh; background:black; color:red; font-size:24px; text-align:center; padding:20px;'>Security Alert: Inspector Detected! Please close DevTools.</div>";
         }
     }, 1000);
 
