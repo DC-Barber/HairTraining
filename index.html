@@ -3,52 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ဆံသား လေ့ကျင့်ရေး လမ်းညွှန် - Professional Hair Training Manual</title>
+    <title>Professional Hair Training Manual</title>
     <link rel="stylesheet" href="style.css">
+    <script src="noss.js"></script>
 </head>
 <body>
 
-    <!--Header -->
     <div class="clean-header">
         <div class="title-section">
-            <h1>ဆံသား လေ့ကျင့်ရေး လမ်းညွှန်</h1>
-            <div class="eng-sub">Professional Hair Color & Technique Manual</div>
+            <h1 id="main-title">ဆံသား လေ့ကျင့်ရေး လမ်းညွှန်</h1>
+            <div class="eng-sub" id="sub-title">Professional Hair Training Manual</div>
         </div>
-        <div class="page-indicator-compact" id="header-page-num">၁ / ၄၂</div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="page-indicator-compact" id="header-page-num">၁ / ၂၆</div>
+            <div id="profile-icon-btn" style="background: #1e3a5f; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; border: 2px solid #e9dfd1;">👤</div>
+        </div>
     </div>
 
     <div class="book-container">
         <div id="pages-wrapper"></div>
     </div>
 
-    <!-- arrow button-->
     <div class="nav-simple">
         <button class="arrow-btn" id="prev-arrow">←</button>
-        <div class="counter-simple" id="center-counter">၁ / ၄၂</div>
+        <div class="counter-simple" id="center-counter">၁ / ၂၆</div>
         <button class="arrow-btn" id="next-arrow">→</button>
     </div>
 
-    <!-- FAB -->
     <div class="fab" id="fab-btn">☰</div>
     <div class="fab-menu" id="fab-menu">
         <div class="menu-header">
-            <span>📖 စာမျက်နှာများ</span>
+            <span id="toc-title">📖 စာမျက်နှာများ</span>
             <button id="close-menu">✕</button>
         </div>
         <ul id="toc-list"></ul>
     </div>
-    <button id="logoutBtn" style="position: fixed; bottom: 20px; left: 20px; background: #1e3a5f; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; z-index: 9999;">Logout</button>
 
-<script>
-  document.getElementById('logoutBtn')?.addEventListener('click', () => {
-    if (typeof window.logout === 'function') {
-      window.logout();
-    } else {
-      localStorage.clear();
-      location.reload();
-    }
-  });
-</script>
+    <div id="profile-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 20000; backdrop-filter: blur(5px);">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 85%; max-width: 320px; border-radius: 20px; padding: 25px; text-align: center;">
+            <button id="close-profile" style="position: absolute; top: 15px; right: 15px; background: #eee; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;">✕</button>
+            <div style="font-size: 50px; margin: 10px 0;">👤</div>
+            <h3 id="p-fullname">-</h3>
+            <p style="margin: 0; color: #666; font-size: 0.85rem;">@<span id="p-username">-</span></p>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            <div style="text-align: left; margin-bottom: 20px; font-size: 0.9rem;">
+                <div>📞 <b>Phone:</b> <span id="p-phone">-</span></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 12px; margin-bottom: 20px;">
+                <span style="font-size: 0.85rem; font-weight: bold;">Language:</span>
+                <div style="display: flex; gap: 5px;">
+                    <button id="lang-mm" style="padding: 6px 12px; border-radius: 8px; border: 1px solid #1e3a5f; cursor: pointer; font-size: 0.75rem;">မြန်မာ</button>
+                    <button id="lang-en" style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; font-size: 0.75rem;">English</button>
+                </div>
+            </div>
+            <button onclick="window.logout()" style="background: #d9534f; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer;">🚪 Logout</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
