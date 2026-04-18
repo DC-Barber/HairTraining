@@ -10,10 +10,28 @@ async function handleAuthSubmit() {
     if (error) return UIAuth.showMessage(error);
 
     UIAuth.showMessage("⏳ လုပ်ဆောင်နေပါသည်...", true);
-    const deviceId = btoa(navigator.userAgent).substring(0, 32);
+    
+    // ✅ Device ID ကို မှန်ကန်စွာ ရယူပါ
+    let deviceId = localStorage.getItem('device_id');
+    
+    if (!deviceId) {
+        deviceId = await APIService.getDeviceId();
+        localStorage.setItem('device_id', deviceId);
+    }
+    
+    console.log("Device ID:", deviceId); // Debug အတွက်
 
-    const payload = { action: isRegisterMode ? 'register' : 'login', username: user, password: pass, deviceId: deviceId };
-    if (isRegisterMode) { payload.phone = country + phone; payload.fullname = name; }
+    const payload = { 
+        action: isRegisterMode ? 'register' : 'login', 
+        username: user, 
+        password: pass, 
+        deviceId: deviceId 
+    };
+    
+    if (isRegisterMode) { 
+        payload.phone = country + phone; 
+        payload.fullname = name; 
+    }
 
     try {
         const data = await APIService.submitAuth(payload);
@@ -24,11 +42,20 @@ async function handleAuthSubmit() {
             } else {
                 await APIService.recordHistory(user, deviceId);
                 localStorage.setItem(CONFIG.AUTH_EXPIRY_KEY, (new Date().getTime() + CONFIG.LOGIN_DURATION_MS).toString());
-                localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify({ username: user, fullname: data.fullname, phone: data.phone }));
+                localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify({ 
+                    username: user, 
+                    fullname: data.fullname, 
+                    phone: data.phone 
+                }));
                 location.reload();
             }
-        } else { UIAuth.showMessage("❌ " + data.message); }
-    } catch (e) { UIAuth.showMessage("❌ ချိတ်ဆက်မှု အဆင်မပြေပါ။"); }
+        } else { 
+            UIAuth.showMessage("❌ " + data.message); 
+        }
+    } catch (e) { 
+        console.error(e);
+        UIAuth.showMessage("❌ ချိတ်ဆက်မှု အဆင်မပြေပါ။"); 
+    }
 }
 
 function setupProfileSystem() {
@@ -55,7 +82,10 @@ function setupProfileSystem() {
     }
 }
 
-window.logout = () => { localStorage.clear(); location.reload(); };
+window.logout = () => { 
+    localStorage.clear(); 
+    location.reload(); 
+};
 
 (function init() {
     const expiry = localStorage.getItem(CONFIG.AUTH_EXPIRY_KEY);
