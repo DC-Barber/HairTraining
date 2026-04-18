@@ -19,7 +19,7 @@ const UIAuth = {
                     <div style="display:flex; margin-bottom:10px; border:1px solid #ddd; border-radius:10px; overflow:hidden;">
                         <select id="country-code" style="padding:10px; border:none; background:#f1f1f1; outline:none; font-size:14px; border-right:1px solid #ddd;">
                             <option value="+95">🇲🇲 +95</option>
-                            <option value="+84">🇻🇳 +66</option>
+                            <option value="+84">🇻🇳 +84</option>
                             <option value="+66">🇹🇭 +66</option>
                             <option value="+65">🇸🇬 +65</option>
                             <option value="+81">🇯🇵 +81</option>
