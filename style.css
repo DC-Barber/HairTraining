@@ -1,4 +1,5 @@
-/* style.css - Professional Hair Training Manual */
+/* style.css - Professional Hair Training Manual (Fully Responsive) */
+
 * {
     margin: 0;
     padding: 0;
@@ -6,34 +7,42 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background: linear-gradient(145deg, #f6efe3 0%, #ede3d4 100%);
     color: #1e2a32;
-    overflow: hidden;
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     position: relative;
 }
 
-/*  Header */
+/* ========== HEADER ========== */
 .clean-header {
     background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(2px);
-    padding: 12px 20px;
+    padding: 12px 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
     border-bottom: 1px solid #e9dfd1;
     position: sticky;
     top: 0;
     z-index: 60;
+    width: 100%;
 }
 
 .title-section h1 {
-    font-size: 1.4rem;
+    font-size: clamp(1rem, 5vw, 1.4rem);
     font-weight: 700;
     color: #1e3a5f;
     letter-spacing: -0.3px;
@@ -41,29 +50,44 @@ body {
 }
 
 .title-section .eng-sub {
-    font-size: 0.7rem;
+    font-size: clamp(0.6rem, 3vw, 0.7rem);
     font-weight: 400;
     color: #7c6e5d;
-    letter-spacing: 0.3px;
     margin-top: 4px;
 }
 
 .page-indicator-compact {
     background: #f0e7dc;
-    padding: 6px 14px;
+    padding: 4px 12px;
     border-radius: 60px;
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 3.5vw, 0.9rem);
     font-weight: 600;
     color: #1e3a5f;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+    white-space: nowrap;
 }
 
-/* Book Container */
+.profile-icon {
+    background: #1e3a5f;
+    color: white;
+    width: clamp(32px, 8vw, 35px);
+    height: clamp(32px, 8vw, 35px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    border: 2px solid #e9dfd1;
+    flex-shrink: 0;
+}
+
+/* ========== BOOK CONTAINER ========== */
 .book-container {
-    height: calc(100vh - 76px);
+    flex: 1;
     position: relative;
     overflow: hidden;
-    padding: 12px 12px 20px 12px;
+    padding: 10px 12px 70px 12px;
+    min-height: 0;
 }
 
 #pages-wrapper {
@@ -72,6 +96,7 @@ body {
     height: 100%;
 }
 
+/* ========== PAGE STYLES ========== */
 .page {
     position: absolute;
     top: 0;
@@ -79,13 +104,13 @@ body {
     right: 0;
     bottom: 0;
     background: #ffffff;
-    border-radius: 28px;
-    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0,0,0,0.05);
-    padding: 20px 22px;
+    border-radius: 24px;
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.25);
+    padding: 16px 18px;
     display: none;
     flex-direction: column;
     overflow-y: auto;
-    transition: opacity 0.3s ease, transform 0.2s;
+    transition: opacity 0.3s ease;
     scroll-behavior: smooth;
 }
 
@@ -99,153 +124,159 @@ body {
     to { opacity: 1; transform: translateX(0); }
 }
 
-/* စာမျက်နှာအားလုံးရဲ့ အောက်ခြေမှာ logo ထည့်ရန် */
-.page::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 50px;
-    background-image: url('img/logo.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    opacity: 0.5;
-    margin-top: 20px;
-}
 /* Page Header */
 .page-header {
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 16px;
     border-bottom: 2px solid #f0e2d0;
-    padding-bottom: 12px;
+    padding-bottom: 10px;
+    flex-shrink: 0;
 }
 
 .page-number {
     background: #1e3a5f;
     color: white;
-    width: 36px;
-    height: 36px;
+    width: clamp(32px, 8vw, 36px);
+    height: clamp(32px, 8vw, 36px);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 1.1rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    flex-shrink: 0;
 }
 
 .page h2 {
-    font-size: 1.3rem;
+    font-size: clamp(0.95rem, 4.5vw, 1.3rem);
     font-weight: 700;
     color: #1e3a5f;
     line-height: 1.25;
     flex: 1;
 }
 
+/* Page Image */
 .page-image {
     width: 100%;
-    border-radius: 20px;
-    margin: 12px 0 18px 0;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    margin: 8px 0 14px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     object-fit: cover;
     background: #f9f3ea;
-    max-height: 350px;
-    border: 1px solid #f1e5d8;
+    max-height: 250px;
+    flex-shrink: 0;
 }
 
+/* Page Content */
 .page-content {
     flex: 1;
-    line-height: 1.65;
-    font-size: 1rem;
+    line-height: 1.6;
+    font-size: clamp(0.85rem, 4vw, 1rem);
     color: #2c3e2f;
+    overflow-y: auto;
 }
 
 .page-content p {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .page-content ul, .page-content ol {
-    padding-left: 22px;
-    margin: 14px 0;
+    padding-left: 20px;
+    margin: 10px 0;
 }
 
 .page-content li {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
-/* 极简导航栏：只有左右箭头 - 背景完全透明/隐藏 */
+.page-content table {
+    width: 100%;
+    font-size: clamp(0.7rem, 3.5vw, 0.85rem);
+}
+
+/* Page Footer Logo */
+.page::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 40px;
+    background-image: url('img/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.4;
+    margin-top: 16px;
+    flex-shrink: 0;
+}
+
+/* ========== NAVIGATION ========== */
 .nav-simple {
     position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: transparent; /* 完全透明背景 */
-    backdrop-filter: none;   /* 移除模糊效果 */
+    bottom: 12px;
+    left: 0;
+    right: 0;
     display: flex;
     align-items: center;
-    gap: 24px;
-    padding: 10px 26px;
+    justify-content: center;
+    gap: 20px;
+    padding: 8px 16px;
     z-index: 100;
-    box-shadow: none;        /* 移除阴影 */
-    border: none;            /* 移除边框 */
+    background: transparent;
 }
 
 .arrow-btn {
-    background: transparent; /* 透明背景 */
+    background: rgba(30, 58, 95, 0.85);
+    backdrop-filter: blur(8px);
     border: none;
-    width: 48px;
-    height: 48px;
-    border-radius: 60px;
+    width: clamp(44px, 12vw, 48px);
+    height: clamp(44px, 12vw, 48px);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: #1e3a5f;          /* 深蓝色箭头，与主题色一致 */
-    font-size: 2.2rem;
+    color: white;
+    font-size: clamp(1.5rem, 6vw, 2rem);
     font-weight: 300;
-    backdrop-filter: none;   /* 移除模糊 */
-    opacity: 0.7;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .arrow-btn:active {
     transform: scale(0.94);
-    opacity: 1;
-    background: transparent; /* 点击时保持透明 */
+    background: rgba(30, 58, 95, 1);
 }
 
 .counter-simple {
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 4vw, 1rem);
     font-weight: 600;
     color: #1e3a5f;
-    background: rgba(255, 255, 255, 0.85);
-    padding: 5px 14px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 12px;
     border-radius: 40px;
-    letter-spacing: 0.5px;
-    min-width: 70px;
     text-align: center;
     backdrop-filter: blur(4px);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    min-width: 65px;
 }
 
-/* FAB 按钮 + 菜单 */
+/* ========== FAB BUTTON ========== */
 .fab {
     position: fixed;
-    bottom: 24px;
-    right: 20px;
-    width: 54px;
-    height: 54px;
+    bottom: 16px;
+    right: 16px;
+    width: clamp(48px, 12vw, 54px);
+    height: clamp(48px, 12vw, 54px);
     background: #1e3a5f;
     color: white;
-    border-radius: 30px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
-    font-weight: 400;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
     z-index: 200;
     cursor: pointer;
     transition: all 0.2s;
@@ -254,24 +285,22 @@ body {
 
 .fab:active {
     transform: scale(0.94);
-    background: #0f2b46;
 }
 
+/* ========== FAB MENU ========== */
 .fab-menu {
     position: fixed;
-    bottom: 90px;
-    right: 20px;
-    width: 280px;
+    bottom: 80px;
+    right: 16px;
+    width: min(280px, 85vw);
     background: #fffef7;
-    border-radius: 28px;
-    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     display: none;
     z-index: 300;
-    max-height: 70vh;
+    max-height: 60vh;
     overflow-y: auto;
-    backdrop-filter: blur(2px);
-    border: 1px solid #e9dbcc;
 }
 
 .fab-menu.active {
@@ -286,21 +315,22 @@ body {
 
 .menu-header {
     background: #1e3a5f;
-    padding: 16px 20px;
+    padding: 14px 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: white;
     font-weight: 600;
+    position: sticky;
+    top: 0;
 }
 
 #close-menu {
     background: none;
     border: none;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    line-height: 1;
 }
 
 #toc-list {
@@ -308,11 +338,10 @@ body {
 }
 
 #toc-list li {
-    padding: 14px 20px;
+    padding: 12px 16px;
     border-bottom: 1px solid #f0e2d4;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 3.5vw, 0.9rem);
     font-weight: 500;
-    color: #2c3e2f;
     cursor: pointer;
     transition: background 0.15s;
 }
@@ -321,48 +350,278 @@ body {
     background: #f9efe5;
 }
 
-/* 滚动条 */
-.page::-webkit-scrollbar {
-    width: 4px;
+/* ========== PROFILE OVERLAY ========== */
+#profile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 20000;
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
 }
+
+#profile-overlay[style*="display: block"] {
+    display: flex !important;
+}
+
+.profile-modal {
+    background: white;
+    width: min(320px, 85%);
+    max-height: 80vh;
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow-y: auto;
+}
+
+.close-profile-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #eee;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.profile-avatar {
+    font-size: clamp(40px, 12vw, 50px);
+    margin: 10px 0;
+}
+
+.profile-name {
+    margin: 5px 0;
+    color: #1e3a5f;
+    font-size: clamp(1.1rem, 5vw, 1.3rem);
+}
+
+.profile-username {
+    margin: 0;
+    color: #666;
+    font-size: clamp(0.8rem, 3.5vw, 0.85rem);
+}
+
+.profile-divider {
+    margin: 15px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.profile-info {
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: clamp(0.85rem, 4vw, 0.9rem);
+    padding: 0 5px;
+}
+
+.logout-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: clamp(0.9rem, 4vw, 1rem);
+}
+
+/* ========== SCROLLBAR ========== */
+.page::-webkit-scrollbar {
+    width: 3px;
+}
+
 .page::-webkit-scrollbar-track {
     background: #f0e2d4;
     border-radius: 10px;
 }
+
 .page::-webkit-scrollbar-thumb {
     background: #c0aa8a;
     border-radius: 10px;
 }
 
-@media (max-width: 500px) {
+/* ========== VERY SMALL DEVICES (<= 380px) ========== */
+@media (max-width: 380px) {
     .clean-header {
-        padding: 10px 16px;
+        padding: 8px 12px;
     }
-    .title-section h1 {
-        font-size: 1.2rem;
-    }
+    
     .page {
-        padding: 16px;
-        border-radius: 24px;
+        padding: 12px 14px;
+        border-radius: 20px;
     }
-    .page h2 {
-        font-size: 1.1rem;
+    
+    .page-header {
+        gap: 8px;
+        margin-bottom: 12px;
     }
+    
+    .page-image {
+        max-height: 180px;
+        margin: 6px 0 10px 0;
+    }
+    
+    .nav-simple {
+        bottom: 8px;
+        gap: 12px;
+    }
+    
     .arrow-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+    }
+    
+    .fab {
         width: 44px;
         height: 44px;
+        bottom: 12px;
+        right: 12px;
+        font-size: 1.4rem;
+    }
+    
+    .fab-menu {
+        bottom: 70px;
+        right: 12px;
+        width: min(260px, 90vw);
+    }
+    
+    .profile-modal {
+        padding: 20px;
+    }
+}
+
+/* ========== LANDSCAPE MODE ========== */
+@media (orientation: landscape) and (max-height: 500px) {
+    .clean-header {
+        padding: 6px 12px;
+    }
+    
+    .title-section h1 {
+        font-size: 0.9rem;
+    }
+    
+    .title-section .eng-sub {
+        font-size: 0.55rem;
+    }
+    
+    .page-image {
+        max-height: 100px;
+    }
+    
+    .book-container {
+        padding-bottom: 55px;
+    }
+    
+    .nav-simple {
+        bottom: 4px;
+        gap: 15px;
+    }
+    
+    .arrow-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+    }
+    
+    .fab {
+        width: 40px;
+        height: 40px;
+        bottom: 8px;
+        right: 8px;
+        font-size: 1.2rem;
+    }
+    
+    .fab-menu {
+        bottom: 60px;
+        right: 8px;
+        max-height: 70vh;
+    }
+    
+    .page {
+        padding: 10px 14px;
+    }
+    
+    .page-content {
+        font-size: 0.8rem;
+    }
+}
+
+/* ========== TABLET & LARGER ========== */
+@media (min-width: 768px) {
+    .book-container {
+        padding: 15px 20px 80px 20px;
+    }
+    
+    .page {
+        padding: 24px 30px;
+        border-radius: 32px;
+    }
+    
+    .page-image {
+        max-height: 320px;
+    }
+    
+    .nav-simple {
+        gap: 30px;
+    }
+    
+    .arrow-btn {
+        width: 55px;
+        height: 55px;
         font-size: 2rem;
     }
-    .nav-simple {
-        padding: 6px 20px;
-        gap: 16px;
-        bottom: 18px;
-    }
+    
     .fab {
-        width: 48px;
-        height: 48px;
-        bottom: 18px;
-        right: 16px;
-        font-size: 1.6rem;
+        width: 60px;
+        height: 60px;
+        bottom: 24px;
+        right: 24px;
+        font-size: 2rem;
     }
+    
+    .fab-menu {
+        bottom: 100px;
+        right: 24px;
+        width: 320px;
+    }
+}
+
+/* ========== AUTH MODAL (Login/Register) ========== */
+#auth-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1e3a5f;
+    z-index: 30000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#auth-modal-overlay > div {
+    background: white;
+    padding: clamp(20px, 6vw, 30px);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    overflow-y: auto;
 }

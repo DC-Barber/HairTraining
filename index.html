@@ -2,8 +2,8 @@
 <html lang="my">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Professional Hair Training Manual</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+      <title>Professional Hair Training Manual</title>
     <link rel="stylesheet" href="style.css">
     <script src="noss.js"></script>
 </head>
@@ -14,9 +14,9 @@
             <h1>ဆံသား လေ့ကျင့်ရေး လမ်းညွှန်</h1>
             <div class="eng-sub">Professional Hair Training Manual</div>
         </div>
-        <div style="display: flex; align-items: center; gap: 15px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
             <div class="page-indicator-compact" id="header-page-num">၁ / ၄၂</div>
-            <div id="profile-icon-btn" style="background: #1e3a5f; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; border: 2px solid #e9dfd1;">👤</div>
+            <div id="profile-icon-btn" class="profile-icon">👤</div>
         </div>
     </div>
 
@@ -39,28 +39,22 @@
         <ul id="toc-list"></ul>
     </div>
 
-    <div id="profile-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 20000; backdrop-filter: blur(5px);">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 85%; max-width: 320px; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            
-            <button id="close-profile" style="position: absolute; top: 15px; right: 15px; background: #eee; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 16px;">✕</button>
-
-            <div style="font-size: 50px; margin: 10px 0;">👤</div>
-            <h3 id="p-fullname" style="margin: 5px 0; color: #1e3a5f;">-</h3>
-            <p style="margin: 0; color: #666; font-size: 0.85rem;">@<span id="p-username">-</span></p>
-            
-            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
-            
-            <div style="text-align: left; margin-bottom: 20px; font-size: 0.9rem; padding: 0 5px;">
-                <div style="margin-bottom: 10px;">📞 <b>Phone:</b> <span id="p-phone">-</span></div>
+    <div id="profile-overlay" style="display: none;">
+        <div class="profile-modal">
+            <button id="close-profile" class="close-profile-btn">✕</button>
+            <div class="profile-avatar">👤</div>
+            <h3 id="p-fullname" class="profile-name">-</h3>
+            <p class="profile-username">@<span id="p-username">-</span></p>
+            <hr class="profile-divider">
+            <div class="profile-info">
+                <div>📞 <b>Phone:</b> <span id="p-phone">-</span></div>
             </div>
-
-            <button onclick="window.logout()" style="background: #d9534f; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer;">🚪 Logout</button>
+            <button onclick="window.logout()" class="logout-btn">🚪 Logout</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script src="script.js"></script>
-   
     <script src="config.js"></script>
     <script src="validation.js"></script>
     <script src="api-service.js"></script>
