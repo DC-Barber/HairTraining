@@ -9,7 +9,7 @@ const UIAuth = {
         
         modal.innerHTML = `
             <div style="background:white;padding:30px;border-radius:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-                <h3 id="modal-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.4rem;">Just Hair Training </h3>
+                <h3 id="modal-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.4rem;">Hair_Color_Training </h3>
                 
                 <input type="text" id="login-username" maxlength="10" placeholder="Username (6-10 chars)" style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;outline:none;box-sizing:border-box;">
                 
