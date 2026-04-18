@@ -1486,6 +1486,192 @@ Bleach-Powder က ကာလာလေးတွေနဲ့ လာလေ့ရှ�
 </div>
 
 <p><strong>မှတ်ချက် -</strong> Highlight ဆိုးခြင်းသည် အတွေ့အကြုံများစွာ လိုအပ်သော လုပ်ငန်းစဉ်ဖြစ်သည်။ ပထမဆုံးအကြိမ် ပြုလုပ်ပါက အပိုင်းအစအနည်းငယ်ဖြင့် စမ်းသပ်ဆိုးသင့်ပါသည်။</p>`, img: "img/i38.png" },
+    { id: 39, title: "Lowlight, Air-Touch, Sombre နှင့် Ombre ဆိုးနည်းများ", content: `<p><strong>Lowlight ဆိုးနည်း</strong></p>
+<p>ဆံပင်အပေါ်လွှာတွေအထိ အချောင်းပုံစံနဲ့ ဖောက်တဲ့ ဒီဇိုင်းတွေအကုန်လုံးကို <strong>Highlight</strong> လို့ခေါ်ပြီး၊ အပေါ်ပိုင်းအမှောင် အောက်ပိုင်းအလင်းကို အပြန့်လိုက်၊ အလျားလိုက် ပုံစံမျိုးဖောက်တဲ့ ဒီဇိုင်းတွေအကုန်လုံးကို <strong>Lowlight</strong> ဟုခေါ်ပါသည်။</p>
+<p><strong>Lowlight ဥပမာများ</strong><br>
+• နားကြားညှပ်ပုံစံ<br>
+• အောက်တစ်လွှာချွတ်ပြီးဆိုးသော ဒီဇိုင်းများ<br>
+• <strong>ခဲပြား (Foil)</strong> အသုံးပြုပေးရသည်။</p>
+
+<p><strong>Air-Touch, Sombre နှင့် Ombre ဆိုးနည်းများ</strong></p>
+<p>ဤသည်မှာ ဒီဇိုင်းဆိုးနည်းတစ်မျိုးဖြစ်ပြီး <strong>အရင်းပိုင်းမှောင်ကာ အဖျားပိုင်းအလင်း</strong> ဆိုးခြင်းဖြစ်ပါသည်။</p>
+
+<p><strong>ဒီဇိုင်း၏ အားသာချက်များ</strong><br>
+• တစ်ကောင်လုံး မချွတ်ချင်တဲ့သူတွေအတွက် သင့်တော်သည်။<br>
+• ဆံပင်အသစ်ပြန်ရှည်လာရင်လည်း လှနေစေသော ဒီဇိုင်း<br>
+• ဒီဇိုင်းဆန်းဆန်း ဝတ်စားဆင်ယင်တဲ့သူတွေအတွက် လိုက်ဖက်မှုပိုရှိသည်။<br>
+• လူငယ်ဆန်သော ဒီဇိုင်းတစ်မျိုး</p>
+
+<p><strong>ဆိုးဆေးအဆင့်ဆင့်</strong><br>
+Highlight ပုံစံမျိုး အချောင်းရွေးထုတ်ခြင်း မဟုတ်ဘဲ အောက်ပါအတိုင်း ပြုလုပ်ရပါသည်။</p>
+<ol>
+    <li>လွှာယူထားတဲ့ ရေပြင်ညီစည်းအလွှာလေးတိုင်းကို <strong>အမှောင်ထားမည်</strong>။</li>
+    <li>ဆံပင်အတိုနဲ့ အလင်းချွတ်မည်။</li>
+    <li>ဆံပင်အရှည်ကို <strong>Dryer လေ (Blow Dryer)</strong> ဖြင့် မှုတ်ပြီး ခွဲပေးရမည်။</li>
+</ol>
+
+<div style="background: #f5f0eb; padding: 15px; border-radius: 8px; margin: 16px 0;">
+    <p><strong>အရေးကြီးသော မှတ်ချက်</strong></p>
+    <p>• ၎င်းဒီဇိုင်းကို ရွေးချယ်ပါက <strong>ဆံပင်ပါးပေးရမည်</strong> ဟု မှတ်ပါ။</p>
+    <p>• ဆံပင်ထူသူများတွင် အလွှာလိုက် ခွဲခြားရန် ပိုမိုလွယ်ကူပါသည်။</p>
+    <p>• Air-Touch, Sombre, Ombre များသည် သဘာဝဆန်ဆန် အရောင်ကူးပြောင်းမှုကို ဖန်တီးပေးသော နည်းစနစ်များဖြစ်သည်။</p>
+</div>
+
+<table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;">
+    <thead>
+        <tr><th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">နည်းလမ်း</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">ဖော်ပြချက်</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">လိုက်ဖက်သူ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">Lowlight</td>
+         <td style="border: 1px solid #d4c5b0; padding: 8px;">အပေါ်ပိုင်းအမှောင်၊ အောက်ပိုင်းအလင်း၊ အလျားလိုက်ပုံစံ</td>
+         <td style="border: 1px solid #d4c5b0; padding: 8px;">ဒီဇိုင်းဆန်းလိုသူများ</td>
+        </tr>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">Air-Touch / Sombre / Ombre</td>
+         <td style="border: 1px solid #d4c5b0; padding: 8px;">အရင်းမှောင်၊ အဖျားလင်း၊ လေမှုတ်ခွဲခြင်း</td>
+         <td style="border: 1px solid #d4c5b0; padding: 8px;">လူငယ်များ၊ သဘာဝဆန်သောအရောင်ပြောင်းလိုသူများ</td>
+        </tr>
+    </tbody>
+</table>
+
+<div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin: 16px 0;">
+    <p><strong>ဆီ (Oil-Based) နှင့် Cream (Cream-Based) နှိုင်းယှဉ်ချက်</strong></p>
+    <p><strong>ဆီ (Oil-Based)</strong><br>
+    အားသာချက် - အရောင်ထွက်နှုန်းကောင်း၊ ကြာရှည်ခံ၊ အရောင်တောက်<br>
+    အားနည်းချက် - အရောင်ပြောင်းရခက်၊ One-Color မရ၊ ချွတ်ပြီးမှဆိုးရ</p>
+    <p><strong>Cream (Cream-Based)</strong><br>
+    အားသာချက် - One-Color ဆိုးလို့ရ၊ အရောင်ပြောင်းရလွယ်<br>
+    အားနည်းချက် - အရောင်မခံ၊ ဆံသားပျက်စီးနှုန်းမြင့်</p>
+</div>`, img: "img/i39.png" },
+    { id: 40, title: "Balayage ဆိုးနည်း", content: `<p><strong>Balayage ဆိုးနည်း</strong></p>
+<p>Balayage သည် ဒီဇိုင်းဆိုးနည်း တစ်မျိုးဖြစ်ပြီး <strong>အရင်းပိုင်းမှိန်၍ အဖျားပိုင်းတစ်ခုလုံး အလင်းဆိုးခြင်း</strong> ဖြစ်ပါသည်။</p>
+
+<p><strong>ဒီဇိုင်း၏ အားသာချက်များ</strong><br>
+• ချွတ်ဆေး တစ်ခေါင်းလုံး မသုံးချင်တဲ့အခါ သင့်တော်သော ဒီဇိုင်း<br>
+• လူငယ်ဆန်ပြီး ခေတ်မီသော ဒီဇိုင်း<br>
+• ဆံပင်အသစ်ပြန်ရှည်လာရင်လည်း လှနေစေသည်</p>
+
+<p><strong>ဆိုးဆေးအဆင့်ဆင့်</strong><br>
+Highlight ပုံစံ အချောင်းရွေးထုတ်ခြင်း မဟုတ်ဘဲ အောက်ပါအတိုင်း ပြုလုပ်ရပါသည်။</p>
+<ol>
+    <li>အလွှာယူထားတဲ့ ရေပြင်ညီစည်းအလွှာလေးတိုင်းကို <strong>အလင်း/အမှောင် ဆိုးမည်</strong>။</li>
+    <li>ဆံပင်အတို အရှည်အား ဘီးစိပ်ဖြင့် <strong>ခြစ်တင်ခွဲထုတ်</strong>ရတဲ့နည်းပါ။</li>
+</ol>
+
+<div style="background: #f5f0eb; padding: 15px; border-radius: 8px; margin: 16px 0;">
+    <p><strong>ဒီဇိုင်းထွင်ခြင်း</strong></p>
+    <p>ဒီဇိုင်း စုံလင်သောကြောင့် ချွတ်ဆေးကို ပုံမှန်အသုံးပြုခြင်း မဟုတ်ဘဲ ဒီဇိုင်းထွင်ပြီး အသုံးပြုနိုင်ပါတယ်။</p>
+    <p>များသောအားဖြင့် <strong>နေကြာစေ့ခွံ (Sunflower Seed Shell Pattern)</strong> ပုံစံယူ၍ ဆိုးလေ့ရှိကြပါသည်။</p>
+</div>
+
+<div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin: 16px 0;">
+    <p><strong>အရေးကြီးသော မှတ်ချက်</strong></p>
+    <p>• Balayage ကို ရွေးချယ်ပါက <strong>ဆံပင်ပါးပေးရန်</strong> လိုအပ်ပါသည်။</p>
+    <p>• ဤနည်းစနစ်သည် သဘာဝဆန်ဆန် အရောင်ကူးပြောင်းမှုကို ဖန်တီးပေးသည်။</p>
+    <p>• Balayage သည် <strong>Foil (သတ္တုပြား)</strong> အသုံးမပြုဘဲ လက်ဖြင့် ခြယ်သခြင်းနည်းလမ်းဖြစ်သည်။</p>
+    <p>• ဆံပင်အဖျားပိုင်းကို V သို့မဟုတ် W ပုံစံဖြင့် ဆေးလိမ်းခြင်းဖြင့် ပိုမိုသဘာဝကျသော အရောင်ကူးမှုကို ရရှိစေပါသည်။</p>
+</div>
+
+<table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;">
+    <thead>
+        <tr><th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">နည်းလမ်း</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">ဖော်ပြချက်</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">အသုံးပြုပုံ</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">လိုက်ဖက်သူ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">Balayage</td>
+         <td style="border: 1px solid #d4c5b0; padding: 8px;">အရင်းမှောင်၊ အဖျားလင်း၊ လက်ဖြင့်ခြယ်</td>
+         <td style="border: 1px solid #d4c5b0; padding: 8px;">ဘီးစိပ်ဖြင့် ခြစ်တင်ခွဲထုတ်</td>
+         <td style="border: 1px solid #d4c5b0; padding: 8px;">လူငယ်များ၊ သဘာဝဆန်သောအရောင်ပြောင်းလိုသူများ</td>
+        </tr>
+    </tbody>
+</table>
+
+<div style="background: #f5f0eb; padding: 15px; border-radius: 8px; margin: 16px 0;">
+    <p><strong>ဆီ (Oil-Based) နှင့် Cream (Cream-Based) နှိုင်းယှဉ်ချက်</strong></p>
+    <p><strong>ဆီ (Oil-Based)</strong><br>
+    အားသာချက် - အရောင်ထွက်နှုန်းကောင်း၊ ကြာရှည်ခံ၊ အရောင်တောက်<br>
+    အားနည်းချက် - အရောင်ပြောင်းရခက်၊ One-Color မရ၊ ချွတ်ပြီးမှဆိုးရ</p>
+    <p><strong>Cream (Cream-Based)</strong><br>
+    အားသာချက် - One-Color ဆိုးလို့ရ၊ အရောင်ပြောင်းရလွယ်<br>
+    အားနည်းချက် - အရောင်မခံ၊ ဆံသားပျက်စီးနှုန်းမြင့်</p>
+</div>`, img: "img/i40.png" },
+    { id: 41, title: "အဝါသတ် Shampoo (သို့) Level တစ်ဆင့်မြှင့်ဆေး ပြုလုပ်နည်း", content: `<p><strong>အဝါသတ် Shampoo (သို့) Level တစ်ဆင့်မြှင့်ဆေး ပြုလုပ်နည်း</strong></p>
+
+<p><strong>ဆေးစပ်နည်း (၁) - ကာလာဆီ (Oil-Based)</strong></p>
+<table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;">
+    <thead>
+        <tr><th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">ပါဝင်ပစ္စည်း</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">ပမာဏ</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">မှတ်ချက်</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">အပြာရောင် (Blue)</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">အဝါသတ်</td></tr>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">ခရမ်းရောင် (Violet)</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">အဝါသတ်</td></tr>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">Shampoo ကြမ်း</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">Cuticle ပွင့်စေ</td></tr>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">H₂O₂ 9% (30 VOL)</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">အာနိသင်</td></tr>
+    </tbody>
+</table>
+
+<p><strong>ဆေးစပ်နည်း (၂) - ကာလာ Cream (Cream-Based)</strong></p>
+<table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;">
+    <thead>
+        <tr><th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">ပါဝင်ပစ္စည်း</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">ပမာဏ</th>
+         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">မှတ်ချက်</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">0/88 (အပြာ)</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">အဝါသတ်</td></tr>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">0/66 (ခရမ်း)</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">အဝါသတ်</td></tr>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">0/00</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">အလင်းအာနိသင်</td></tr>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">Shampoo ကြမ်း</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">Cuticle ပွင့်စေ</td></tr>
+        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">H₂O₂ 9% (30 VOL)</td><td style="border: 1px solid #d4c5b0; padding: 8px;">၁ ဆ</td><td style="border: 1px solid #d4c5b0; padding: 8px;">အာနိသင်</td></tr>
+    </tbody>
+</table>
+
+<div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin: 16px 0;">
+    <p><strong>အသုံးပြုပုံ</strong></p>
+    <p>ဆေးစပ်နည်း နှစ်မျိုးလုံးကို အချိန်အားဖြင့် လျှော်စင်ပေါ်တွင် <strong>(၁၅) မိနစ်</strong> ကြာသည်အထိ တစ်ခေါင်းလုံး နှံ့စပ်အောင် ပွတ်နယ်လျှော်ပေးရပါမည်။</p>
+</div>
+
+<p><strong>ကာလာဆီ (Oil-Based) ၏ အားသာချက်/အားနည်းချက်</strong></p>
+<table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;">
+    <tr><td style="border: 1px solid #d4c5b0; padding: 8px; background: #d4edda;"><strong>အားသာချက်</strong></td>
+        <td style="border: 1px solid #d4c5b0; padding: 8px;">• ရေရှည်ခံတယ်<br>• ဆံပင်ခြောက်သွေ့မှု လျှော့ချတယ်<br>• စိုစိုအိအိနှင့် အရောင်လှ</td></tr>
+    <tr><td style="border: 1px solid #d4c5b0; padding: 8px; background: #f8d7da;"><strong>အားနည်းချက်</strong></td>
+        <td style="border: 1px solid #d4c5b0; padding: 8px;">• One-Color ဆိုးလို့မရ<br>• အရောင်ပြောင်းရခက်<br>• အောက်ခံ Level ညီမှ လှ<br>• အောက်ခံ Level မြင့်ရင် တင်မရ (ချုပ်ရည်မပါလို့)</td></tr>
+</table>
+
+<p><strong>Cream (Cream-Based) ၏ အားသာချက်/အားနည်းချက်</strong></p>
+<table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;">
+    <tr><td style="border: 1px solid #d4c5b0; padding: 8px; background: #d4edda;"><strong>အားသာချက်</strong></td>
+        <td style="border: 1px solid #d4c5b0; padding: 8px;">• One-Color ဆိုးလို့ရ<br>• Color ဆိုးရလွယ်၊ ပြောင်းရလွယ်<br>• အရောင်ညှိရလွယ်၊ ဖယ်ရလွယ်ကူ</td></tr>
+    <tr><td style="border: 1px solid #d4c5b0; padding: 8px; background: #f8d7da;"><strong>အားနည်းချက်</strong></td>
+        <td style="border: 1px solid #d4c5b0; padding: 8px;">• အရောင်ကျလွယ်၊ အကျွတ်လွယ်<br>• ဆံပင်ခြောက်သွေ့မှု ပိုဖြစ်စေတယ်</td></tr>
+</table>
+
+<div style="background: #f5f0eb; padding: 15px; border-radius: 8px; margin: 16px 0;">
+    <p><strong>မှတ်ချက်</strong></p>
+    <p>ဤဆေးစပ်နည်းသည် Level 8-10 တွင် ကျန်ရှိသော အဝါရောင်ကို ဖျောက်ဖျက်ရန်အတွက်ဖြစ်သည်။ ဆံသားအခြေအနေပေါ်မူတည်၍ အချိန်ကို အနည်းငယ် လျှော့/များ ပြုလုပ်နိုင်ပါသည်။</p>
+</div>`, img: "img/i41.png" },
+    { id: 42, title: "ဆံပင်ပုံစံများ - Diamond Crown", content: `<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; background: white; z-index: 9999;">
+    <iframe 
+        src="https://dc-barber.github.io/MENUBOOK/" 
+        style="width: 100%; height: 100%; border: none; display: block;">
+    </iframe>
+    
+    <div style="position: fixed; top: 20px; left: 20px; z-index: 100000; pointer-events: auto;">
+        <a href="${window.location.pathname}?page=1" target="_self" style="background: rgba(139, 69, 19, 0.95); backdrop-filter: blur(8px); color: white; text-decoration: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); overflow: hidden;" onmouseover="this.style.background='rgba(90, 45, 14, 1)';" onmouseout="this.style.background='rgba(139, 69, 19, 0.95)';">
+            <img src="img/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='🏠'; this.parentElement.style.fontSize='24px'; this.parentElement.style.fontWeight='bold';">
+        </a>
+    </div>
+</div>`, img: "" },
     ];
 
 // DOM
