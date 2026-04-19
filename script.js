@@ -448,7 +448,7 @@ Medulla အလွှာသည် ဆံသားအမျိုးအစား�
 <p><strong>အရေးကြီးသော မှတ်ချက်</strong><br>
 အနီရောင်ကို တခြားအရောင်တွေနဲ့ ရောစပ်တဲ့အခါမှာ ပမာဏကို <strong>လျှော့ထည့်ပေးရမည်</strong> ဟု သိနိုင်ပါတယ်။</p>
 
-     <img src="img/i23.png" class="page-image" alt="blue color characteristics" style="margin: 12px 0; border-radius: 12px;" onerror="this.src='https://picsum.photos/id/180/800/500'">
+     <img src="img/i20_1.png" class="page-image" alt="blue color characteristics" style="margin: 12px 0; border-radius: 12px;" onerror="this.src='https://picsum.photos/id/180/800/500'">
 <p><strong>(၃) အပြာရောင် (Blue) ၏ လက္ခဏာများ</strong></p>
      <p>အပြာရောင်ရဲ့ လက္ခဏာကတော့ <strong>ရင့်တတ်၊ မှောင်တတ်၊ မည်းတတ်</strong> ပြီး အရောင်ကို ဖျောက်နိုင်စွမ်း ရှိပါတယ်။ ကာလာပြင်းအားလည်း အလွန်များတဲ့အရောင် ဖြစ်ပါတယ်။</p>
 <p>အပြာရောင်ကို ဘယ်အရောင်နဲ့ ရောစပ်ရော အရောခံလိုက်ရတဲ့အရောင်ဟာ အပြာရောင်ရဲ့ လက္ခဏာကြောင့် <strong>ရင့်ပြီး မှောင်သွားတတ်</strong> ပါတယ်။</p>
