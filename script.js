@@ -584,7 +584,7 @@ Medulla အလွှာသည် ဆံသားအမျိုးအစား�
 ဆံသားရဲ့ အရောင်ဆဲလ်တွေကို (၅၀%) ဆွဲထုတ်ပေးနိုင်ပါတယ်။</p>
 <p><strong>သတိပြုရန်</strong><br>
 ၎င်းကိုသုံးပြီး ဆေးဆိုးရင် ဦးရေပြားကို တိုက်ရိုက်မထိအောင် အတတ်နိုင်ဆုံး ရှောင်သင့်ပါတယ်။</p>
- <img src="img/i28.png" class="page-image" alt="blue color characteristics" style="margin: 12px 0; border-radius: 12px;" onerror="this.src='https://picsum.photos/id/180/800/500'">
+ <img src="img/i24_2.png" class="page-image" alt="blue color characteristics" style="margin: 12px 0; border-radius: 12px;" onerror="this.src='https://picsum.photos/id/180/800/500'">
 
 <p><strong>12% (40 VOL) - (၄ ဆင့်တက်ဆေး)</strong></p>
 <p>ပြင်းအားမြင့် ချုပ်ဆေးအမျိုးအစားဖြစ်ပါတယ်။ အရောင်ဝင်ချိန်မြန်သလို အရောင်ကျွတ်ချိန်လည်း မြန်ပါတယ်။</p>
@@ -604,7 +604,7 @@ Medulla အလွှာသည် ဆံသားအမျိုးအစား�
 • <strong>3% (10 VOL)</strong> - အရောင်စွဲအားကောင်း၊ အရောင်မဖယ်<br>
 • <strong>6% (20 VOL)</strong> - ၂ ဆင့်တက်၊ အရောင်ချယ်ဆဲလ် 20-25% ဖယ်<br>
 • <strong>9% (30 VOL)</strong> - ၃ ဆင့်တက်၊ အရောင်ဆဲလ် 50% ဖယ်<br>
-• <strong>12% (40 VOL)</strong> - ၄ ဆင့်တက်၊ အရောင်ဆဲလ် 70-75% ဖယ်</p>`, img: "img/i24.png" },
+• <strong>12% (40 VOL)</strong> - ၄ ဆင့်တက်၊ အရောင်ဆဲလ် 70-75% ဖယ်</p>`, img: "img/i24_1.png" },
     { id: 25, title: "ချုပ်ဆေး အာနိသင် ကစားခြင်း (Developer Mixing)", content: `<p><strong>ချုပ်ဆေး အာနိသင် ကစားခြင်း</strong></p>
 <p>အသုံးများတဲ့ ချုပ်ဆေးတွေရဲ့ ပြင်းအားတွေကို တိကျစွာ နားလည်နေရင် ထိုချုပ်ဆေးတွေကို ပေါင်းစပ်ပြီး အာနိသင် အပျော့၊ အပြင်းကို လိုသလို ကစားနိုင်ပါတယ်။</p>
 
