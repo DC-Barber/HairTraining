@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+      <title>Professional Hair Training Manual</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="noss.js"></script>
+</head>
+<body>
+
+    <div class="clean-header">
+        <div class="title-section">
+            <h1>ဆံသား လေ့ကျင့်ရေး လမ်းညွှန်</h1>
+            <div class="eng-sub">Professional Hair Training Manual</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="page-indicator-compact" id="header-page-num">၁ / ၄၂</div>
+            <div id="profile-icon-btn" class="profile-icon">👤</div>
+        </div>
+    </div>
+
+    <div class="book-container">
+        <div id="pages-wrapper"></div>
+    </div>
+
+    <div class="nav-simple">
+        <button class="arrow-btn" id="prev-arrow">←</button>
+        <div class="counter-simple" id="center-counter">၁ / ၄၂</div>
+        <button class="arrow-btn" id="next-arrow">→</button>
+    </div>
+
+    <div class="fab" id="fab-btn">☰</div>
+    <div class="fab-menu" id="fab-menu">
+        <div class="menu-header">
+            <span>📖 စာမျက်နှာများ</span>
+            <button id="close-menu">✕</button>
+        </div>
+        <ul id="toc-list"></ul>
+    </div>
+
+    <div id="profile-overlay" style="display: none;">
+        <div class="profile-modal">
+            <button id="close-profile" class="close-profile-btn">✕</button>
+            <div class="profile-avatar">👤</div>
+            <h3 id="p-fullname" class="profile-name">-</h3>
+            <p class="profile-username">@<span id="p-username">-</span></p>
+            <hr class="profile-divider">
+            <div class="profile-info">
+                <div>📞 <b>Phone:</b> <span id="p-phone">-</span></div>
+            </div>
+            <!-- ✅ စာမေးပွဲဖြေဆိုရန် Button အသစ် ထည့်သွင်းခြင်း -->
+            <button onclick="openExam()" style="background: #8e44ad; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: clamp(0.9rem, 4vw, 1rem); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                📝 စာမေးပွဲ ဖြေဆိုရန်
+            </button>
+            <button onclick="window.logout()" class="logout-btn">🚪 Logout</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script src="script.js"></script>
+    <script src="config.js"></script>
+    <script src="validation.js"></script>
+    <script src="api-service.js"></script>
+    <script src="ui-auth.js"></script>
+    <script src="main-auth.js"></script>
+
+</body>
+</html>
