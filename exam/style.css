@@ -9,12 +9,17 @@ body {
     background: linear-gradient(145deg, #f6efe3 0%, #ede3d4 100%);
     color: #1e2a32;
     min-height: 100vh;
+    margin: 0;
     padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .exam-container {
     max-width: 800px;
-    margin: 0 auto;
+    width: 100%;        
+    margin: 0;            
 }
 
 .exam-header {
