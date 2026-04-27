@@ -1,43 +1,42 @@
-// exam.js - Core Exam Engine with Custom Alert & Export Support
+// exam.js - Core Exam Engine with Loading State
 
-// Global variables
 let allQuestions = [];
 let currentExamQuestions = [];
 let userAnswers = [];
 let currentIndex = 0;
+let isSubmitting = false;
 
-// Custom Alert Function
-function showCustomAlert(message, type = "warning") {
-    return new Promise((resolve) => {
+function showCustomAlert(message, type) {
+    type = type || "warning";
+    return new Promise(function(resolve) {
         const overlay = document.getElementById('customAlertOverlay');
         const icon = document.getElementById('customAlertIcon');
         const title = document.getElementById('customAlertTitle');
         const msgEl = document.getElementById('customAlertMessage');
         const btn = document.getElementById('customAlertBtn');
         
-        // Set icon and styling
         if (type === "warning") {
             icon.textContent = "⚠️";
             icon.className = "custom-alert-icon warning";
-            title.textContent = "သတိပြုရန်";
+            title.textContent = "Warning";
         } else if (type === "error") {
             icon.textContent = "❌";
             icon.className = "custom-alert-icon error";
-            title.textContent = "အမှား";
+            title.textContent = "Error";
         } else if (type === "success") {
             icon.textContent = "✅";
             icon.className = "custom-alert-icon success";
-            title.textContent = "အောင်မြင်ပါသည်";
+            title.textContent = "Success";
         } else {
             icon.textContent = "ℹ️";
             icon.className = "custom-alert-icon";
-            title.textContent = "အကြောင်းကြားချက်";
+            title.textContent = "Notice";
         }
         
         msgEl.textContent = message;
         overlay.classList.add('active');
         
-        const closeHandler = () => {
+        var closeHandler = function() {
             overlay.classList.remove('active');
             btn.removeEventListener('click', closeHandler);
             resolve();
@@ -47,9 +46,54 @@ function showCustomAlert(message, type = "warning") {
     });
 }
 
-// Function to collect all questions
+function showLoading(show, buttonElement) {
+    if (buttonElement) {
+        if (show) {
+            buttonElement.disabled = true;
+            buttonElement.style.opacity = "0.6";
+            buttonElement.style.cursor = "not-allowed";
+            buttonElement.innerHTML = "⏳ Processing...";
+        } else {
+            buttonElement.disabled = false;
+            buttonElement.style.opacity = "1";
+            buttonElement.style.cursor = "pointer";
+            buttonElement.innerHTML = "Next ▶";
+        }
+    }
+}
+
+function disableAllNavButtons(disabled) {
+    var nextBtn = document.getElementById('nextBtn');
+    var prevBtn = document.getElementById('prevBtn');
+    var restartBtn = document.getElementById('restartBtn');
+    var exportBtn = document.getElementById('exportBtn');
+    
+    if (nextBtn) {
+        nextBtn.disabled = disabled;
+        nextBtn.style.opacity = disabled ? "0.6" : "1";
+        nextBtn.style.cursor = disabled ? "not-allowed" : "pointer";
+        if (disabled) nextBtn.innerHTML = "⏳ Submitting...";
+        else nextBtn.innerHTML = "Next ▶";
+    }
+    if (prevBtn) {
+        prevBtn.disabled = disabled;
+        prevBtn.style.opacity = disabled ? "0.6" : "1";
+        prevBtn.style.cursor = disabled ? "not-allowed" : "pointer";
+    }
+    if (restartBtn) {
+        restartBtn.disabled = disabled;
+        restartBtn.style.opacity = disabled ? "0.6" : "1";
+        restartBtn.style.cursor = disabled ? "not-allowed" : "pointer";
+    }
+    if (exportBtn) {
+        exportBtn.disabled = disabled;
+        exportBtn.style.opacity = disabled ? "0.6" : "1";
+        exportBtn.style.cursor = disabled ? "not-allowed" : "pointer";
+    }
+}
+
 function collectAllQuestions() {
-    const topicArrays = [
+    var topicArrays = [
         window.topic1, window.topic2, window.topic3, window.topic4,
         window.topic5, window.topic6, window.topic7, window.topic8,
         window.topic9, window.topic10, window.topic11, window.topic12,
@@ -58,163 +102,141 @@ function collectAllQuestions() {
     ];
     
     allQuestions = [];
-    for (let i = 0; i < topicArrays.length; i++) {
+    for (var i = 0; i < topicArrays.length; i++) {
         if (topicArrays[i] && Array.isArray(topicArrays[i])) {
-            allQuestions.push(...topicArrays[i]);
+            allQuestions.push.apply(allQuestions, topicArrays[i]);
         }
     }
     
     if (allQuestions.length === 0) {
-        document.getElementById('questionText').innerHTML = "❌ မေးခွန်းများ မတွေ့ရှိပါ။";
+        document.getElementById('questionText').innerHTML = "No questions found";
         return false;
     }
     return true;
 }
 
-// Shuffle array
 function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+    for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
     return arr;
 }
 
-// Select 20 random questions
 function selectExamQuestions() {
-    const shuffled = shuffleArray([...allQuestions]);
+    var shuffled = shuffleArray(allQuestions.slice());
     currentExamQuestions = shuffled.slice(0, 20);
     userAnswers = new Array(20).fill(null);
     currentIndex = 0;
+    isSubmitting = false;
 }
 
-// Check all answered
 function isAllAnswered() {
-    return userAnswers.every(a => a !== null);
+    return userAnswers.every(function(a) { return a !== null; });
 }
 
-// Export to Excel/CSV
-function exportToExcel() {
-    let csvRows = [];
-    csvRows.push(['အပုဒ်အမှတ်', 'မေးခွန်း', 'သင့်အဖြေ', 'မှန်ကန်သောအဖြေ', 'ရလဒ်']);
-    
-    for (let i = 0; i < currentExamQuestions.length; i++) {
-        const q = currentExamQuestions[i];
-        const userAnswer = userAnswers[i];
-        const isCorrect = (userAnswer === q.correct);
-        const userAnswerText = userAnswer !== null ? q.options[userAnswer] : 'မဖြေရသေးပါ';
-        const correctAnswerText = q.options[q.correct];
-        const result = isCorrect ? '✓ မှန်' : '✗ မှား';
-        
-        csvRows.push([
-            i + 1,
-            q.text,
-            userAnswerText,
-            correctAnswerText,
-            result
-        ]);
+function updateProgress() {
+    var answeredCount = userAnswers.filter(function(a) { return a !== null; }).length;
+    var progressPercent = (answeredCount / 20) * 100;
+    var progressFill = document.getElementById('progressFill');
+    if (progressFill) {
+        progressFill.style.width = progressPercent + "%";
     }
-    
-    // Add score summary
-    const correctCount = userAnswers.filter((a, idx) => a === currentExamQuestions[idx].correct).length;
-    csvRows.push([]);
-    csvRows.push(['စုစုပေါင်းရမှတ်', `${correctCount} / 20`, '', '', '']);
-    
-    const csvContent = csvRows.map(row => {
-        return row.map(cell => {
-            if (typeof cell === 'string' && (cell.includes(',') || cell.includes('"'))) {
-                return `"${cell.replace(/"/g, '""')}"`;
-            }
-            return cell;
-        }).join(',');
-    }).join('\n');
-    
-    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.href = url;
-    link.setAttribute('download', `exam_results_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    
-    showCustomAlert('Excel ဖိုင်သို့ ထုတ်ယူပြီးပါပြီ။', 'success');
 }
 
-// Show result
-function showResult() {
-    let correct = 0;
-    const mistakes = [];
+function selectAnswer(questionIndex, optionIndex) {
+    if (isSubmitting) return;
+    userAnswers[questionIndex] = optionIndex;
+    updateProgress();
+    renderCurrentQuestion();
+}
+
+async function showResult() {
+    var correct = 0;
+    var mistakes = [];
     
-    for (let i = 0; i < currentExamQuestions.length; i++) {
-        const q = currentExamQuestions[i];
-        const userAnswer = userAnswers[i];
+    for (var i = 0; i < currentExamQuestions.length; i++) {
+        var q = currentExamQuestions[i];
+        var userAnswer = userAnswers[i];
         if (userAnswer !== null && userAnswer === q.correct) {
             correct++;
         } else {
             mistakes.push({
                 question: q.text,
                 correctAnswer: q.options[q.correct],
-                userAnswer: userAnswer !== null ? q.options[userAnswer] : "မဖြေရသေးပါ"
+                userAnswer: userAnswer !== null ? q.options[userAnswer] : "Not answered"
             });
         }
     }
     
-    document.getElementById('scoreDisplay').innerHTML = `${correct} / 20`;
-    
-    const mistakeList = document.getElementById('mistakeList');
-    if (mistakes.length === 0) {
-        mistakeList.innerHTML = '<p style="text-align:center; color:#2e7d32; background:#e8f5e9; padding:15px; border-radius:12px;">🎉 ဂုဏ်ယူပါတယ်။ အမှားမရှိပါ။ 🎉</p>';
+    var submitResult = await submitExamResult(correct, 20);
+    if (submitResult.status === 'success') {
+        console.log("Result saved to Google Sheet");
     } else {
-        let html = '<h3>❌ မှားသောအပုဒ်များ</h3><ul class="mistake-list">';
-        mistakes.forEach((m, idx) => {
-            html += `<li><strong>${idx+1}.</strong> ${m.question}<br>
-                     <span style="color:#2e7d32;">✓ မှန်ကန်သောအဖြေ: ${m.correctAnswer}</span><br>
-                     <span style="color:#c62828;">✗ သင့်အဖြေ: ${m.userAnswer}</span></li>`;
-        });
-        html += '</ul>';
-        mistakeList.innerHTML = html;
+        console.warn("Could not save to Google Sheet:", submitResult.message);
     }
     
-    document.getElementById('resultModal').classList.add('active');
+    var scoreDisplay = document.getElementById('scoreDisplay');
+    if (scoreDisplay) {
+        scoreDisplay.innerHTML = correct + " / 20";
+    }
+    
+    var mistakeList = document.getElementById('mistakeList');
+    if (mistakeList) {
+        if (mistakes.length === 0) {
+            mistakeList.innerHTML = '<p style="text-align:center; color:#2e7d32; background:#e8f5e9; padding:15px; border-radius:12px;">🎉 Congratulations! You passed the exam with 100% score. 🎉</p>';
+        } else {
+            var html = '<h3>Wrong Answers</h3><ul class="mistake-list">';
+            for (var m = 0; m < mistakes.length; m++) {
+                html += '<li><strong>' + (m+1) + '.</strong> ' + mistakes[m].question + '<br>' +
+                         '<span style="color:#2e7d32;">✓ Correct: ' + mistakes[m].correctAnswer + '</span><br>' +
+                         '<span style="color:#c62828;">✗ Your answer: ' + mistakes[m].userAnswer + '</span></li>';
+            }
+            html += '</ul>';
+            mistakeList.innerHTML = html;
+        }
+    }
+    
+    var resultModal = document.getElementById('resultModal');
+    if (resultModal) {
+        resultModal.classList.add('active');
+    }
+    
+    isSubmitting = false;
+    disableAllNavButtons(false);
 }
 
-// Update progress
-function updateProgress() {
-    const answeredCount = userAnswers.filter(a => a !== null).length;
-    const progressPercent = (answeredCount / 20) * 100;
-    document.getElementById('progressFill').style.width = `${progressPercent}%`;
-}
-
-// Select answer
-function selectAnswer(questionIndex, optionIndex) {
-    userAnswers[questionIndex] = optionIndex;
-    updateProgress();
-    renderCurrentQuestion();
-}
-
-// Render current question
 function renderCurrentQuestion() {
     if (!currentExamQuestions.length || currentIndex >= currentExamQuestions.length) return;
     
-    const q = currentExamQuestions[currentIndex];
-    const currentAnswer = userAnswers[currentIndex];
+    var q = currentExamQuestions[currentIndex];
+    var currentAnswer = userAnswers[currentIndex];
     
-    document.getElementById('questionText').innerHTML = `${currentIndex + 1}. ${q.text}`;
-    document.getElementById('counter').innerText = `အပုဒ် ${currentIndex + 1} / 20`;
+    var questionText = document.getElementById('questionText');
+    if (questionText) {
+        questionText.innerHTML = (currentIndex + 1) + ". " + q.text;
+    }
     
-    const optionsContainer = document.getElementById('optionsContainer');
+    var counter = document.getElementById('counter');
+    if (counter) {
+        counter.innerText = "Question " + (currentIndex + 1) + " / 20";
+    }
+    
+    var optionsContainer = document.getElementById('optionsContainer');
+    if (!optionsContainer) return;
     optionsContainer.innerHTML = '';
     
-    q.options.forEach((opt, idx) => {
-        const optionDiv = document.createElement('div');
+    for (var idx = 0; idx < q.options.length; idx++) {
+        var opt = q.options[idx];
+        var optionDiv = document.createElement('div');
         optionDiv.className = 'option';
         if (currentAnswer === idx) {
             optionDiv.classList.add('selected');
         }
         
-        const radio = document.createElement('input');
+        var radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = 'question';
         radio.value = idx;
@@ -222,17 +244,18 @@ function renderCurrentQuestion() {
         
         radio.addEventListener('change', (function(optIdx) {
             return function() {
-                selectAnswer(currentIndex, optIdx);
+                if (!isSubmitting) selectAnswer(currentIndex, optIdx);
             };
         })(idx));
         
-        const label = document.createElement('label');
-        label.textContent = `${String.fromCharCode(65+idx)}. ${opt}`;
+        var label = document.createElement('label');
+        var letter = String.fromCharCode(65 + idx);
+        label.textContent = letter + ". " + opt;
         
         optionDiv.addEventListener('click', (function(optIdx) {
             return function(e) {
-                if (e.target.type !== 'radio') {
-                    const radioInput = optionDiv.querySelector('input');
+                if (e.target.type !== 'radio' && !isSubmitting) {
+                    var radioInput = optionDiv.querySelector('input');
                     if (radioInput) {
                         radioInput.checked = true;
                         selectAnswer(currentIndex, optIdx);
@@ -244,60 +267,130 @@ function renderCurrentQuestion() {
         optionDiv.appendChild(radio);
         optionDiv.appendChild(label);
         optionsContainer.appendChild(optionDiv);
-    });
+    }
     
     updateProgress();
 }
 
-// Next question
 async function nextQuestion() {
-    if (userAnswers[currentIndex] === null) {
-        await showCustomAlert("ကျေးဇူးပြု၍ လက်ရှိမေးခွန်းကို ဖြေဆိုပါ။", "warning");
+    if (isSubmitting) {
         return;
     }
     
-    if (currentIndex < 19) {
+    if (userAnswers[currentIndex] === null) {
+        await showCustomAlert("Please answer the current question before proceeding.", "warning");
+        return;
+    }
+    
+    if (currentIndex < 18) {
         currentIndex++;
         renderCurrentQuestion();
         return;
     }
     
+    if (currentIndex === 18) {
+        if (userAnswers[18] !== null) {
+            currentIndex = 19;
+            renderCurrentQuestion();
+        } else {
+            await showCustomAlert("Please answer question 19 before proceeding.", "warning");
+        }
+        return;
+    }
+    
     if (currentIndex === 19) {
         if (isAllAnswered()) {
-            showResult();
+            isSubmitting = true;
+            disableAllNavButtons(true);
+            await showResult();
         } else {
-            await showCustomAlert("ကျေးဇူးပြု၍ မေးခွန်းအားလုံးကို ဖြေဆိုပါ။", "warning");
+            await showCustomAlert("Please answer all questions before submitting.", "warning");
         }
     }
 }
 
-// Prev question
 function prevQuestion() {
+    if (isSubmitting) return;
     if (currentIndex > 0) {
         currentIndex--;
         renderCurrentQuestion();
     }
 }
 
-// Restart exam
 function restartExam() {
-    document.getElementById('resultModal').classList.remove('active');
+    if (isSubmitting) return;
+    
+    var resultModal = document.getElementById('resultModal');
+    if (resultModal) {
+        resultModal.classList.remove('active');
+    }
+    
+    if (typeof resetExamSubmissionFlag === 'function') {
+        resetExamSubmissionFlag();
+    }
+    
     selectExamQuestions();
     currentIndex = 0;
+    isSubmitting = false;
+    disableAllNavButtons(false);
     renderCurrentQuestion();
 }
 
-// Initialize
+function exportToExcel() {
+    if (isSubmitting) return;
+    
+    var csvRows = [];
+    csvRows.push(['Question', 'Your Answer', 'Correct Answer', 'Result']);
+    
+    for (var i = 0; i < currentExamQuestions.length; i++) {
+        var q = currentExamQuestions[i];
+        var userAnswer = userAnswers[i];
+        var isCorrect = (userAnswer === q.correct);
+        var userAnswerText = userAnswer !== null ? q.options[userAnswer] : 'Not answered';
+        var correctAnswerText = q.options[q.correct];
+        var result = isCorrect ? 'Correct' : 'Wrong';
+        
+        csvRows.push([q.text, userAnswerText, correctAnswerText, result]);
+    }
+    
+    var correctCount = 0;
+    for (var j = 0; j < currentExamQuestions.length; j++) {
+        if (userAnswers[j] === currentExamQuestions[j].correct) correctCount++;
+    }
+    csvRows.push([]);
+    csvRows.push(['Total Score', correctCount + ' / 20', '', '']);
+    
+    var csvContent = "";
+    for (var r = 0; r < csvRows.length; r++) {
+        csvContent += csvRows[r].join(',') + "\n";
+    }
+    
+    var blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement('a');
+    var url = URL.createObjectURL(blob);
+    link.href = url;
+    link.setAttribute('download', 'exam_results.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
 function initExam() {
     if (!collectAllQuestions()) return;
     
     selectExamQuestions();
     renderCurrentQuestion();
     
-    document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-    document.getElementById('prevBtn').addEventListener('click', prevQuestion);
-    document.getElementById('restartBtn').addEventListener('click', restartExam);
-    document.getElementById('exportBtn').addEventListener('click', exportToExcel);
+    var nextBtn = document.getElementById('nextBtn');
+    var prevBtn = document.getElementById('prevBtn');
+    var restartBtn = document.getElementById('restartBtn');
+    var exportBtn = document.getElementById('exportBtn');
+    
+    if (nextBtn) nextBtn.addEventListener('click', nextQuestion);
+    if (prevBtn) prevBtn.addEventListener('click', prevQuestion);
+    if (restartBtn) restartBtn.addEventListener('click', restartExam);
+    if (exportBtn) exportBtn.addEventListener('click', exportToExcel);
 }
 
 document.addEventListener('DOMContentLoaded', initExam);

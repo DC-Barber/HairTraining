@@ -9,7 +9,7 @@
 <body>
 <div class="exam-container">
     <div class="exam-header">
-        <h1> ဆံပင်ပညာ အခြေခံစာမေးပွဲ</h1>
+        <h1>Hair Training Exam</h1>
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -18,35 +18,32 @@
         <div class="question-text" id="questionText">Loading...</div>
         <div class="options" id="optionsContainer"></div>
         <div class="nav-buttons">
-            <button class="btn-prev" id="prevBtn">◀ နောက်</button>
-            <button class="btn-next" id="nextBtn">ရှေ့ ▶</button>
+            <button class="btn-prev" id="prevBtn">◀ Previous</button>
+            <button class="btn-next" id="nextBtn">Next ▶</button>
         </div>
-        <div class="question-counter" id="counter">အပုဒ် 0 / 20</div>
+        <div class="question-counter" id="counter">Question 0 / 20</div>
     </div>
 </div>
 
-<!-- Result Modal -->
 <div class="modal" id="resultModal">
     <div class="modal-content">
-        <h2 style="text-align:center;">📊 စာမေးပွဲရလဒ်</h2>
+        <h2 style="text-align:center;">Exam Result</h2>
         <div class="score" id="scoreDisplay">0 / 20</div>
         <div id="mistakeList"></div>
-        <button class="btn-export" id="exportBtn">📥 Download </button>
-        <button class="restart-btn" id="restartBtn">🔄 ပြန်ဖြေမည်</button>
+        <button class="btn-export" id="exportBtn">📥 Download CSV</button>
+        <button class="restart-btn" id="restartBtn">🔄 Retry Exam</button>
     </div>
 </div>
 
-<!-- Custom Alert Overlay -->
 <div id="customAlertOverlay" class="custom-alert-overlay">
     <div class="custom-alert">
         <div class="custom-alert-icon" id="customAlertIcon">⚠️</div>
-        <div class="custom-alert-title" id="customAlertTitle">သတိပြုရန်</div>
+        <div class="custom-alert-title" id="customAlertTitle">Warning</div>
         <div class="custom-alert-message" id="customAlertMessage"></div>
-        <button class="custom-alert-btn" id="customAlertBtn">အိုကေ</button>
+        <button class="custom-alert-btn" id="customAlertBtn">OK</button>
     </div>
 </div>
 
-<!-- Question Files -->
 <script src="questions/topic1.js"></script>
 <script src="questions/topic2.js"></script>
 <script src="questions/topic3.js"></script>
@@ -67,6 +64,7 @@
 <script src="questions/topic18.js"></script>
 <script src="questions/topic19.js"></script>
 <script src="questions/topic20.js"></script>
+<script src="exam-logger.js"></script>
 <script src="exam.js"></script>
 </body>
 </html>
