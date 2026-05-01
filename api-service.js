@@ -10,20 +10,16 @@ const APIService = {
         }
     },
 
-    // ✅ တကယ့် Unique Device ID ရယူခြင်း
     async getDeviceId() {
         try {
-            // FingerprintJS ကို အသုံးပြုပါ
             const fp = await FingerprintJS.load();
             const result = await fp.get();
             return result.visitorId;
         } catch (e) {
-            // Fallback - ပိုမိုကောင်းမွန်တဲ့ method
             return this.getEnhancedFallbackId();
         }
     },
 
-    // ✅ Fallback Device ID (User-Agent ထက် ပိုကောင်းတယ်)
     getEnhancedFallbackId() {
         const components = [
             navigator.userAgent,
@@ -38,7 +34,6 @@ const APIService = {
             !!navigator.maxTouchPoints
         ];
         
-        // Simple hash function
         let hash = 0;
         const str = components.join('|');
         for (let i = 0; i < str.length; i++) {
@@ -71,5 +66,46 @@ const APIService = {
             body: JSON.stringify(payload)
         });
         return await res.json();
+    },
+
+ // api-service.js - uploadProfilePicture function (with CORS proxy)
+
+async uploadProfilePicture(file, username, fullname) {
+    try {
+        // File to Base64
+        const base64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+        });
+        
+        const deviceId = localStorage.getItem('device_id') || await this.getDeviceId();
+        
+        // ✅ CORS proxy ကိုသုံးပါ
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+        const targetUrl = CONFIG.IMGBB_PROXY_URL;
+        
+        const response = await fetch(CORS_PROXY + targetUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                imageBase64: base64,
+                username: username,
+                fullname: fullname || '',
+                deviceId: deviceId
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.imageUrl) {
+            return { success: true, imageUrl: result.imageUrl };
+        } else {
+            return { success: false, error: result.message || 'Upload failed' };
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        return { success: false, error: error.message };
     }
+}
 };

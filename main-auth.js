@@ -60,13 +60,56 @@ async function handleAuthSubmit() {
 
 function setupProfileSystem() {
     const profileBtn = document.getElementById('profile-icon-btn');
-    const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+    
+    // Profile modal ထဲက elements တွေ မရှိသေးရင် ထပ်မလုပ်ပါနဲ့
+    const profileImg = document.getElementById('profile-img');
+    const uploadStatus = document.getElementById('upload-status');
+    const fileInput = document.getElementById('profile-upload');
+    
+    // Profile picture နဲ့ upload input မရှိရင် ထွက်ပါ
+    if (!profileImg || !fileInput || !uploadStatus) return;
 
     if (profileBtn) {
         profileBtn.onclick = function() {
+            const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+            
             if(document.getElementById('p-fullname')) document.getElementById('p-fullname').innerText = userData.fullname || '-';
             if(document.getElementById('p-username')) document.getElementById('p-username').innerText = userData.username || '-';
             if(document.getElementById('p-phone')) document.getElementById('p-phone').innerText = userData.phone || '-';
+            
+            // Profile Picture ပြသရန်
+            if (userData.profilePic) {
+                profileImg.src = userData.profilePic;
+            } else {
+                profileImg.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%231e3a5f\'/%3E%3Ctext x=\'50\' y=\'67\' text-anchor=\'middle\' fill=\'white\' font-size=\'40\'%3E👤%3C/text%3E%3C/svg%3E';
+            }
+            
+            // Upload handler ကို ပြန်သတ်မှတ်ပါ
+            fileInput.onchange = async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                // Show local preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImg.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                
+                uploadStatus.innerHTML = '<span style="color:blue;">⏳ ပုံတင်နေသည်...</span>';
+                
+                const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+                const result = await APIService.uploadProfilePicture(file, userData.username, userData.fullname);
+                
+                if (result.success) {
+                    userData.profilePic = result.imageUrl;
+                    localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
+                    uploadStatus.innerHTML = '<span style="color:green;">✅ ပုံတင်ခြင်း အောင်မြင်ပါသည်။</span>';
+                    setTimeout(() => uploadStatus.innerHTML = '', 3000);
+                } else {
+                    uploadStatus.innerHTML = '<span style="color:red;">❌ ပုံတင်ခြင်း မအောင်မြင်ပါ။</span>';
+                }
+            };
             
             const overlay = document.getElementById('profile-overlay');
             if (overlay) overlay.style.display = 'block';
