@@ -1,6 +1,4 @@
-
-
-// chat/chat-loader.js - Background Sync & Unread Badge
+// chat/chat-loader.js - Optimized Background Sync
 (function() {
     'use strict';
     
@@ -9,8 +7,9 @@
     let isSyncing = false;
     let messageContainer = null;
     let isChatOpen = false;
+    let initialLoadDone = false;
     
-    // Update unread badge on profile icon
+    // Update unread badge
     async function updateBadge() {
         const user = window.ChatAPI?.getCurrentUser();
         if (!user) return;
@@ -29,7 +28,7 @@
                         background: #dc3545; color: white; border-radius: 50%;
                         min-width: 18px; height: 18px; font-size: 10px;
                         display: flex; align-items: center; justify-content: center;
-                        padding: 0 4px; font-weight: bold;
+                        padding: 0 4px;
                     `;
                     profileIcon.style.position = 'relative';
                     profileIcon.appendChild(badge);
@@ -40,13 +39,11 @@
                 const badge = document.getElementById('unread-badge');
                 if (badge) badge.style.display = 'none';
             }
-        } catch(e) {
-            console.error('Badge update error:', e);
-        }
+        } catch(e) {}
     }
     
-    // Sync new messages from server
-    async function syncMessages() {
+    // Sync new messages
+    async function syncMessages(forceRefresh = false) {
         if (isSyncing) return;
         isSyncing = true;
         
@@ -54,26 +51,33 @@
             const newMessages = await window.ChatAPI.getNewMessages(lastTimestamp);
             
             if (newMessages && newMessages.length > 0) {
-                console.log(`Synced ${newMessages.length} new messages`);
-                
                 // Update last timestamp
                 const newestMsg = newMessages[newMessages.length - 1];
                 if (newestMsg && newestMsg.timestamp > lastTimestamp) {
                     lastTimestamp = newestMsg.timestamp;
                 }
                 
-                // Update cache
+                // Update cache by merging
                 const cached = window.ChatCache.get();
-                const allMessages = [...(cached || []), ...newMessages];
+                let allMessages = cached ? [...cached] : [];
+                
+                // Add only new messages (avoid duplicates)
+                for (const msg of newMessages) {
+                    if (!window.ChatCache.hasMessage(msg.id)) {
+                        allMessages.push(msg);
+                    }
+                }
+                
+                // Sort by timestamp
+                allMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                 window.ChatCache.set(allMessages);
                 
-                // If chat is open, append to UI without clearing
+                // Update UI if chat is open
                 if (isChatOpen && messageContainer) {
                     window.ChatUI.appendNewMessages(newMessages, messageContainer);
                 }
                 
-                // Update badge
-                await updateBadge();
+                updateBadge();
             }
         } catch(e) {
             console.error('Sync error:', e);
@@ -82,76 +86,119 @@
         }
     }
     
-    // Initialize background sync
-    async function initBackgroundSync() {
+    // Load initial data (fast - from cache first)
+    async function loadInitialData() {
+        if (initialLoadDone) return;
+        
         const user = window.ChatAPI?.getCurrentUser();
         if (!user) return;
         
-        // Load from cache first
-        const cached = window.ChatCache.get();
-        if (cached && cached.length > 0) {
+        // IMMEDIATE: Show cached messages (0ms delay)
+        const cached = window.ChatCache.getSync();
+        if (cached.length > 0) {
             lastTimestamp = window.ChatCache.getLastTimestamp();
-            console.log(`Loaded ${cached.length} messages from cache`);
         }
         
-        // Initial sync from server
-        await syncMessages();
+        // If chat is open, display immediately
+        if (isChatOpen && messageContainer) {
+            if (cached.length > 0) {
+                window.ChatUI.loadAllMessages(cached, messageContainer);
+            } else {
+                window.ChatUI.showLoading(messageContainer, 'Loading...');
+            }
+        }
         
-        // Start periodic sync every 5 seconds
-        if (syncInterval) clearInterval(syncInterval);
-        syncInterval = setInterval(syncMessages, 5000);
+        // Then fetch latest from server (fast)
+        try {
+            const newMessages = await window.ChatAPI.getNewMessages(lastTimestamp);
+            if (newMessages && newMessages.length > 0) {
+                const newestMsg = newMessages[newMessages.length - 1];
+                if (newestMsg && newestMsg.timestamp > lastTimestamp) {
+                    lastTimestamp = newestMsg.timestamp;
+                }
+                
+                // Merge and cache
+                const cached = window.ChatCache.getSync();
+                let allMessages = [...cached];
+                for (const msg of newMessages) {
+                    if (!window.ChatCache.hasMessage(msg.id)) {
+                        allMessages.push(msg);
+                    }
+                }
+                allMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                window.ChatCache.set(allMessages);
+                
+                // Update UI if chat is open
+                if (isChatOpen && messageContainer) {
+                    window.ChatUI.appendNewMessages(newMessages, messageContainer);
+                } else if (newMessages.length > 0) {
+                    updateBadge();
+                }
+            }
+        } catch(e) {
+            console.error('Initial fetch error:', e);
+        }
         
-        console.log('Background sync started');
+        initialLoadDone = true;
     }
     
-    // Register chat open/close
+    // Start background sync
+    async function startBackgroundSync() {
+        const user = window.ChatAPI?.getCurrentUser();
+        if (!user) return;
+        
+        // Load initial data
+        await loadInitialData();
+        
+        // Auto sync every 3 seconds (faster)
+        if (syncInterval) clearInterval(syncInterval);
+        syncInterval = setInterval(syncMessages, 3000);
+        
+        console.log('Background sync started (3s interval)');
+    }
+    
+    // Register chat events
     window.ChatEvents = {
         onChatOpen: function(container) {
             isChatOpen = true;
             messageContainer = container;
             
-            // Load from cache immediately
-            const cached = window.ChatCache.get();
-            if (cached && cached.length > 0) {
+            // Display cached messages immediately
+            const cached = window.ChatCache.getSync();
+            if (cached.length > 0) {
                 window.ChatUI.loadAllMessages(cached, container);
-                
-                // Update last timestamp
-                const newestMsg = cached[cached.length - 1];
-                if (newestMsg && newestMsg.timestamp > lastTimestamp) {
-                    lastTimestamp = newestMsg.timestamp;
-                }
             } else {
-                window.ChatUI.showLoading(container);
+                window.ChatUI.showLoading(container, 'Loading messages...');
             }
             
             // Then sync latest
-            syncMessages().then(() => {
-                // Refresh UI with latest after sync
-                const latestCache = window.ChatCache.get();
-                if (latestCache && latestCache.length > 0) {
-                    window.ChatUI.loadAllMessages(latestCache, container);
+            syncMessages(true).then(async () => {
+                const updated = window.ChatCache.getSync();
+                if (updated.length > 0) {
+                    window.ChatUI.loadAllMessages(updated, container);
                 } else {
                     window.ChatUI.showEmpty(container);
                 }
+                updateBadge();
             });
         },
         
         onChatClose: function() {
             isChatOpen = false;
             messageContainer = null;
-            updateBadge(); // Refresh badge when chat closes
+            updateBadge();
         }
     };
     
-    // Start background sync when page loads
+    // Start when ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initBackgroundSync);
+        document.addEventListener('DOMContentLoaded', startBackgroundSync);
     } else {
-        initBackgroundSync();
+        startBackgroundSync();
     }
     
-    // Also update badge periodically
-    setInterval(updateBadge, 10000);
+    // Update badge every 5 seconds
+    setInterval(updateBadge, 5000);
     
-    console.log('Chat loader (background sync) loaded');
+    console.log('Optimized chat loader started');
 })();

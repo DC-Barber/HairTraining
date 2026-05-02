@@ -1,14 +1,10 @@
-
-
-// chat/chat-core.js - API Communication Layer
+// chat/chat-core.js - Fixed (with fallback URL)
 (function() {
     'use strict';
     
-    let currentUser = null;
-    let pendingCallbacks = [];
-    let isConnected = true;
+    // ✅ Fallback URL (သင်၏ Apps Script URL - ဒီမှာ ထည့်ပါ)
+    const FALLBACK_API_URL = 'https://script.google.com/macros/s/AKfycbwXStl6JCMGh-LthuAuQqRcnm4_TdM9E83ymRfE3oW3AYajyRN_v15PF7xdXo4Y6wvxfA/exec';
     
-    // Helper: Get current user
     function getCurrentUser() {
         try {
             const data = localStorage.getItem('hair_user_data');
@@ -18,7 +14,6 @@
         }
     }
     
-    // Helper: Escape HTML
     function escapeHtml(text) {
         if (!text) return '';
         return text.replace(/[&<>]/g, function(m) {
@@ -29,32 +24,38 @@
         });
     }
     
-    // Helper: Format time
     function formatTime(ts) {
         if (!ts) return '';
         try {
             const d = new Date(ts);
-            const now = new Date();
-            const isToday = d.toDateString() === now.toDateString();
-            if (isToday) {
-                return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            } else {
-                return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
-            }
+            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         } catch(e) {
             return '';
         }
     }
     
-    // Main API caller
-    async function callApi(action, data = {}) {
+    // ✅ Get API URL with fallback
+    function getApiUrl() {
+        if (window.CONFIG && window.CONFIG.CHAT_API_URL) {
+            console.log('Using CONFIG.CHAT_API_URL');
+            return window.CONFIG.CHAT_API_URL;
+        }
+        console.log('Using FALLBACK_API_URL');
+        return FALLBACK_API_URL;
+    }
+    
+    // API caller with retry
+    async function callApi(action, data = {}, retryCount = 0) {
         const user = getCurrentUser();
         if (!user) return { success: false, message: 'Not logged in' };
         
-        const API_URL = window.CONFIG?.CHAT_API_URL;
+        const API_URL = getApiUrl();
         if (!API_URL) return { success: false, message: 'API URL not configured' };
         
+        console.log(`Calling API: ${action} to ${API_URL.substring(0, 60)}...`);
+        
         const payload = { action: action, username: user.username, ...data };
+        const maxRetries = 2;
         
         try {
             const controller = new AbortController();
@@ -66,17 +67,30 @@
                 signal: controller.signal
             });
             clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+                if (response.status === 429 && retryCount < maxRetries) {
+                    await new Promise(r => setTimeout(r, 2000));
+                    return callApi(action, data, retryCount + 1);
+                }
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
             return await response.json();
         } catch(e) {
             console.error(`API call ${action} failed:`, e);
-            isConnected = false;
-            setTimeout(() => { isConnected = true; }, 5000);
+            
+            if (retryCount < maxRetries) {
+                await new Promise(r => setTimeout(r, 2000));
+                return callApi(action, data, retryCount + 1);
+            }
+            
             return { success: false, message: e.message };
         }
     }
     
     // Compress image
-    async function compressImage(file, maxWidth = 800, maxHeight = 800) {
+    async function compressImage(file, maxWidth = 600, maxHeight = 600) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -107,12 +121,10 @@
         });
     }
     
-    // Expose public API
     window.ChatAPI = {
         getCurrentUser: getCurrentUser,
         escapeHtml: escapeHtml,
         formatTime: formatTime,
-        isConnected: () => isConnected,
         
         sendMessage: async function(message) {
             const user = getCurrentUser();
@@ -129,7 +141,7 @@
             if (!user) return { success: false, error: 'Not logged in' };
             
             if (!file.type.startsWith('image/')) {
-                return { success: false, error: 'Please select an image file' };
+                return { success: false, error: 'Please select an image' };
             }
             if (file.size > 2 * 1024 * 1024) {
                 return { success: false, error: 'Image must be less than 2MB' };
@@ -161,8 +173,7 @@
         getNewMessages: async function(lastTimestamp) {
             const result = await callApi('getMessages', { lastTimestamp: lastTimestamp });
             if (result.success && result.messages) {
-                // Mark as read automatically when fetching
-                await callApi('markAsRead', {});
+                callApi('markAsRead', {}).catch(() => {});
                 return result.messages;
             }
             return [];
@@ -179,5 +190,5 @@
         }
     };
     
-    console.log('Chat core loaded');
+    console.log('Chat core loaded with fallback URL');
 })();
