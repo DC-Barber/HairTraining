@@ -43,12 +43,14 @@
     <div class="profile-modal">
         <button id="close-profile" class="close-profile-btn">✕</button>
         
-        <!-- Profile Picture -->
+        <!-- Profile Picture Upload Section -->
         <div style="position: relative; width: 100px; height: 100px; margin: 0 auto 15px auto;">
             <img id="profile-img" 
                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%231e3a5f'/%3E%3Ctext x='50' y='67' text-anchor='middle' fill='white' font-size='40'%3E👤%3C/text%3E%3C/svg%3E" 
                  style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #1e3a5f;">
-            <label for="profile-upload" style="position: absolute; bottom: 5px; right: 0; background: #1e3a5f; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 16px;">📷</label>
+            <label for="profile-upload" style="position: absolute; bottom: 5px; right: 0; background: #1e3a5f; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 16px;">
+                📷
+            </label>
             <input type="file" id="profile-upload" accept="image/jpeg, image/png, image/jpg" style="display: none;">
         </div>
         <div id="upload-status" style="font-size: 11px; min-height: 30px; margin-bottom: 10px;"></div>
@@ -56,14 +58,7 @@
         <h3 id="p-fullname" class="profile-name">-</h3>
         <p class="profile-username">@<span id="p-username">-</span></p>
         <hr class="profile-divider">
-        
-        <!-- ✅ Barber Network Button -->
-        <button id="barber-network-btn" style="background: #2e7d32; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            🌐 Barber Network
-        </button>
-        
-        <!-- Phone (Hidden by default, show only for friends) -->
-        <div id="phone-container" class="profile-info" style="display: none;">
+        <div class="profile-info">
             <div>📞 <b>Phone:</b> <span id="p-phone">-</span></div>
         </div>
         
@@ -73,104 +68,13 @@
         <button onclick="window.logout()" class="logout-btn">🚪 Logout</button>
     </div>
 </div>
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script src="script.js"></script>
+    <script src="config.js"></script>
+    <script src="validation.js"></script>
+    <script src="api-service.js"></script>
+    <script src="ui-auth.js"></script>
+    <script src="main-auth.js"></script>
 
-<!-- Chat Widget Container -->
-<div id="chat-container" style="display: none;"></div>
-
-<!-- Scripts -->
-    <script>
-// Barber Network Button Handler
-document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit for elements to load
-    setTimeout(function() {
-        const barberBtn = document.getElementById('barber-network-btn');
-        if (barberBtn) {
-            console.log('Barber button found!');
-            barberBtn.onclick = function() {
-                console.log('Barber button clicked!');
-                openChatWindow();
-            };
-        } else {
-            console.log('Barber button not found yet, retrying...');
-            // Try again after 1 second
-            setTimeout(function() {
-                const btn = document.getElementById('barber-network-btn');
-                if (btn) {
-                    btn.onclick = openChatWindow;
-                }
-            }, 1000);
-        }
-    }, 500);
-});
-
-// Open chat window function
-function openChatWindow() {
-    console.log('Opening chat window...');
-    
-    // Check if chat container exists
-    let chatContainer = document.getElementById('chat-container');
-    if (!chatContainer) {
-        chatContainer = document.createElement('div');
-        chatContainer.id = 'chat-container';
-        document.body.appendChild(chatContainer);
-    }
-    
-    // Check if chat is already open
-    if (chatContainer.style.display === 'block') {
-        console.log('Chat already open');
-        return;
-    }
-    
-    // Load chat HTML
-    fetch('chat/chat.html')
-        .then(response => response.text())
-        .then(html => {
-            chatContainer.innerHTML = html;
-            chatContainer.style.display = 'block';
-            
-            // Load chat CSS if not already loaded
-            if (!document.querySelector('link[href="chat/chat.css"]')) {
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = 'chat/chat.css';
-                document.head.appendChild(link);
-            }
-            
-            // Initialize chat after loading
-            if (typeof initChat === 'function') {
-                initChat();
-            } else {
-                // If initChat not defined, reload scripts
-                const script = document.createElement('script');
-                script.src = 'chat/chat.js';
-                document.head.appendChild(script);
-            }
-        })
-        .catch(err => {
-            console.error('Failed to load chat:', err);
-            alert('Chat feature is loading. Please try again in a moment.');
-        });
-}
-
-// Make function global
-window.openChatWindow = openChatWindow;
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-<script src="config.js"></script>
-<script src="validation.js"></script>
-<script src="api-service.js"></script>
-<script src="ui-auth.js"></script>
-<script src="main-auth.js"></script>
-<script src="script.js"></script>
-
-<!-- ✅ New Chat & Profile Scripts -->
-<script src="profile/profile-view.js"></script>
-
-<!-- ✅ New Chat Scripts (order matters) -->
-<script src="chat/chat-cache.js"></script>
-<script src="chat/chat-core.js"></script>
-<script src="chat/chat-ui.js"></script>
-<script src="chat/chat-loader.js"></script>
-<script src="chat/chat.js"></script>  
 </body>
 </html>
