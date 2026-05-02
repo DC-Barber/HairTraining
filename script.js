@@ -1674,7 +1674,6 @@ Highlight ပုံစံ အချောင်းရွေးထုတ်ခြ
 </div>`, img: "" },
     ];
 
-
 // DOM
 const pagesWrapper = document.getElementById('pages-wrapper');
 const headerPageNum = document.getElementById('header-page-num');
@@ -1688,46 +1687,6 @@ const tocList = document.getElementById('toc-list');
 
 let currentPage = 1;
 const totalPages = 42;
-
-// ========== ✅ CHAT NOTIFICATION FUNCTION (တစ်ကြိမ်ပဲရှိတယ်) ==========
-async function checkNewMessages() {
-    // Chat page ဖွင့်ထားရင် badge အသစ်မပြပါနဲ့
-    if (document.getElementById('chat-page')) return;
-    
-    // CHAT_API_URL မရှိရင် ထွက်ပါ
-    if (!CONFIG.CHAT_API_URL) return;
-    
-    try {
-        const response = await fetch(CONFIG.CHAT_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'load' })
-        });
-        const data = await response.json();
-        
-        if (data.messages) {
-            const lastSeen = localStorage.getItem('last_seen_chat') || '0';
-            const newMessages = data.messages.filter(msg => {
-                return new Date(msg.timestamp).getTime() > parseInt(lastSeen);
-            }).length;
-            
-            const badge = document.getElementById('message-badge');
-            if (badge) {
-                if (newMessages > 0) {
-                    badge.style.display = 'flex';
-                    badge.innerText = newMessages > 99 ? '99+' : newMessages;
-                } else {
-                    badge.style.display = 'none';
-                }
-            }
-        }
-    } catch (error) {
-        console.error("Check messages error:", error);
-    }
-}
-
-// ========== ✅ 5 စက္ကန့်တစ်ခါ check လုပ်ပါ ==========
-setInterval(checkNewMessages, 5000);
 
 // Page Header
 function renderAllPages() {
@@ -1760,7 +1719,7 @@ function updatePageUI(pageNum) {
     headerPageNum.innerText = `${pageNum} / ${totalPages}`;
 }
 
-// Build TOC
+// Build
 function buildTOC() {
     tocList.innerHTML = '';
     pagesData.forEach(p => {
@@ -1774,7 +1733,7 @@ function buildTOC() {
     });
 }
 
-// Swipe
+// touchStartX
 let touchStartX = 0;
 const bookContainer = document.querySelector('.book-container');
 function initSwipe() {
@@ -1818,7 +1777,7 @@ function bindEvents() {
     });
 }
 
-// Init
+// ***
 function init() {
     renderAllPages();
     buildTOC();

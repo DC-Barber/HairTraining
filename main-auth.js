@@ -125,114 +125,6 @@ function setupProfileSystem() {
     }
 }
 
-// ========== ✅ CHAT SYSTEM အတွက် ထပ်ထည့်ရမယ့် အပိုင်း ==========
-
-// Barber Network Button ကို Profile Modal ထဲထည့်ဖို့
-function injectBarberButton() {
-    // Button ရှိပြီးသားလား စစ်ပါ
-    if (document.getElementById('barber-network-btn')) return;
-    
-    // Exam button ကိုရှာပါ (တစ်ခါတစ်ရံ မပေါ်သေးရင် စောင့်ပါ)
-    const examBtn = document.querySelector('#profile-overlay button[onclick="openExam()"]');
-    if (!examBtn) return;
-    
-    // Barber Network button ကိုဖန်တီးပါ
-    const barberBtn = document.createElement('button');
-    barberBtn.id = 'barber-network-btn';
-    barberBtn.innerHTML = '💬 Barber Network';
-    barberBtn.style.cssText = 'background: #2980b9; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 12px;';
-    barberBtn.onclick = function() {
-        document.getElementById('profile-overlay').style.display = 'none';
-        if (typeof openChatPage === 'function') {
-            openChatPage();
-        } else {
-            console.error('openChatPage function not found');
-        }
-    };
-    
-    // Exam button ရဲ့ နောက်မှာ ထည့်ပါ
-    examBtn.insertAdjacentElement('afterend', barberBtn);
-}
-
-// Profile modal ပွင့်တိုင်း Barber Button ထည့်ဖို့
-function observeProfileModal() {
-    // ရှိပြီးသား overlay ကို စောင့်ကြည့်မယ်
-    const observer = new MutationObserver(function(mutations) {
-        const overlay = document.getElementById('profile-overlay');
-        if (overlay && overlay.style.display === 'block') {
-            // button ထည့်ဖို့ နည်းနည်းနောက်ကျပြီးမှ လုပ်ပါ
-            setTimeout(() => {
-                injectBarberButton();
-            }, 150);
-        }
-    });
-    
-    observer.observe(document.body, { childList: true, subtree: true });
-}
-
-// Badge ကို Profile Icon မှာ ထည့်ဖို့
-function injectBadge() {
-    if (document.getElementById('message-badge')) return;
-    
-    const profileIcon = document.getElementById('profile-icon-btn');
-    if (!profileIcon) return;
-    
-    const parentDiv = profileIcon.parentElement;
-    if (!parentDiv) return;
-    
-    // Badge container ကိုဖန်တီးပါ
-    const badgeContainer = document.createElement('div');
-    badgeContainer.style.position = 'relative';
-    badgeContainer.style.display = 'inline-block';
-    
-    // Profile icon ကို container ထဲထည့်ပါ
-    parentDiv.insertBefore(badgeContainer, profileIcon);
-    badgeContainer.appendChild(profileIcon);
-    
-    // Badge ကိုထည့်ပါ
-    const badge = document.createElement('span');
-    badge.id = 'message-badge';
-    badge.style.cssText = 'position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border-radius: 50%; min-width: 18px; height: 18px; font-size: 10px; display: none; align-items: center; justify-content: center; padding: 0 4px; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.3);';
-    badge.innerText = '0';
-    badgeContainer.appendChild(badge);
-}
-
-// Chat message badge ကို အချိန်နဲ့တပြေးညီ update လုပ်ဖို့
-let chatLoadInterval = null;
-
-async function loadChatMessagesForBadge() {
-    if (!CONFIG.CHAT_API_URL) return;
-    
-    try {
-        const response = await fetch(CONFIG.CHAT_API_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'load' })
-        });
-        const data = await response.json();
-        
-        if (data.messages) {
-            const lastSeen = localStorage.getItem('last_seen_chat') || '0';
-            const newMessages = data.messages.filter(msg => new Date(msg.timestamp).getTime() > parseInt(lastSeen)).length;
-            const badge = document.getElementById('message-badge');
-            
-            if (badge) {
-                if (newMessages > 0 && !document.getElementById('chat-page')) {
-                    badge.style.display = 'flex';
-                    badge.innerText = newMessages > 99 ? '99+' : newMessages;
-                } else {
-                    badge.style.display = 'none';
-                }
-            }
-        }
-    } catch (error) {
-        console.error("Load messages for badge error:", error);
-    }
-}
-
-// ========== မူရင်း Functions (အတိုင်းသား) ==========
-
 // စာမေးပွဲ စတင်ရန် function
 window.openExam = () => {
     window.location.href = 'exam/exam.html';
@@ -243,31 +135,11 @@ window.logout = () => {
     location.reload(); 
 };
 
-// ========== ✅ Chat Functions ကို window မှာ ထည့်ပါ (chat.js ရှိရင် သုံးမယ်) ==========
-window.openChatPage = window.openChatPage || function() {
-    console.log("openChatPage will be loaded from chat.js");
-};
-
-// ========== ✅ INIT FUNCTION (မူရင်းအတိုင်း + ထပ်ထည့်တာ) ==========
 (function init() {
     const expiry = localStorage.getItem(CONFIG.AUTH_EXPIRY_KEY);
     const isAuth = expiry && new Date().getTime() < parseInt(expiry);
-    
     if (isAuth) {
         setupProfileSystem();
-        
-        // ✅ Chat system အတွက် ထပ်ထည့်တာများ
-        setTimeout(() => {
-            injectBadge();
-            observeProfileModal();
-            injectBarberButton();
-            
-            // Badge ကို 5 စက္ကန့်တစ်ခါ update လုပ်ပါ
-            loadChatMessagesForBadge();
-            if (chatLoadInterval) clearInterval(chatLoadInterval);
-            chatLoadInterval = setInterval(loadChatMessagesForBadge, 5000);
-        }, 500);
-        
     } else {
         UIAuth.showModal(handleAuthSubmit);
     }

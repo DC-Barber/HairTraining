@@ -68,7 +68,7 @@ const APIService = {
         return await res.json();
     },
 
- // api-service.js - ImgBB တိုက်ရိုက်သုံးနည်း
+ // api-service.js - uploadProfilePicture function (with CORS proxy)
 
 async uploadProfilePicture(file, username, fullname) {
     try {
@@ -79,37 +79,29 @@ async uploadProfilePicture(file, username, fullname) {
             reader.onload = () => resolve(reader.result.split(',')[1]);
         });
         
-        // ✅ ImgBB တိုက်ရိုက် (CORS proxy မလို)
-        const formData = new FormData();
-        formData.append('image', base64);
-        formData.append('key', CONFIG.IMGBB_API_KEY);
+        const deviceId = localStorage.getItem('device_id') || await this.getDeviceId();
         
-        const response = await fetch('https://api.imgbb.com/1/upload', {
+        // ✅ CORS proxy ကိုသုံးပါ
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+        const targetUrl = CONFIG.IMGBB_PROXY_URL;
+        
+        const response = await fetch(CORS_PROXY + targetUrl, {
             method: 'POST',
-            body: formData
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                imageBase64: base64,
+                username: username,
+                fullname: fullname || '',
+                deviceId: deviceId
+            })
         });
         
         const result = await response.json();
         
-        if (result.success) {
-            const imageUrl = result.data.url;
-            
-            // Optional: Store to your Apps Script
-            const deviceId = localStorage.getItem('device_id') || await this.getDeviceId();
-            const storeResponse = await fetch(CONFIG.IMGBB_PROXY_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    imageUrl: imageUrl,
-                    username: username,
-                    fullname: fullname || '',
-                    deviceId: deviceId
-                })
-            });
-            
-            return { success: true, imageUrl: imageUrl };
+        if (result.success && result.imageUrl) {
+            return { success: true, imageUrl: result.imageUrl };
         } else {
-            return { success: false, error: result.error?.message || 'Upload failed' };
+            return { success: false, error: result.message || 'Upload failed' };
         }
     } catch (error) {
         console.error('Upload error:', error);
