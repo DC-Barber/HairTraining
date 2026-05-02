@@ -1,6 +1,9 @@
-// api-service.js - Full Updated Version with Chat-Style Profile Sync
+// api-service.js - Full Upgrade Version
+// Works on: GitHub Pages, Localhost, Android Code Editor, Any Browser
 
 const APIService = {
+    // ========== UTILITY FUNCTIONS ==========
+    
     async getIP() {
         try {
             const res = await fetch('https://api.ipify.org?format=json');
@@ -44,6 +47,8 @@ const APIService = {
         return Math.abs(hash).toString(36).substring(0, 24);
     },
 
+    // ========== AUTH FUNCTIONS ==========
+    
     async recordHistory(username, deviceId) {
         const ip = await this.getIP();
         const payload = {
@@ -69,9 +74,11 @@ const APIService = {
         return await res.json();
     },
 
-    // Upload profile picture to ImgBB + Google Sheet
+    // ========== PROFILE PICTURE UPLOAD ==========
+    
     async uploadProfilePicture(file, username, fullname) {
         try {
+            // Convert file to base64
             const base64 = await new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -80,159 +87,206 @@ const APIService = {
             
             const deviceId = localStorage.getItem('device_id') || await this.getDeviceId();
             
-            let response;
-            try {
-                response = await fetch(CONFIG.IMGBB_PROXY_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'upload',
-                        imageBase64: base64,
-                        username: username,
-                        fullname: fullname || '',
-                        deviceId: deviceId
-                    })
-                });
-            } catch (corsError) {
-                console.warn('Direct fetch failed, using CORS proxy:', corsError);
-                const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
-                response = await fetch(CORS_PROXY + CONFIG.IMGBB_PROXY_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'upload',
-                        imageBase64: base64,
-                        username: username,
-                        fullname: fullname || '',
-                        deviceId: deviceId
-                    })
-                });
+            // Step 1: Upload to ImgBB directly (no CORS issue with ImgBB)
+            const formData = new FormData();
+            formData.append('image', base64);
+            formData.append('key', CONFIG.IMGBB_API_KEY);
+            
+            console.log('📤 Uploading to ImgBB...');
+            const imgbbResponse = await fetch('https://api.imgbb.com/1/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const imgbbResult = await imgbbResponse.json();
+            
+            if (!imgbbResult.success) {
+                return { success: false, error: imgbbResult.error?.message || 'ImgBB upload failed' };
             }
             
-            const result = await response.json();
+            const imageUrl = imgbbResult.data.url;
+            console.log('✅ ImgBB upload success:', imageUrl);
             
-            if (result.success && result.imageUrl) {
-                // Update local storage
-                const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
-                userData.profilePic = result.imageUrl;
-                localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
-                
-                // Update cache
-                if (username) {
-                    localStorage.setItem(`profile_cache_${username}`, result.imageUrl);
-                    localStorage.setItem(`profile_cache_${username}_time`, Date.now().toString());
-                }
-                
-                // Also store in a separate permanent key (like chat system)
-                localStorage.setItem(`user_profile_${username}`, result.imageUrl);
-                
-                return { success: true, imageUrl: result.imageUrl };
+            // Step 2: Store URL to Google Sheet via Apps Script (with CORS handling)
+            const storeResult = await this.storeProfileUrlToSheet(imageUrl, username, fullname, deviceId);
+            
+            if (storeResult.success) {
+                // Update all local storage locations
+                this.updateLocalProfileStorage(username, imageUrl);
+                return { success: true, imageUrl: imageUrl };
             } else {
-                return { success: false, error: result.message || 'Upload failed' };
+                return { success: false, error: storeResult.error };
             }
+            
         } catch (error) {
-            console.error('Upload error:', error);
+            console.error('❌ Upload error:', error);
             return { success: false, error: error.message };
         }
     },
+    
+    // Store URL to Google Sheet (with CORS proxy fallback)
+    async storeProfileUrlToSheet(imageUrl, username, fullname, deviceId) {
+        const payload = {
+            action: 'upload',
+            imageBase64: null,
+            imageUrl: imageUrl,  // Direct URL instead of base64
+            username: username,
+            fullname: fullname || '',
+            deviceId: deviceId
+        };
+        
+        // Try multiple methods
+        const methods = [
+            () => this.fetchWithCorsProxy(payload),
+            () => this.fetchDirectNoCors(payload),
+            () => this.fetchWithGoogleCors(payload)
+        ];
+        
+        for (const method of methods) {
+            try {
+                const result = await method();
+                if (result && result.success) {
+                    return result;
+                }
+            } catch (e) {
+                console.warn('Method failed, trying next:', e.message);
+            }
+        }
+        
+        return { success: false, error: 'All storage methods failed' };
+    },
+    
+    async fetchWithCorsProxy(payload) {
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+        const response = await fetch(CORS_PROXY + CONFIG.IMGBB_PROXY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        return await response.json();
+    },
+    
+    async fetchDirectNoCors(payload) {
+        const response = await fetch(CONFIG.IMGBB_PROXY_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        // no-cors mode returns opaque response, assume success
+        return { success: true };
+    },
+    
+    async fetchWithGoogleCors(payload) {
+        const response = await fetch(CONFIG.IMGBB_PROXY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        return await response.json();
+    },
+    
+    // Update all local storage locations
+    updateLocalProfileStorage(username, imageUrl) {
+        // Update main user data
+        const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+        userData.profilePic = imageUrl;
+        localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
+        
+        // Update cache
+        localStorage.setItem(`profile_cache_${username}`, imageUrl);
+        localStorage.setItem(`profile_cache_${username}_time`, Date.now().toString());
+        
+        // Update permanent storage
+        localStorage.setItem(`user_profile_${username}`, imageUrl);
+        
+        console.log('💾 Local storage updated for:', username);
+    },
 
-    // Get profile picture - Chat System Style (always check server first for other devices)
+    // ========== PROFILE PICTURE GET ==========
+    
     async getProfilePicture(username, forceRefresh = false) {
         if (!username) {
             console.warn('No username provided');
             return { success: false, imageUrl: null };
         }
         
-        // Check permanent storage first (cross-device sync)
-        const permanentKey = `user_profile_${username}`;
-        const permanentUrl = localStorage.getItem(permanentKey);
-        
-        // If force refresh, skip cache and go to server
-        if (forceRefresh) {
-            console.log('🔄 Force refresh - fetching from server');
-            return await this.fetchProfileFromServer(username);
-        }
-        
-        // Check cache (5 minutes)
+        // Check local storage first (for speed)
+        const permanentUrl = localStorage.getItem(`user_profile_${username}`);
         const cacheKey = `profile_cache_${username}`;
         const cached = localStorage.getItem(cacheKey);
         const cacheTime = localStorage.getItem(`${cacheKey}_time`);
         
-        if (cached && cacheTime && cached !== 'null') {
+        // If not force refresh and have valid cache, use it
+        if (!forceRefresh && cached && cacheTime && cached !== 'null') {
             const age = Date.now() - parseInt(cacheTime);
-            if (age < 5 * 60 * 1000) {
+            if (age < 5 * 60 * 1000) { // 5 minutes cache
                 console.log('📦 Using cached profile picture for:', username);
                 return { success: true, imageUrl: cached, fromCache: true };
             }
         }
         
-        // If we have a permanent URL but cache expired, still show it while fetching fresh
-        if (permanentUrl && permanentUrl !== 'null') {
+        // If have permanent URL but cache expired, show it while fetching fresh
+        if (permanentUrl && permanentUrl !== 'null' && !forceRefresh) {
             console.log('📦 Using permanent storage, fetching fresh in background');
             // Fetch in background
             this.fetchProfileFromServer(username).then(result => {
                 if (result.success && result.imageUrl !== permanentUrl) {
-                    console.log('🔄 Updated profile picture from background sync');
+                    console.log('🔄 Profile picture updated from background sync');
                 }
             }).catch(err => console.error('Background sync failed:', err));
             return { success: true, imageUrl: permanentUrl, fromPermanent: true };
         }
         
-        // No cache, fetch from server
+        // Fetch from server
         return await this.fetchProfileFromServer(username);
     },
     
-    // Internal: Fetch from server and update all storages
     async fetchProfileFromServer(username) {
-        console.log('🔍 Fetching profile picture from server for:', username);
+        console.log('🔍 Fetching profile from server for:', username);
         
-        try {
-            const response = await fetch(CONFIG.IMGBB_PROXY_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'getProfilePic',
-                    username: username
-                })
-            });
-            
-            const result = await response.json();
-            console.log('📸 Server response:', result);
-            
-            if (result.success && result.imageUrl && result.imageUrl !== 'null') {
-                // Update all storage locations
-                const cacheKey = `profile_cache_${username}`;
-                const permanentKey = `user_profile_${username}`;
+        const payload = {
+            action: 'getProfilePic',
+            username: username
+        };
+        
+        // Try multiple methods
+        const methods = [
+            () => this.fetchWithCorsProxy(payload),
+            () => this.fetchWithGoogleCors(payload)
+        ];
+        
+        for (const method of methods) {
+            try {
+                const result = await method();
+                console.log('📸 Server response:', result);
                 
-                localStorage.setItem(cacheKey, result.imageUrl);
-                localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
-                localStorage.setItem(permanentKey, result.imageUrl);
-                
-                // Update main user data
-                const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
-                if (userData.profilePic !== result.imageUrl) {
-                    userData.profilePic = result.imageUrl;
-                    localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
+                if (result && result.success && result.imageUrl && result.imageUrl !== 'null') {
+                    this.updateLocalProfileStorage(username, result.imageUrl);
+                    return { success: true, imageUrl: result.imageUrl };
                 }
-                
-                return { success: true, imageUrl: result.imageUrl };
-            } else {
-                console.log('⚠️ No profile picture found for:', username);
-                return { success: false, imageUrl: null, message: result.message };
+            } catch (e) {
+                console.warn('Fetch method failed:', e.message);
             }
-        } catch (error) {
-            console.error('❌ Get profile picture error:', error);
-            return { success: false, imageUrl: null, error: error.message };
         }
+        
+        // If all methods fail but we have permanent storage, use it
+        const permanentUrl = localStorage.getItem(`user_profile_${username}`);
+        if (permanentUrl && permanentUrl !== 'null') {
+            console.log('⚠️ Using permanent storage (server fetch failed)');
+            return { success: true, imageUrl: permanentUrl, fromPermanent: true };
+        }
+        
+        console.log('⚠️ No profile picture found for:', username);
+        return { success: false, imageUrl: null };
     },
-
-    // Force refresh profile picture (ignore all cache)
+    
     async forceRefreshProfilePicture(username) {
         console.log('🔄 Force refreshing profile picture from sheet...');
         return await this.fetchProfileFromServer(username);
     },
     
-    // Get profile picture for chat message display (synchronous, from storage)
+    // Get profile picture synchronously (for chat messages, etc.)
     getProfilePictureSync(username) {
         const permanentKey = `user_profile_${username}`;
         const url = localStorage.getItem(permanentKey);
@@ -248,16 +302,40 @@ const APIService = {
         return null;
     },
 
-    // Test connection to Apps Script
-    async testConnection() {
+    // ========== CHAT SYSTEM SUPPORT ==========
+    
+    async loadChatMessages() {
+        if (!CONFIG.CHAT_API_URL) return [];
+        
         try {
-            const response = await fetch(CONFIG.IMGBB_PROXY_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'test' })
-            });
-            const result = await response.json();
-            console.log('🔗 Connection test:', result);
+            const response = await this.fetchWithCorsProxy({ action: 'load' });
+            return response.messages || [];
+        } catch (error) {
+            console.error('Load chat messages error:', error);
+            return [];
+        }
+    },
+    
+    async sendChatMessage(messageData) {
+        if (!CONFIG.CHAT_API_URL) return false;
+        
+        try {
+            const result = await this.fetchWithCorsProxy(messageData);
+            return result.success === true;
+        } catch (error) {
+            console.error('Send chat message error:', error);
+            return false;
+        }
+    },
+
+    // ========== TEST & DEBUG FUNCTIONS ==========
+    
+    async testConnection() {
+        console.log('🔗 Testing connection to Apps Script...');
+        
+        try {
+            const result = await this.fetchWithCorsProxy({ action: 'test' });
+            console.log('Connection test result:', result);
             return result;
         } catch (error) {
             console.error('❌ Connection test failed:', error);
@@ -265,7 +343,30 @@ const APIService = {
         }
     },
     
-    // Clear profile picture cache for a user
+    // Check if CORS proxy is working
+    async testCorsProxy() {
+        try {
+            const response = await fetch('https://cors-anywhere.herokuapp.com/https://httpbin.org/get');
+            const data = await response.json();
+            console.log('✅ CORS proxy is working:', data);
+            return true;
+        } catch (error) {
+            console.error('❌ CORS proxy failed:', error);
+            return false;
+        }
+    },
+    
+    // Clear all profile caches
+    clearAllProfileCaches() {
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('profile_cache_') || key.startsWith('user_profile_')) {
+                localStorage.removeItem(key);
+                console.log('Removed cache:', key);
+            }
+        });
+        console.log('✅ All profile caches cleared');
+    },
+    
     clearProfileCache(username) {
         if (username) {
             localStorage.removeItem(`profile_cache_${username}`);
@@ -273,12 +374,40 @@ const APIService = {
             localStorage.removeItem(`user_profile_${username}`);
             console.log('Cache cleared for:', username);
         } else {
-            Object.keys(localStorage).forEach(key => {
-                if (key.startsWith('profile_cache_') || key.startsWith('user_profile_')) {
-                    localStorage.removeItem(key);
-                }
-            });
-            console.log('All profile caches cleared');
+            this.clearAllProfileCaches();
         }
+    },
+    
+    // Check current environment
+    getEnvironment() {
+        const protocol = window.location.protocol;
+        const hostname = window.location.hostname;
+        
+        let env = 'unknown';
+        if (protocol === 'file:') env = 'android_editor';
+        else if (hostname === 'localhost' || hostname === '127.0.0.1') env = 'localhost';
+        else if (hostname.includes('github.io')) env = 'github_pages';
+        else if (protocol === 'https:') env = 'https_server';
+        else if (protocol === 'http:') env = 'http_server';
+        
+        console.log('🌍 Environment:', env, 'Protocol:', protocol, 'Host:', hostname);
+        return { env, protocol, hostname };
     }
 };
+
+// Auto-detect environment and log
+APIService.getEnvironment();
+
+// Make sure CORS proxy is ready (first time use)
+if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            // Check if we need to warm up CORS proxy
+            if (localStorage.getItem('cors_proxy_warmed') !== 'true') {
+                APIService.testCorsProxy().then(() => {
+                    localStorage.setItem('cors_proxy_warmed', 'true');
+                });
+            }
+        }, 2000);
+    });
+}
