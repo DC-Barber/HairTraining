@@ -1,9 +1,9 @@
-// chat/chat-core.js - Fixed (with fallback URL)
+// chat/chat-core.js - GitHub Ready Version
 (function() {
     'use strict';
     
-    // ✅ Fallback URL (သင်၏ Apps Script URL - ဒီမှာ ထည့်ပါ)
-    const FALLBACK_API_URL = 'https://script.google.com/macros/s/AKfycbwXStl6JCMGh-LthuAuQqRcnm4_TdM9E83ymRfE3oW3AYajyRN_v15PF7xdXo4Y6wvxfA/exec';
+    // ✅ သင်၏ Chat API URL အသစ် (ဒီမှာ တိုက်ရိုက်လည်းထည့်ထားတယ်)
+    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbwXStl6JCMGh-LthuAuQqRcnm4_TdM9E83ymRfE3oW3AYajyRN_v15PF7xdXo4Y6wvxfA/exec';
     
     function getCurrentUser() {
         try {
@@ -28,34 +28,35 @@
         if (!ts) return '';
         try {
             const d = new Date(ts);
-            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const now = new Date();
+            const isToday = d.toDateString() === now.toDateString();
+            if (isToday) {
+                return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } else {
+                return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+            }
         } catch(e) {
             return '';
         }
     }
     
-    // ✅ Get API URL with fallback
+    // Get API URL (from CONFIG or fallback)
     function getApiUrl() {
         if (window.CONFIG && window.CONFIG.CHAT_API_URL) {
-            console.log('Using CONFIG.CHAT_API_URL');
             return window.CONFIG.CHAT_API_URL;
         }
-        console.log('Using FALLBACK_API_URL');
-        return FALLBACK_API_URL;
+        return DEFAULT_API_URL;
     }
     
-    // API caller with retry
     async function callApi(action, data = {}, retryCount = 0) {
         const user = getCurrentUser();
         if (!user) return { success: false, message: 'Not logged in' };
         
         const API_URL = getApiUrl();
-        if (!API_URL) return { success: false, message: 'API URL not configured' };
-        
-        console.log(`Calling API: ${action} to ${API_URL.substring(0, 60)}...`);
-        
         const payload = { action: action, username: user.username, ...data };
         const maxRetries = 2;
+        
+        console.log(`[ChatAPI] Calling: ${action}`);
         
         try {
             const controller = new AbortController();
@@ -78,7 +79,7 @@
             
             return await response.json();
         } catch(e) {
-            console.error(`API call ${action} failed:`, e);
+            console.error(`[ChatAPI] ${action} failed:`, e);
             
             if (retryCount < maxRetries) {
                 await new Promise(r => setTimeout(r, 2000));
@@ -89,7 +90,6 @@
         }
     }
     
-    // Compress image
     async function compressImage(file, maxWidth = 600, maxHeight = 600) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -190,5 +190,5 @@
         }
     };
     
-    console.log('Chat core loaded with fallback URL');
+    console.log('[ChatCore] Loaded - API URL:', getApiUrl().substring(0, 70));
 })();
