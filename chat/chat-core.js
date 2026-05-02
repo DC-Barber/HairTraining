@@ -1,5 +1,4 @@
-
-// chat/chat-core.js - Core message functions
+// chat/chat-core.js - GET parameter style
 
 let chatMessages = [];
 let chatInterval = null;
@@ -8,12 +7,9 @@ async function loadChatMessages() {
     if (!CONFIG.CHAT_API_URL) return;
     
     try {
-        const response = await fetch(CONFIG.CHAT_API_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'load' })
-        });
+        // ✅ GET parameter နဲ့ load
+        const url = `${CONFIG.CHAT_API_URL}?action=load`;
+        const response = await fetch(url);
         const data = await response.json();
         
         if (data.messages && JSON.stringify(chatMessages) !== JSON.stringify(data.messages)) {
@@ -38,7 +34,6 @@ function renderChatMessages() {
         return;
     }
     
-    // ✅ messages တွေကို အပေါ်ဆုံးမှာ အဟောင်း၊ အောက်ဆုံးမှာ အသစ် ဖြစ်အောင် (ပုံမှန်အတိုင်း)
     chatMessages.forEach(msg => {
         const isOwnMessage = msg.username === currentUser.username;
         const messageDiv = document.createElement('div');
@@ -68,7 +63,6 @@ function renderChatMessages() {
         container.appendChild(messageDiv);
     });
     
-    // ✅ Scroll to bottom (new message ကိုပြဖို့)
     container.scrollTop = container.scrollHeight;
 }
 
@@ -80,7 +74,6 @@ async function sendChatMessage() {
     const sendBtn = document.getElementById('chat-send-btn');
     if (!sendBtn) return;
     
-    // ✅ Disable button and show sending animation
     const originalText = sendBtn.innerHTML;
     sendBtn.disabled = true;
     sendBtn.innerHTML = '⏳';
@@ -93,7 +86,8 @@ async function sendChatMessage() {
         type = 'link';
     }
     
-    const payload = {
+    // ✅ GET parameter နဲ့ send
+    const params = new URLSearchParams({
         action: 'send',
         username: userData.username,
         fullname: userData.fullname,
@@ -101,16 +95,14 @@ async function sendChatMessage() {
         type: type,
         content: content,
         userId: userData.username
-    };
+    });
+    
+    const url = `${CONFIG.CHAT_API_URL}?${params.toString()}`;
     
     try {
-        const response = await fetch(CONFIG.CHAT_API_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+        const response = await fetch(url);
         const result = await response.json();
+        
         if (result.success) {
             input.value = '';
             await loadChatMessages();
@@ -119,7 +111,6 @@ async function sendChatMessage() {
         console.error("Send message error:", error);
         alert("မက်ဆေ့ခ်ျ ပို့ရာတွင် အဆင်မပြေပါ။");
     } finally {
-        // ✅ Re-enable button
         sendBtn.disabled = false;
         sendBtn.innerHTML = originalText;
         sendBtn.style.opacity = '1';
