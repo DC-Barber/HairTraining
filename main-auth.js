@@ -1,4 +1,4 @@
-// main-auth.js - Full Optimized Version
+// main-auth.js - Full Optimized Version with Cross-Device Sync
 
 async function handleAuthSubmit() {
     const user = document.getElementById('login-username').value.trim();
@@ -44,8 +44,8 @@ async function handleAuthSubmit() {
                 await APIService.recordHistory(user, deviceId);
                 localStorage.setItem(CONFIG.AUTH_EXPIRY_KEY, (new Date().getTime() + CONFIG.LOGIN_DURATION_MS).toString());
                 
-                // Get profile picture from sheet
-                const profileResult = await APIService.getProfilePicture(user);
+                // ✅ IMPORTANT: Force fetch from server (no cache, cross-device sync)
+                const profileResult = await APIService.forceRefreshProfilePicture(user);
                 
                 const userData = { 
                     username: user, 
@@ -54,6 +54,12 @@ async function handleAuthSubmit() {
                     profilePic: profileResult.success ? profileResult.imageUrl : null
                 };
                 localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
+                
+                // Also store in permanent key for chat system compatibility
+                if (profileResult.success && profileResult.imageUrl) {
+                    localStorage.setItem(`user_profile_${user}`, profileResult.imageUrl);
+                }
+                
                 location.reload();
             }
         } else { 
@@ -94,14 +100,16 @@ async function setupProfileSystem() {
                 profileImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="50" fill="%231e3a5f"/%3E%3Ctext x="50" y="67" text-anchor="middle" fill="white" font-size="40"%3E👤%3C/text%3E%3C/svg%3E';
             }
             
-            // ✅ Background refresh from server (don't await)
+            // ✅ Background refresh from server (force refresh to get cross-device updates)
             if (userData.username) {
-                APIService.getProfilePicture(userData.username).then(freshProfile => {
-                    if (freshProfile.success && freshProfile.imageUrl && freshProfile.imageUrl !== userData.profilePic) {
-                        userData.profilePic = freshProfile.imageUrl;
-                        localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
-                        profileImg.src = freshProfile.imageUrl;
-                        console.log('Profile picture updated from server');
+                APIService.forceRefreshProfilePicture(userData.username).then(freshProfile => {
+                    if (freshProfile.success && freshProfile.imageUrl) {
+                        if (freshProfile.imageUrl !== userData.profilePic) {
+                            userData.profilePic = freshProfile.imageUrl;
+                            localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
+                            profileImg.src = freshProfile.imageUrl;
+                            console.log('✅ Profile picture updated from server (cross-device sync)');
+                        }
                     }
                 }).catch(err => console.error('Background refresh failed:', err));
             }
@@ -113,7 +121,6 @@ async function setupProfileSystem() {
                     const file = event.target.files[0];
                     if (!file) return;
                     
-                    // Show preview immediately
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         profileImg.src = e.target.result;
@@ -128,7 +135,12 @@ async function setupProfileSystem() {
                     if (result.success) {
                         currentUserData.profilePic = result.imageUrl;
                         localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(currentUserData));
+                        localStorage.setItem(`user_profile_${currentUserData.username}`, result.imageUrl);
                         uploadStatus.innerHTML = '<span style="color:green;">✅ ပုံတင်ခြင်း အောင်မြင်ပါသည်။</span>';
+                        
+                        // Clear cache to ensure fresh fetch next time
+                        APIService.clearProfileCache(currentUserData.username);
+                        
                         setTimeout(() => uploadStatus.innerHTML = '', 3000);
                     } else {
                         uploadStatus.innerHTML = '<span style="color:red;">❌ ပုံတင်ခြင်း မအောင်မြင်ပါ။</span>';
@@ -144,10 +156,62 @@ async function setupProfileSystem() {
             const overlay = document.getElementById('profile-overlay');
             if (overlay) overlay.style.display = 'none';
             
-            // Clear upload status when closing
             const statusDiv = document.getElementById('upload-status');
             if (statusDiv) statusDiv.innerHTML = '';
         };
+    }
+}
+
+// ========== CHAT SYSTEM COMPATIBILITY ==========
+// Inject Barber Button into Profile Modal
+function injectBarberButton() {
+    if (document.getElementById('barber-network-btn')) return;
+    
+    const examBtn = document.querySelector('#profile-overlay button[onclick="openExam()"]');
+    if (!examBtn) return;
+    
+    const barberBtn = document.createElement('button');
+    barberBtn.id = 'barber-network-btn';
+    barberBtn.innerHTML = '💬 Barber Network';
+    barberBtn.style.cssText = 'background: #2980b9; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 12px;';
+    barberBtn.onclick = function() {
+        document.getElementById('profile-overlay').style.display = 'none';
+        if (typeof openChatPage === 'function') {
+            openChatPage();
+        } else {
+            console.error('openChatPage function not found');
+            window.location.href = 'chat.html';
+        }
+    };
+    
+    examBtn.insertAdjacentElement('afterend', barberBtn);
+}
+
+// Observe profile modal to inject button
+function observeProfileModal() {
+    const observer = new MutationObserver(function(mutations) {
+        const overlay = document.getElementById('profile-overlay');
+        if (overlay && overlay.style.display === 'block') {
+            setTimeout(() => {
+                injectBarberButton();
+            }, 150);
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+}
+
+// Inject badge on profile icon
+function injectBadge() {
+    const wrapper = document.getElementById('profile-icon-wrapper');
+    if (!wrapper) return;
+    
+    let badge = document.getElementById('message-badge');
+    if (!badge) {
+        badge = document.createElement('span');
+        badge.id = 'message-badge';
+        badge.style.cssText = 'position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border-radius: 50%; min-width: 18px; height: 18px; font-size: 10px; display: none; align-items: center; justify-content: center; padding: 0 4px; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.3); z-index: 100;';
+        badge.innerText = '0';
+        wrapper.appendChild(badge);
     }
 }
 
@@ -170,18 +234,64 @@ window.syncProfilePicture = async function() {
             localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
             const profileImg = document.getElementById('profile-img');
             if (profileImg) profileImg.src = result.imageUrl;
+            console.log('✅ Manual sync completed');
             return true;
         }
     }
     return false;
 };
 
+// Load chat messages for badge (if chat system exists)
+async function loadChatMessagesForBadge() {
+    if (!CONFIG.CHAT_API_URL) return;
+    
+    try {
+        const response = await fetch(CONFIG.CHAT_API_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'load' })
+        });
+        const data = await response.json();
+        
+        if (data.messages) {
+            const lastSeen = localStorage.getItem('last_seen_chat') || '0';
+            const newMessages = data.messages.filter(msg => new Date(msg.timestamp).getTime() > parseInt(lastSeen)).length;
+            const badge = document.getElementById('message-badge');
+            
+            if (badge) {
+                if (newMessages > 0 && !document.getElementById('chat-page')) {
+                    badge.style.display = 'flex';
+                    badge.innerText = newMessages > 99 ? '99+' : newMessages;
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Load messages for badge error:", error);
+    }
+}
+
 // Initialize
 (function init() {
     const expiry = localStorage.getItem(CONFIG.AUTH_EXPIRY_KEY);
     const isAuth = expiry && new Date().getTime() < parseInt(expiry);
+    
     if (isAuth) {
         setupProfileSystem();
+        
+        // Chat system integration
+        setTimeout(() => {
+            injectBadge();
+            observeProfileModal();
+            injectBarberButton();
+            
+            // Update badge periodically
+            loadChatMessagesForBadge();
+            setInterval(loadChatMessagesForBadge, 5000);
+        }, 500);
+        
     } else {
         UIAuth.showModal(handleAuthSubmit);
     }

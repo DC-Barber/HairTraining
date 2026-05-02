@@ -1,4 +1,4 @@
-// api-service.js - Full Updated Version
+// api-service.js - Full Updated Version with Chat-Style Profile Sync
 
 const APIService = {
     async getIP() {
@@ -80,7 +80,6 @@ const APIService = {
             
             const deviceId = localStorage.getItem('device_id') || await this.getDeviceId();
             
-            // Try without CORS proxy first
             let response;
             try {
                 response = await fetch(CONFIG.IMGBB_PROXY_URL, {
@@ -113,7 +112,7 @@ const APIService = {
             const result = await response.json();
             
             if (result.success && result.imageUrl) {
-                // Update local storage with new image
+                // Update local storage
                 const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
                 userData.profilePic = result.imageUrl;
                 localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
@@ -123,6 +122,9 @@ const APIService = {
                     localStorage.setItem(`profile_cache_${username}`, result.imageUrl);
                     localStorage.setItem(`profile_cache_${username}_time`, Date.now().toString());
                 }
+                
+                // Also store in a separate permanent key (like chat system)
+                localStorage.setItem(`user_profile_${username}`, result.imageUrl);
                 
                 return { success: true, imageUrl: result.imageUrl };
             } else {
@@ -134,26 +136,54 @@ const APIService = {
         }
     },
 
-    // Get profile picture by username from Google Sheet (with caching)
+    // Get profile picture - Chat System Style (always check server first for other devices)
     async getProfilePicture(username, forceRefresh = false) {
         if (!username) {
             console.warn('No username provided');
             return { success: false, imageUrl: null };
         }
         
-        // Check cache first (unless force refresh)
+        // Check permanent storage first (cross-device sync)
+        const permanentKey = `user_profile_${username}`;
+        const permanentUrl = localStorage.getItem(permanentKey);
+        
+        // If force refresh, skip cache and go to server
+        if (forceRefresh) {
+            console.log('🔄 Force refresh - fetching from server');
+            return await this.fetchProfileFromServer(username);
+        }
+        
+        // Check cache (5 minutes)
         const cacheKey = `profile_cache_${username}`;
         const cached = localStorage.getItem(cacheKey);
         const cacheTime = localStorage.getItem(`${cacheKey}_time`);
         
-        if (!forceRefresh && cached && cacheTime && cached !== 'null') {
+        if (cached && cacheTime && cached !== 'null') {
             const age = Date.now() - parseInt(cacheTime);
-            if (age < 5 * 60 * 1000) { // Cache for 5 minutes
+            if (age < 5 * 60 * 1000) {
                 console.log('📦 Using cached profile picture for:', username);
                 return { success: true, imageUrl: cached, fromCache: true };
             }
         }
         
+        // If we have a permanent URL but cache expired, still show it while fetching fresh
+        if (permanentUrl && permanentUrl !== 'null') {
+            console.log('📦 Using permanent storage, fetching fresh in background');
+            // Fetch in background
+            this.fetchProfileFromServer(username).then(result => {
+                if (result.success && result.imageUrl !== permanentUrl) {
+                    console.log('🔄 Updated profile picture from background sync');
+                }
+            }).catch(err => console.error('Background sync failed:', err));
+            return { success: true, imageUrl: permanentUrl, fromPermanent: true };
+        }
+        
+        // No cache, fetch from server
+        return await this.fetchProfileFromServer(username);
+    },
+    
+    // Internal: Fetch from server and update all storages
+    async fetchProfileFromServer(username) {
         console.log('🔍 Fetching profile picture from server for:', username);
         
         try {
@@ -170,11 +200,15 @@ const APIService = {
             console.log('📸 Server response:', result);
             
             if (result.success && result.imageUrl && result.imageUrl !== 'null') {
-                // Update cache
+                // Update all storage locations
+                const cacheKey = `profile_cache_${username}`;
+                const permanentKey = `user_profile_${username}`;
+                
                 localStorage.setItem(cacheKey, result.imageUrl);
                 localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
+                localStorage.setItem(permanentKey, result.imageUrl);
                 
-                // Also update main user data
+                // Update main user data
                 const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
                 if (userData.profilePic !== result.imageUrl) {
                     userData.profilePic = result.imageUrl;
@@ -192,10 +226,26 @@ const APIService = {
         }
     },
 
-    // Force refresh profile picture (ignore cache)
+    // Force refresh profile picture (ignore all cache)
     async forceRefreshProfilePicture(username) {
         console.log('🔄 Force refreshing profile picture from sheet...');
-        return await this.getProfilePicture(username, true);
+        return await this.fetchProfileFromServer(username);
+    },
+    
+    // Get profile picture for chat message display (synchronous, from storage)
+    getProfilePictureSync(username) {
+        const permanentKey = `user_profile_${username}`;
+        const url = localStorage.getItem(permanentKey);
+        if (url && url !== 'null') {
+            return url;
+        }
+        
+        const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+        if (userData.username === username && userData.profilePic) {
+            return userData.profilePic;
+        }
+        
+        return null;
     },
 
     // Test connection to Apps Script
@@ -220,11 +270,11 @@ const APIService = {
         if (username) {
             localStorage.removeItem(`profile_cache_${username}`);
             localStorage.removeItem(`profile_cache_${username}_time`);
+            localStorage.removeItem(`user_profile_${username}`);
             console.log('Cache cleared for:', username);
         } else {
-            // Clear all profile caches
             Object.keys(localStorage).forEach(key => {
-                if (key.startsWith('profile_cache_')) {
+                if (key.startsWith('profile_cache_') || key.startsWith('user_profile_')) {
                     localStorage.removeItem(key);
                 }
             });
