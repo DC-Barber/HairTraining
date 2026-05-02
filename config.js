@@ -10,5 +10,5 @@ const CONFIG = {
     LOGIN_DURATION_MS: 86400000,
     
     // ✅ ဒီအပိုင်းကို ထပ်ထည့်ပါ (မူရင်းအတိုင်း)
-    CHAT_API_URL: 'https://script.google.com/macros/s/AKfycbwvaF3iHEpnXsCPMmlJEgqreJTIls0OovdZgGxoLTfnzrXpCt7e6o1m4Qd8tiY21OPw3g/exec'  // ဒီနေရာမှာ မင်း Deploy ရထားတဲ့ URL ထည့်
+    CHAT_API_URL: 'https://script.google.com/macros/s/AKfycbwY-IHvkGbmKpzaZTqUv7ga8d-Hcd6jUo31wIcupIFa2Bvkvf75kEF5brmavlIqFwkc/exec'  // ဒီနေရာမှာ မင်း Deploy ရထားတဲ့ URL ထည့်
 };
