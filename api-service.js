@@ -68,7 +68,7 @@ const APIService = {
         return await res.json();
     },
 
- // api-service.js - uploadProfilePicture function (with CORS proxy)
+ // api-service.js - ImgBB တိုက်ရိုက်သုံးနည်း
 
 async uploadProfilePicture(file, username, fullname) {
     try {
@@ -79,29 +79,37 @@ async uploadProfilePicture(file, username, fullname) {
             reader.onload = () => resolve(reader.result.split(',')[1]);
         });
         
-        const deviceId = localStorage.getItem('device_id') || await this.getDeviceId();
+        // ✅ ImgBB တိုက်ရိုက် (CORS proxy မလို)
+        const formData = new FormData();
+        formData.append('image', base64);
+        formData.append('key', CONFIG.IMGBB_API_KEY);
         
-        // ✅ CORS proxy ကိုသုံးပါ
-        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
-        const targetUrl = CONFIG.IMGBB_PROXY_URL;
-        
-        const response = await fetch(CORS_PROXY + targetUrl, {
+        const response = await fetch('https://api.imgbb.com/1/upload', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                imageBase64: base64,
-                username: username,
-                fullname: fullname || '',
-                deviceId: deviceId
-            })
+            body: formData
         });
         
         const result = await response.json();
         
-        if (result.success && result.imageUrl) {
-            return { success: true, imageUrl: result.imageUrl };
+        if (result.success) {
+            const imageUrl = result.data.url;
+            
+            // Optional: Store to your Apps Script
+            const deviceId = localStorage.getItem('device_id') || await this.getDeviceId();
+            const storeResponse = await fetch(CONFIG.IMGBB_PROXY_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    imageUrl: imageUrl,
+                    username: username,
+                    fullname: fullname || '',
+                    deviceId: deviceId
+                })
+            });
+            
+            return { success: true, imageUrl: imageUrl };
         } else {
-            return { success: false, error: result.message || 'Upload failed' };
+            return { success: false, error: result.error?.message || 'Upload failed' };
         }
     } catch (error) {
         console.error('Upload error:', error);
