@@ -162,8 +162,8 @@ async function setupProfileSystem() {
     }
 }
 
-// main-auth.js - Replace the injectBarberButton function with this
-
+// ========== CHAT SYSTEM COMPATIBILITY ==========
+// Inject Barber Button into Profile Modal
 function injectBarberButton() {
     if (document.getElementById('barber-network-btn')) return;
     
@@ -174,17 +174,13 @@ function injectBarberButton() {
     barberBtn.id = 'barber-network-btn';
     barberBtn.innerHTML = '💬 Barber Network';
     barberBtn.style.cssText = 'background: #2980b9; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 12px;';
-    
-    // ✅ FIX: Direct call to openChat function from chat.js
-    barberBtn.onclick = function(e) {
-        e.preventDefault();
+    barberBtn.onclick = function() {
         document.getElementById('profile-overlay').style.display = 'none';
-        
-        // The function name in chat.js is 'openChat'
-        if (typeof window.openChat === 'function') {
-            window.openChat();
+        if (typeof openChatPage === 'function') {
+            openChatPage();
         } else {
-            alert('Chat system is loading. Please try again.');
+            console.error('openChatPage function not found');
+            window.location.href = 'chat.html';
         }
     };
     
