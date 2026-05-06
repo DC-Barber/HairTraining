@@ -172,7 +172,7 @@ function injectBarberButton() {
     
     const barberBtn = document.createElement('button');
     barberBtn.id = 'barber-network-btn';
-    barberBtn.innerHTML = '💬 Barber Network';
+    barberBtn.innerHTML = 'DC BARBER';
     barberBtn.style.cssText = 'background: #2980b9; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 12px;';
     barberBtn.onclick = function() {
         document.getElementById('profile-overlay').style.display = 'none';
@@ -180,7 +180,7 @@ function injectBarberButton() {
             openChatPage();
         } else {
             console.error('openChatPage function not found');
-            window.location.href = 'chat.html';
+            window.location.href = 'https://dc-barber.github.io/MENUBOOK/';
         }
     };
     
