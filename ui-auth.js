@@ -9,7 +9,7 @@ const UIAuth = {
         
         modal.innerHTML = `
             <div style="background:white;padding:30px;border-radius:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-                <h3 id="modal-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.4rem;">Hair_Color_Training </h3>
+                <h3 id="modal-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.4rem;">Hair_Color_Training</h3>
                 
                 <input type="text" id="login-username" maxlength="10" placeholder="Username (6-10 chars)" style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;outline:none;box-sizing:border-box;">
                 
@@ -37,6 +37,13 @@ const UIAuth = {
                     <span id="mode-toggle-text">No account? </span>
                     <span id="mode-toggle-btn" style="color:#1e3a5f;font-weight:bold;cursor:pointer;text-decoration:underline;">Register</span>
                 </p>
+                
+                <!-- ========== LOGIN CARD FOOTER LINKS ========== -->
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 11px;">
+                    <a href="/privacy.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">🔒 Privacy Policy</a>
+                    <span style="color: #ccc;">|</span>
+                    <a href="/about.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">ℹ️ About</a>
+                </div>
             </div>`;
         document.body.appendChild(modal);
 
