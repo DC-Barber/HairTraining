@@ -1,4 +1,4 @@
-// ui-auth.js
+
 let isRegisterMode = false;
 
 const UIAuth = {
@@ -38,11 +38,11 @@ const UIAuth = {
                     <span id="mode-toggle-btn" style="color:#1e3a5f;font-weight:bold;cursor:pointer;text-decoration:underline;">Register</span>
                 </p>
                 
-                <!-- ========== LOGIN CARD FOOTER LINKS ========== -->
+                <!-- ========== LOGIN CARD FOOTER LINKS (ရှိနေပြီ) ========== -->
                 <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 11px;">
                     <a href="/privacy.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">🔒 Privacy Policy</a>
                     <span style="color: #ccc;">|</span>
-                    <a href="/about.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">ℹ️ About</a>
+                    <a href="/about.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">📖 About</a>
                 </div>
             </div>`;
         document.body.appendChild(modal);
@@ -66,4 +66,4 @@ const UIAuth = {
             errDiv.innerText = msg;
         }
     }
-}
+};
