@@ -44,7 +44,6 @@ async function handleAuthSubmit() {
                 await APIService.recordHistory(user, deviceId);
                 localStorage.setItem(CONFIG.AUTH_EXPIRY_KEY, (new Date().getTime() + CONFIG.LOGIN_DURATION_MS).toString());
                 
-                // ✅ IMPORTANT: Force fetch from server (no cache, cross-device sync)
                 const profileResult = await APIService.forceRefreshProfilePicture(user);
                 
                 const userData = { 
@@ -55,7 +54,6 @@ async function handleAuthSubmit() {
                 };
                 localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
                 
-                // Also store in permanent key for chat system compatibility
                 if (profileResult.success && profileResult.imageUrl) {
                     localStorage.setItem(`user_profile_${user}`, profileResult.imageUrl);
                 }
@@ -81,26 +79,21 @@ async function setupProfileSystem() {
 
     if (profileBtn) {
         profileBtn.onclick = async function() {
-            // ✅ Show modal immediately
             const overlay = document.getElementById('profile-overlay');
             if (overlay) overlay.style.display = 'block';
             
-            // ✅ Get user data from localStorage instantly
             let userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
             
-            // ✅ Update basic info instantly
             if(document.getElementById('p-fullname')) document.getElementById('p-fullname').innerText = userData.fullname || '-';
             if(document.getElementById('p-username')) document.getElementById('p-username').innerText = userData.username || '-';
             if(document.getElementById('p-phone')) document.getElementById('p-phone').innerText = userData.phone || '-';
             
-            // ✅ Show cached profile picture instantly
             if (userData.profilePic && userData.profilePic !== 'null') {
                 profileImg.src = userData.profilePic;
             } else {
                 profileImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="50" fill="%231e3a5f"/%3E%3Ctext x="50" y="67" text-anchor="middle" fill="white" font-size="40"%3E👤%3C/text%3E%3C/svg%3E';
             }
             
-            // ✅ Background refresh from server (force refresh to get cross-device updates)
             if (userData.username) {
                 APIService.forceRefreshProfilePicture(userData.username).then(freshProfile => {
                     if (freshProfile.success && freshProfile.imageUrl) {
@@ -108,13 +101,12 @@ async function setupProfileSystem() {
                             userData.profilePic = freshProfile.imageUrl;
                             localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
                             profileImg.src = freshProfile.imageUrl;
-                            console.log('✅ Profile picture updated from server (cross-device sync)');
+                            console.log('✅ Profile picture updated from server');
                         }
                     }
                 }).catch(err => console.error('Background refresh failed:', err));
             }
             
-            // ✅ Setup file upload handler (only once)
             if (fileInput && !fileInput.hasListener) {
                 fileInput.hasListener = true;
                 fileInput.onchange = async (event) => {
@@ -137,10 +129,7 @@ async function setupProfileSystem() {
                         localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(currentUserData));
                         localStorage.setItem(`user_profile_${currentUserData.username}`, result.imageUrl);
                         uploadStatus.innerHTML = '<span style="color:green;">✅ ပုံတင်ခြင်း အောင်မြင်ပါသည်။</span>';
-                        
-                        // Clear cache to ensure fresh fetch next time
                         APIService.clearProfileCache(currentUserData.username);
-                        
                         setTimeout(() => uploadStatus.innerHTML = '', 3000);
                     } else {
                         uploadStatus.innerHTML = '<span style="color:red;">❌ ပုံတင်ခြင်း မအောင်မြင်ပါ။</span>';
@@ -155,15 +144,12 @@ async function setupProfileSystem() {
         closeBtn.onclick = function() {
             const overlay = document.getElementById('profile-overlay');
             if (overlay) overlay.style.display = 'none';
-            
             const statusDiv = document.getElementById('upload-status');
             if (statusDiv) statusDiv.innerHTML = '';
         };
     }
 }
 
-// ========== CHAT SYSTEM COMPATIBILITY ==========
-// Inject Barber Button into Profile Modal
 function injectBarberButton() {
     if (document.getElementById('barber-network-btn')) return;
     
@@ -179,7 +165,6 @@ function injectBarberButton() {
         if (typeof openChatPage === 'function') {
             openChatPage();
         } else {
-            console.error('openChatPage function not found');
             window.location.href = 'https://dc-barber.github.io/MENUBOOK/';
         }
     };
@@ -187,7 +172,6 @@ function injectBarberButton() {
     examBtn.insertAdjacentElement('afterend', barberBtn);
 }
 
-// Observe profile modal to inject button
 function observeProfileModal() {
     const observer = new MutationObserver(function(mutations) {
         const overlay = document.getElementById('profile-overlay');
@@ -200,7 +184,6 @@ function observeProfileModal() {
     observer.observe(document.body, { childList: true, subtree: true });
 }
 
-// Inject badge on profile icon
 function injectBadge() {
     const wrapper = document.getElementById('profile-icon-wrapper');
     if (!wrapper) return;
@@ -215,7 +198,6 @@ function injectBadge() {
     }
 }
 
-// Global functions
 window.openExam = () => {
     window.location.href = 'exam/exam.html';
 };
@@ -241,7 +223,6 @@ window.syncProfilePicture = async function() {
     return false;
 };
 
-// Load chat messages for badge (if chat system exists)
 async function loadChatMessagesForBadge() {
     if (!CONFIG.CHAT_API_URL) return;
     
@@ -273,7 +254,6 @@ async function loadChatMessagesForBadge() {
     }
 }
 
-// Initialize
 (function init() {
     const expiry = localStorage.getItem(CONFIG.AUTH_EXPIRY_KEY);
     const isAuth = expiry && new Date().getTime() < parseInt(expiry);
@@ -281,13 +261,10 @@ async function loadChatMessagesForBadge() {
     if (isAuth) {
         setupProfileSystem();
         
-        // Chat system integration
         setTimeout(() => {
             injectBadge();
             observeProfileModal();
             injectBarberButton();
-            
-            // Update badge periodically
             loadChatMessagesForBadge();
             setInterval(loadChatMessagesForBadge, 5000);
         }, 500);
