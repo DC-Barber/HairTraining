@@ -66,4 +66,4 @@ const UIAuth = {
             errDiv.innerText = msg;
         }
     }
-}Aboutboutbout
+}
