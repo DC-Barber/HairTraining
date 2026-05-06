@@ -1,4 +1,4 @@
-
+// ui-auth.js
 let isRegisterMode = false;
 
 const UIAuth = {
@@ -38,7 +38,7 @@ const UIAuth = {
                     <span id="mode-toggle-btn" style="color:#1e3a5f;font-weight:bold;cursor:pointer;text-decoration:underline;">Register</span>
                 </p>
                 
-                <!-- ========== LOGIN CARD FOOTER LINKS (ရှိနေပြီ) ========== -->
+                <!-- Footer Links (Login Card အောက်ခြေ) -->
                 <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 11px;">
                     <a href="/privacy.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">🔒 Privacy Policy</a>
                     <span style="color: #ccc;">|</span>
