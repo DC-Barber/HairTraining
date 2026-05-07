@@ -73,7 +73,10 @@ const GuestMode = {
         localStorage.removeItem('currentPage');
         localStorage.removeItem('hairTraining_currentPage');
         console.log('Guest mode: cleared old page state');
-        
+      
+        // 🔥 ADD THIS LINE - Set guest mode flag
+    localStorage.setItem('guest_mode_active', 'true');
+    
         const account = await this.getRandomAccount();
         
         if (btn) {
