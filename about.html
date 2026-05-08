@@ -2,7 +2,7 @@
 <html lang="my">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>About - Hair Training</title>
   <style>
     * {
@@ -10,162 +10,287 @@
       padding: 0;
       box-sizing: border-box;
     }
+    
     body {
-      background: #f0ede8;
-      font-family: 'Courier New', 'Times New Roman', 'Myanmar Text', 'Padauk', monospace;
-      padding: 30px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(145deg, #f6efe3 0%, #ede3d4 100%);
+      min-height: 100vh;
+      padding: 20px;
     }
-    .paper {
+    
+    .page-container {
       max-width: 800px;
       margin: 0 auto;
-      background: #fffef5;
-      border: 1px solid #8b7355;
-      box-shadow: 8px 8px 0 rgba(0,0,0,0.05);
-      padding: 30px 25px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
-    hr {
-      border: none;
-      border-top: 1px dashed #c0a080;
-      margin: 20px 0;
+    
+    .page-header {
+      background: #1e3a5f;
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-    .line {
-      border-top: 2px solid #8b7355;
-      margin: 8px 0 20px 0;
+    
+    .page-header h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    h1 {
-      font-size: 1.3rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 5px;
-      color: #3b2a1f;
+    
+    .lang-btn {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    h2 {
+    
+    .lang-btn:active {
+      background: rgba(255,255,255,0.4);
+      transform: scale(0.96);
+    }
+    
+    .page-content {
+      padding: 24px;
+      line-height: 1.6;
+      color: #2c3e2f;
+    }
+    
+    .section {
+      margin-bottom: 24px;
+    }
+    
+    .section h2 {
       font-size: 1rem;
-      font-weight: bold;
-      margin: 18px 0 8px 0;
-      color: #4a3627;
-      border-left: 4px solid #8b7355;
-      padding-left: 12px;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #f0e2d0;
     }
-    p, li {
-      font-size: 0.85rem;
-      line-height: 1.5;
+    
+    .section p, .section li {
+      font-size: 0.9rem;
       color: #2c241a;
+      margin-bottom: 8px;
+    }
+    
+    .section ul {
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+    
+    .section li {
       margin-bottom: 6px;
     }
-    .eng {
-      font-family: 'Courier New', monospace;
-      color: #6b5a4a;
-      margin-bottom: 4px;
-    }
-    .my {
-      font-family: 'Myanmar Text', 'Padauk', 'Courier New', monospace;
-      color: #2c241a;
-    }
-    .double {
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px dotted #d0c0a8;
-    }
-    ul {
-      margin-left: 24px;
-      margin-top: 6px;
-      margin-bottom: 10px;
-    }
-    li {
-      margin-bottom: 4px;
-    }
-    .back-link {
-      display: inline-block;
-      margin-top: 24px;
-      font-size: 0.8rem;
-      color: #6b3e1c;
+    
+    .email-link {
+      color: #1e3a5f;
       text-decoration: none;
-      border: 1px solid #b89a70;
-      padding: 6px 14px;
-      background: #f8f2e6;
+      font-weight: 600;
+      background: #f0e7dc;
+      padding: 10px 16px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 8px;
     }
-    .back-link:hover {
-      background: #e8dccc;
+    
+    .email-link:active {
+      background: #e0d0c0;
     }
-    .footer-note {
-      font-size: 0.7rem;
+    
+    .swipe-indicator {
       text-align: center;
-      margin-top: 24px;
+      padding: 12px;
       color: #9b8a70;
-      border-top: 1px solid #ddd0bc;
-      padding-top: 14px;
+      font-size: 0.7rem;
+      border-top: 1px solid #f0e2d0;
+      background: #fefcf8;
     }
-    .signature {
-      margin-top: 20px;
-      font-style: italic;
-      text-align: right;
-      font-size: 0.8rem;
-      color: #8b7355;
+    
+    .swipe-indicator span {
+      display: inline-block;
+      animation: swipeHint 1.5s ease infinite;
+    }
+    
+    @keyframes swipeHint {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.7rem;
+      color: #9b8a70;
+      border-top: 1px solid #f0e2d0;
+      background: #fefcf8;
     }
   </style>
 </head>
 <body>
-<div class="paper">
-  
-  <h1>📖 ABOUT</h1>
-  <div class="line"></div>
-  <div class="double">
-    <div class="eng">Professional Hair Training Manual</div>
-    <div class="my">ဆံသား လေ့ကျင့်ရေး လမ်းညွှန်</div>
-  </div>
 
-  <!-- What is this -->
-  <h2>WHAT IS THIS? / ဤအကြောင်းအရာ</h2>
-  <div class="eng">A free, simple training manual for barbers, hairdressers, and anyone interested in hair color & care.</div>
-  <div class="my">ဆံပင်ညှပ်သူများ၊ ဆံပင်အလှပြင်သူများနှင့် ဆံသားပြုပြင်ခြင်းကို စိတ်ဝင်စားသူတိုင်းအတွက် အခမဲ့ လေ့ကျင့်ရေးစာအုပ်ငယ် ဖြစ်ပါသည်။</div>
-
-  <hr>
-
-  <!-- Topics -->
-  <h2>📚 TOPICS INCLUDED / ပါဝင်သော ခေါင်းစဉ်များ</h2>
-  <ul>
-    <li><span class="eng">Hair structure (Cuticle, Cortex, Medulla)</span> <span class="my">/ ဆံပင်ဖွဲ့စည်းပုံ</span></li>
-    <li><span class="eng">Primary, Secondary, Tertiary Colors</span> <span class="my">/ အခြေခံ၊ ဒုတိယ၊ တတိယအဆင့် အရောင်များ</span></li>
-    <li><span class="eng">Developer types (3%, 6%, 9%, 12%)</span> <span class="my">/ ချုပ်ဆေးအမျိုးအစားများ</span></li>
-    <li><span class="eng">One-Touch, Two-Touch, Three-Touch techniques</span> <span class="my">/ ဆေးဆိုးနည်းစနစ်များ</span></li>
-    <li><span class="eng">Grey coverage & Hot roots correction</span> <span class="my">/ အဖြူဖုံးခြင်းနှင့် အရင်းတောက်ပြန်မှိန်ခြင်း</span></li>
-  </ul>
-
-  <hr>
-
-  <!-- Purpose -->
-  <h2>🎯 PURPOSE / ရည်ရွယ်ချက်</h2>
-  <div class="eng">To provide free, structured hair training knowledge — anytime, anywhere.</div>
-  <div class="my">ဆံသားပညာရပ်ကို စနစ်တကျ၊ အခမဲ့၊ အချိန်မရွေး နေရာမရွေး လေ့လာနိုင်စေရန် ရည်ရွယ်ပါသည်။</div>
-
-  <hr>
-
-  <!-- Author -->
-  <h2>👨‍🏫 AUTHOR / ရေးသားသူ</h2>
-  <div class="eng">A barber with years of experience — sharing what I've learned from basic to advanced.</div>
-  <div class="my">နှစ်ပေါင်းများစွာ အတွေ့အကြုံရှိ ဆံသားပညာရှင်တစ်ဦးဖြစ်ပြီး အခြေခံမှ အဆင့်မြင့်အထိ သင်ယူခဲ့ရသော အကြောင်းအရာများကို မျှဝေထားခြင်းဖြစ်ပါသည်။</div>
-
-  <hr>
-
-  <!-- Contact -->
-  <h2>📞 CONTACT / ဆက်သွယ်ရန်</h2>
-  <div class="eng">Suggestions or corrections? Send an email:</div>
-  <div class="my">အကြံပြုချက်များ၊ အမှားအယွင်းများရှိပါက ကျေးဇူးပြု၍ အီးမေးလ်ပေးပို့နိုင်ပါသည်-</div>
-  <div style="margin-top:8px;"><strong>dcbarber.training@gmail.com</strong></div>
-
-  <a href="/" class="back-link">← BACK / နောက်သို့</a>
-  
-  <div class="footer-note">
-    <span class="eng">© 2026 Hair Training Manual — All rights reserved.</span><br>
-    <span class="my">© ၂၀၂၆ ဆံသား လေ့ကျင့်ရေး လမ်းညွှန် — မူပိုင်ခွင့် ရှိသည်။</span>
+<div class="page-container" id="pageContainer">
+  <div class="page-header">
+    <h1>📖 ABOUT</h1>
+    <button class="lang-btn" id="langToggle">🇲🇲 မြန်မာ</button>
   </div>
   
-  <div class="signature">
-    <span class="eng">— DC Barber —</span><br>
-    <span class="my">— ဒီစီ ဘာဘာ —</span>
+  <div class="page-content" id="pageContent">
+    <div id="engContent">
+      <div class="section">
+        <h2>WHAT IS THIS?</h2>
+        <p>A free, simple training manual for barbers, hairdressers, and anyone interested in hair color & care.</p>
+      </div>
+      
+      <div class="section">
+        <h2>📚 TOPICS INCLUDED</h2>
+        <ul>
+          <li>Hair structure (Cuticle, Cortex, Medulla)</li>
+          <li>Primary, Secondary, Tertiary Colors</li>
+          <li>Developer types (3%, 6%, 9%, 12%)</li>
+          <li>One-Touch, Two-Touch, Three-Touch techniques</li>
+          <li>Grey coverage & Hot roots correction</li>
+        </ul>
+      </div>
+      
+      <div class="section">
+        <h2>🎯 PURPOSE</h2>
+        <p>To provide free, structured hair training knowledge — anytime, anywhere.</p>
+      </div>
+      
+      <div class="section">
+        <h2>👨‍🏫 AUTHOR</h2>
+        <p>A barber with years of experience — sharing what I've learned from basic to advanced.</p>
+      </div>
+      
+      <div class="section">
+        <h2>📞 CONTACT</h2>
+        <p>Suggestions or corrections? Send an email:</p>
+        <a href="mailto:dcbarber.training@gmail.com" class="email-link">📧 dcbarber.training@gmail.com</a>
+      </div>
+    </div>
+    
+    <div id="mmContent" style="display: none;">
+      <div class="section">
+        <h2>ဤအကြောင်းအရာ</h2>
+        <p>ဆံပင်ညှပ်သူများ၊ ဆံပင်အလှပြင်သူများနှင့် ဆံသားပြုပြင်ခြင်းကို စိတ်ဝင်စားသူတိုင်းအတွက် အခမဲ့ လေ့ကျင့်ရေးစာအုပ်ငယ် ဖြစ်ပါသည်။</p>
+      </div>
+      
+      <div class="section">
+        <h2>📚 ပါဝင်သော ခေါင်းစဉ်များ</h2>
+        <ul>
+          <li>ဆံပင်ဖွဲ့စည်းပုံ (Cuticle, Cortex, Medulla)</li>
+          <li>အခြေခံ၊ ဒုတိယ၊ တတိယအဆင့် အရောင်များ</li>
+          <li>ချုပ်ဆေးအမျိုးအစားများ (3%, 6%, 9%, 12%)</li>
+          <li>ဆေးဆိုးနည်းစနစ်များ (One-Touch, Two-Touch, Three-Touch)</li>
+          <li>အဖြူဖုံးခြင်းနှင့် အရင်းတောက်ပြန်မှိန်ခြင်း</li>
+        </ul>
+      </div>
+      
+      <div class="section">
+        <h2>🎯 ရည်ရွယ်ချက်</h2>
+        <p>ဆံသားပညာရပ်ကို စနစ်တကျ၊ အခမဲ့၊ အချိန်မရွေး နေရာမရွေး လေ့လာနိုင်စေရန် ရည်ရွယ်ပါသည်။</p>
+      </div>
+      
+      <div class="section">
+        <h2>👨‍🏫 ရေးသားသူ</h2>
+        <p>နှစ်ပေါင်းများစွာ အတွေ့အကြုံရှိ ဆံသားပညာရှင်တစ်ဦးဖြစ်ပြီး အခြေခံမှ အဆင့်မြင့်အထိ သင်ယူခဲ့ရသော အကြောင်းအရာများကို မျှဝေထားခြင်းဖြစ်ပါသည်။</p>
+      </div>
+      
+      <div class="section">
+        <h2>📞 ဆက်သွယ်ရန်</h2>
+        <p>အကြံပြုချက်များ၊ အမှားအယွင်းများရှိပါက အီးမေးလ်ပေးပို့နိုင်ပါသည်-</p>
+        <a href="mailto:dcbarber.training@gmail.com" class="email-link">📧 dcbarber.training@gmail.com</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    © 2026 Hair Training Manual — All rights reserved.
   </div>
 </div>
+
+<script>
+  let isMyanmar = false;
+  const langBtn = document.getElementById('langToggle');
+  const engContent = document.getElementById('engContent');
+  const mmContent = document.getElementById('mmContent');
+  
+  langBtn.addEventListener('click', () => {
+    isMyanmar = !isMyanmar;
+    if (isMyanmar) {
+      engContent.style.display = 'none';
+      mmContent.style.display = 'block';
+      langBtn.innerHTML = '🇬🇧 English';
+    } else {
+      engContent.style.display = 'block';
+      mmContent.style.display = 'none';
+      langBtn.innerHTML = '🇲🇲 မြန်မာ';
+    }
+  });
+  
+  // Swipe to close - BOTH directions (up or down)
+  const container = document.getElementById('pageContainer');
+  let startY = 0;
+  let currentY = 0;
+  
+  container.addEventListener('touchstart', (e) => {
+    startY = e.touches[0].clientY;
+    currentY = startY;
+  });
+  
+  container.addEventListener('touchmove', (e) => {
+    currentY = e.touches[0].clientY;
+    const diff = currentY - startY;
+    // Allow both up and down swipe
+    if (Math.abs(diff) > 0) {
+      const translateY = diff * 0.5;
+      const opacity = 1 - Math.abs(diff) / 400;
+      container.style.transform = `translateY(${translateY}px)`;
+      container.style.opacity = `${Math.max(0, opacity)}`;
+    }
+  });
+  
+  container.addEventListener('touchend', () => {
+    const diff = currentY - startY;
+    // Close if swiped more than 80px in either direction
+    if (Math.abs(diff) > 80) {
+      container.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+      const direction = diff > 0 ? '100%' : '-100%';
+      container.style.transform = `translateY(${direction})`;
+      container.style.opacity = '0';
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 200);
+    } else {
+      // Reset position
+      container.style.transform = '';
+      container.style.opacity = '';
+      setTimeout(() => {
+        container.style.transition = '';
+      }, 200);
+    }
+    startY = 0;
+    currentY = 0;
+  });
+</script>
+
 </body>
 </html>
