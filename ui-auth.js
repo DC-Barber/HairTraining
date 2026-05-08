@@ -25,6 +25,8 @@ const UIAuth = {
                 
                 <div style="margin-top:55px;">
                     <h3 id="modal-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.1rem;">DC_BARBER_ACADEMY</h3>
+                    <h2 id="form-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.1rem;">Login</h2>
+              
                 </div>
                 
                 <input type="text" id="login-username" maxlength="10" placeholder="Username (6-10 chars)" style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;outline:none;box-sizing:border-box;">
@@ -66,7 +68,7 @@ const UIAuth = {
 
         document.getElementById('mode-toggle-btn').onclick = () => {
             isRegisterMode = !isRegisterMode;
-            document.getElementById('modal-title').innerText = isRegisterMode ? "Register" : "Login";
+            document.getElementById('form-title').innerText = isRegisterMode ? "Register" : "Login";
             document.getElementById('reg-fields').style.display = isRegisterMode ? 'block' : 'none';
             document.getElementById('login-submit-btn').innerText = isRegisterMode ? 'Register' : 'Login';
             document.getElementById('mode-toggle-text').innerText = isRegisterMode ? "Already have an account? " : "No account? ";
