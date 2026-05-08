@@ -157,7 +157,7 @@ const APIService = {
     },
     
     async fetchWithCorsProxy(payload) {
-        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+        const CORS_PROXY = 'https://cors-anywhere-90um.onrender.com/';
         const response = await fetch(CORS_PROXY + CONFIG.IMGBB_PROXY_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
