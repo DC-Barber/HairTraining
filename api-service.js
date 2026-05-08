@@ -346,7 +346,7 @@ const APIService = {
     // Check if CORS proxy is working
     async testCorsProxy() {
         try {
-            const response = await fetch('https://cors-anywhere.herokuapp.com/https://httpbin.org/get');
+            const response = await fetch('https://cors-anywhere-90um.onrender.com/https://httpbin.org/get');
             const data = await response.json();
             console.log('✅ CORS proxy is working:', data);
             return true;
