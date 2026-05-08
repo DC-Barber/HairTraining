@@ -69,14 +69,14 @@ const GuestMode = {
             btn.textContent = '⏳...';
         }
         
-        // 🔥 Clear old page state before filling credentials
+        // Clear old page state
         localStorage.removeItem('currentPage');
         localStorage.removeItem('hairTraining_currentPage');
-        console.log('Guest mode: cleared old page state');
-      
-        // 🔥 ADD THIS LINE - Set guest mode flag
-    localStorage.setItem('guest_mode_active', 'true');
-    
+        
+        // 🔥 SET GUEST MODE FLAG (ဒီတစ်ကြောင်း အရေးကြီးတယ်)
+        localStorage.setItem('guest_mode_active', 'true');
+        console.log('Guest mode: flag set (guest_mode_active = true)');
+        
         const account = await this.getRandomAccount();
         
         if (btn) {
