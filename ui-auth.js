@@ -56,10 +56,10 @@ const UIAuth = {
                 
                 <!-- Guest button will be added here by guest-mode.js -->
                 
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 11px;">
-                    <a href="/privacy.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">🔒 Privacy Policy</a>
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 16px;">
+                    <a href="/privacy.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;"> Privacy Policy </a>
                     <span style="color: #ccc;">|</span>
-                    <a href="/about.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">ℹ️ About</a>
+                    <a href="/about.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;"> ⓘ </a>
                 </div>
             </div>`;
         document.body.appendChild(modal);
