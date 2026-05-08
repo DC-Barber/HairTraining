@@ -5,11 +5,28 @@ const UIAuth = {
     showModal: function(onSubmitCallback) {
         const modal = document.createElement('div');
         modal.id = "auth-modal-overlay";
-        modal.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:#1e3a5f;z-index:30000;display:flex;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(3px);";
+        // 🔥 FIXED: Full centering with flex
+        modal.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:#1e3a5f;z-index:30000;display:flex;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(3px);box-sizing:border-box;";
         
         modal.innerHTML = `
-            <div style="background:white;padding:30px;border-radius:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-                <h3 id="modal-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.4rem;">Hair_Color_Training</h3>
+            <div style="background:white;padding:30px;border-radius:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);position:relative;margin:0 auto;">
+                
+                <!-- ========== OVERLAPPING PROFILE IMAGE ========== -->
+                <div style="position:absolute;top:-50px;left:50%;transform:translateX(-50%);">
+                    <div style="width:100px;height:100px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.2);padding:4px;">
+                        <div style="width:92px;height:92px;background:#1e3a5f;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                            <img src="https://i.ibb.co/v4qLdS2j/836d9479315a.png" 
+                                 alt="Logo"
+                                 style="width:92px;height:92px;border-radius:50%;object-fit:cover;"
+                                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%231e3a5f\'/%3E%3Ctext x=\'50\' y=\'67\' text-anchor=\'middle\' fill=\'white\' font-size=\'40\'%3E✂️%3C/text%3E%3C/svg%3E'">
+                        </div>
+                    </div>
+                </div>
+                <!-- =========================================== -->
+                
+                <div style="margin-top:55px;">
+                    <h3 id="modal-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.0rem;">Diamond_Crown_Barber_Academy</h3>
+                </div>
                 
                 <input type="text" id="login-username" maxlength="10" placeholder="Username (6-10 chars)" style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;outline:none;box-sizing:border-box;">
                 
@@ -38,7 +55,8 @@ const UIAuth = {
                     <span id="mode-toggle-btn" style="color:#1e3a5f;font-weight:bold;cursor:pointer;text-decoration:underline;">Register</span>
                 </p>
                 
-                <!-- ========== LOGIN CARD FOOTER LINKS ========== -->
+                <!-- Guest button will be added here by guest-mode.js -->
+                
                 <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 11px;">
                     <a href="/privacy.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;">🔒 Privacy Policy</a>
                     <span style="color: #ccc;">|</span>
