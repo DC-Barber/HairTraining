@@ -6,129 +6,46 @@
     <title>Hair Training Exam</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- ========== GUEST GUARD - BLOCK GUEST USERS ========== -->
+    <!-- ========== GUEST GUARD - REDIRECT IMMEDIATELY ========== -->
     <script>
         (function() {
             // Check if user is guest mode
-            function isGuestMode() {
-                // Check direct flag
-                if (localStorage.getItem('guest_mode_active') === 'true') {
-                    return true;
+            let isGuest = false;
+            
+            // Check direct flag
+            if (localStorage.getItem('guest_mode_active') === 'true') {
+                isGuest = true;
+            }
+            
+            // Check username prefix
+            try {
+                const userData = localStorage.getItem('userData');
+                if (userData) {
+                    const data = JSON.parse(userData);
+                    if (data.username && data.username.toLowerCase().startsWith('guest')) {
+                        isGuest = true;
+                    }
                 }
-                // Check username prefix
-                try {
-                    const userData = localStorage.getItem('userData');
+            } catch(e) {}
+            
+            try {
+                if (typeof CONFIG !== 'undefined' && CONFIG.USER_DATA_KEY) {
+                    const userData = localStorage.getItem(CONFIG.USER_DATA_KEY);
                     if (userData) {
                         const data = JSON.parse(userData);
                         if (data.username && data.username.toLowerCase().startsWith('guest')) {
-                            localStorage.setItem('guest_mode_active', 'true');
-                            return true;
+                            isGuest = true;
                         }
                     }
-                } catch(e) {}
-                
-                try {
-                    if (typeof CONFIG !== 'undefined' && CONFIG.USER_DATA_KEY) {
-                        const userData = localStorage.getItem(CONFIG.USER_DATA_KEY);
-                        if (userData) {
-                            const data = JSON.parse(userData);
-                            if (data.username && data.username.toLowerCase().startsWith('guest')) {
-                                localStorage.setItem('guest_mode_active', 'true');
-                                return true;
-                            }
-                        }
-                    }
-                } catch(e) {}
-                
-                return false;
-            }
+                }
+            } catch(e) {}
             
-            // Block guest users immediately
-            if (isGuestMode()) {
-                // Clear page and show access denied message
-                document.write(`
-                    <!DOCTYPE html>
-                    <html lang="my">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Access Denied</title>
-                        <style>
-                            * {
-                                margin: 0;
-                                padding: 0;
-                                box-sizing: border-box;
-                            }
-                            body {
-                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                                background: linear-gradient(145deg, #f6efe3 0%, #ede3d4 100%);
-                                min-height: 100vh;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                padding: 20px;
-                            }
-                            .denied-card {
-                                background: white;
-                                border-radius: 24px;
-                                padding: 40px;
-                                max-width: 400px;
-                                text-align: center;
-                                box-shadow: 0 20px 35px -12px rgba(0,0,0,0.25);
-                            }
-                            .denied-icon {
-                                font-size: 64px;
-                                margin-bottom: 20px;
-                            }
-                            .denied-title {
-                                color: #1e3a5f;
-                                font-size: 1.5rem;
-                                margin-bottom: 15px;
-                            }
-                            .denied-message {
-                                color: #555;
-                                margin-bottom: 15px;
-                                line-height: 1.6;
-                            }
-                            .denied-note {
-                                background: #f0e7dc;
-                                padding: 12px;
-                                border-radius: 12px;
-                                margin: 20px 0;
-                                font-size: 0.85rem;
-                                color: #666;
-                            }
-                            .back-btn {
-                                display: inline-block;
-                                background: #1e3a5f;
-                                color: white;
-                                padding: 12px 24px;
-                                border-radius: 12px;
-                                text-decoration: none;
-                                font-weight: bold;
-                                margin-top: 10px;
-                            }
-                            .back-btn:hover {
-                                background: #2c4a7a;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="denied-card">
-                            <div class="denied-icon">🔒</div>
-                            <h1 class="denied-title">Exam Access Restricted</h1>
-                            <p class="denied-message">Guest users cannot access the exam.</p>
-                            <p class="denied-message">Please <strong>Register</strong> and wait for <strong>Admin Approval</strong> to unlock this feature.</p>
-                            <div class="denied-note">
-                                ℹ️ Registered users need to be approved by admin before accessing exam.
-                            </div>
-                            <a href="/" class="back-btn">← Back to Home</a>
-                        </div>
-                    </body>
-                    </html>
-                `);
-                document.close();
-                throw new Error('Guest access blocked');
+            // If guest, redirect immediately
+            if (isGuest) {
+                // Use window.location.replace to prevent back button
+                window.location.replace('/');
+                // Also show alert
+                alert('Guest users cannot access the exam. Please register and login.');
             }
         })();
     </script>
