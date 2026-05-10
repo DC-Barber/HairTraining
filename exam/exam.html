@@ -6,18 +6,15 @@
     <title>Hair Training Exam</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- ========== GUEST GUARD - REDIRECT IMMEDIATELY ========== -->
+    <!-- ========== GUEST GUARD ========== -->
     <script>
         (function() {
-            // Check if user is guest mode
             let isGuest = false;
             
-            // Check direct flag
             if (localStorage.getItem('guest_mode_active') === 'true') {
                 isGuest = true;
             }
             
-            // Check username prefix
             try {
                 const userData = localStorage.getItem('userData');
                 if (userData) {
@@ -40,11 +37,8 @@
                 }
             } catch(e) {}
             
-            // If guest, redirect immediately
             if (isGuest) {
-                // Use window.location.replace to prevent back button
                 window.location.replace('/');
-                // Also show alert
                 alert('Guest users cannot access the exam. Please register and login.');
             }
         })();
@@ -52,21 +46,37 @@
     <!-- ========== =========== ========== -->
 </head>
 <body>
-<div class="exam-container">
-    <div class="exam-header">
-        <h1>Hair Training Exam</h1>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
+<div class="exam-wrapper">
+    <div class="exam-container">
+        <!-- ========== OVERLAPPING PROFILE IMAGE (တစ်ဝက် Card ထဲ၊ တစ်ဝက် Card အပြင်) ========== -->
+        <div class="exam-image-wrapper">
+            <div class="exam-profile-image">
+                <div class="image-circle">
+                    <div class="image-inner">
+                        <img src="https://i.ibb.co/v4qLdS2j/836d9479315a.png" 
+                             alt="DC Barber Logo"
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="question-card">
-        <div class="question-text" id="questionText">Loading...</div>
-        <div class="options" id="optionsContainer"></div>
-        <div class="nav-buttons">
-            <button class="btn-prev" id="prevBtn">◀ Previous</button>
-            <button class="btn-next" id="nextBtn">Next ▶</button>
+        <!-- =========================================================== -->
+        
+        <div class="exam-header">
+            <h1>📝 Hair Training Exam</h1>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
         </div>
-        <div class="question-counter" id="counter">Question 0 / 20</div>
+        <div class="question-card">
+            <div class="question-text" id="questionText">Loading...</div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="nav-buttons">
+                <button class="btn-prev" id="prevBtn">◀ Previous</button>
+                <button class="btn-next" id="nextBtn">Next ▶</button>
+            </div>
+            <div class="question-counter" id="counter">Question 0 / 20</div>
+        </div>
     </div>
 </div>
 
