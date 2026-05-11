@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Hair Training Hub | Video Library</title>
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+    <!-- Sticky Header - always visible at top -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <span class="logo-icon">✂️</span>
+                <h1 id="mainTitle">Hair Training Hub</h1>
+            </div>
+            <div class="header-badge">
+                <span class="badge-text" id="activeCategoryBadge">All Videos</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div id="videoGrid" class="video-grid">
+            <div class="loader-container">
+                <div class="loader-spinner"></div>
+                <p id="loadingText">Loading video library...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button (FAB) -->
+    <button class="fab-button" id="fabBtn" aria-label="Open menu">
+        <span class="fab-icon">📚</span>
+    </button>
+
+    <!-- FAB Menu Overlay -->
+    <div class="fab-menu-overlay" id="fabOverlay"></div>
+    
+    <!-- FAB Navigation Menu -->
+    <div class="fab-menu" id="fabMenu">
+        <div class="fab-menu-header">
+            <h3 id="menuTitle">Training Categories</h3>
+            <button class="close-menu-btn" id="closeMenuBtn">✕</button>
+        </div>
+        
+        <!-- Language Toggle Button -->
+        <div class="language-toggle-container">
+            <button class="lang-toggle-btn" id="langToggleBtn">
+                <span class="lang-eng">🇬🇧 English</span>
+                <span class="lang-separator">|</span>
+                <span class="lang-my">🇲🇲 မြန်မာ</span>
+            </button>
+        </div>
+        
+        <div class="category-search">
+            <input type="text" id="categorySearchInput" placeholder="🔍 Search categories..." autocomplete="off">
+        </div>
+        <ul class="category-list" id="categoryList">
+            <!-- Categories will be populated by JavaScript -->
+        </ul>
+        <div class="fab-footer">
+            <span id="footerText">Video tutorials library</span>
+        </div>
+    </div>
+
+    <script src="chat.js"></script>
+</body>
+</html>
