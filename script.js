@@ -1662,7 +1662,7 @@ Highlight ပုံစံ အချောင်းရွေးထုတ်ခြ
 </div>`, img: "img/i41.png" },
     { id: 42, title: "ဆံပင်ပုံစံများ - Diamond Crown", content: `<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; background: white; z-index: 9999;">
     <iframe 
-        src="" 
+        src="chat.html" 
         style="width: 100%; height: 100%; border: none; display: block;">
     </iframe>
     
