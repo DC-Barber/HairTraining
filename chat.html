@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Video Library | Hair Training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #fefaf5;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 20px 16px 40px 16px;
+            color: #2c241a;
+        }
+
+        /* elegant container like a manual page */
+        .video-container {
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        /* header with stylized line */
+        .library-header {
+            text-align: center;
+            margin-bottom: 28px;
+            margin-top: 8px;
+        }
+
+        .library-header h1 {
+            font-size: 1.85rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #8b5a2b 0%, #c47e3a 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .library-header .sub {
+            font-size: 0.85rem;
+            color: #b47c48;
+            border-top: 1px solid #f0e0d0;
+            display: inline-block;
+            padding-top: 8px;
+            margin-top: 6px;
+        }
+
+        hr.divider {
+            margin: 16px 0 20px 0;
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, #f0e2d0, #d6b78b, #f0e2d0);
+        }
+
+        /* grid / card layout */
+        .video-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
+            transition: all 0.25s ease;
+            border: 1px solid #f2e3d6;
+        }
+
+        .video-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 32px -12px rgba(0, 0, 0, 0.12);
+            border-color: #e2cfbc;
+        }
+
+        /* youtube responsive embed wrapper */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            background: #1e1b17;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-info {
+            padding: 18px 20px 20px 20px;
+        }
+
+        .video-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #3e2c1c;
+            line-height: 1.35;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .video-title .badge {
+            background: #f3ede7;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 60px;
+            color: #b95f1a;
+            letter-spacing: 0.3px;
+        }
+
+        .video-desc {
+            font-size: 0.85rem;
+            color: #776b5e;
+            margin-top: 6px;
+            line-height: 1.45;
+        }
+
+        .empty-state {
+            background: #fcf6ef;
+            border-radius: 40px;
+            padding: 52px 28px;
+            text-align: center;
+            border: 1px dashed #ddc9b4;
+            color: #a57c54;
+        }
+
+        .empty-state svg {
+            opacity: 0.6;
+            margin-bottom: 14px;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .empty-state small {
+            font-size: 0.8rem;
+            color: #bb9b7a;
+            display: block;
+            margin-top: 12px;
+        }
+
+        .refresh-btn {
+            background: #f0e5db;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #7b4a2a;
+            margin-top: 22px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-btn:hover {
+            background: #e2d1c2;
+            color: #5e3a1f;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 0.7rem;
+            color: #cbb292;
+            border-top: 1px solid #f0e2d4;
+            padding-top: 20px;
+        }
+
+        /* loading state */
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 48px 20px;
+            gap: 12px;
+            color: #bb8f63;
+        }
+
+        .loader .dot {
+            width: 10px;
+            height: 10px;
+            background: #cb9c6e;
+            border-radius: 50%;
+            animation: pulse 1.2s infinite ease-in-out;
+        }
+
+        .loader .dot:nth-child(2) { animation-delay: 0.2s; background: #b87a44; }
+        .loader .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8);}
+            50% { opacity: 1; transform: scale(1);}
+        }
+
+        @media (max-width: 520px) {
+            body { padding: 16px 12px 30px 12px; }
+            .video-title { font-size: 1.05rem; }
+            .video-info { padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="video-container">
+    <div class="library-header">
+        <h1>📺  Video Training Hub</h1>
+        <div class="sub">Practical tutorials – hair coloring & techniques</div>
+        <hr class="divider">
+    </div>
+
+    <!-- grid where videos will appear -->
+    <div id="videoGrid" class="video-grid">
+        <div class="loader">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span style="margin-left: 8px;">Loading lessons from sheet...</span>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        ⚡ Content synced from Google Sheets — add new rows with Title & YouTube link to update gallery.
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // CONFIGURATION: Google Sheet as JSON (published CSV or JSON)
+    // Use Google Sheets Web App URL that returns JSON array with columns: Title, Link
+    // You can also use a simple Google Sheets CSV-to-JSON proxy.
+    // For simplicity and reliability, we use a public sheets service that converts spreadsheet to JSON.
+    // You can replace this URL with your own published Google Sheet.
+    // --------------------------------------------------------------
+    
+    // ======================== INSTRUCTIONS =========================
+    // 1. Create a Google Sheet with two columns: "Title" and "Link"
+    // 2. Publish the sheet: File → Share → Publish to web → CSV
+    // 3. Copy the CSV link (something like: https://docs.google.com/spreadsheets/d/e/.../pub?output=csv)
+    // 4. Replace the SHEET_CSV_URL below with your published CSV link.
+    // 5. The script will fetch CSV, parse, and display videos on page 42.
+    //    Each row must contain a valid YouTube link (url or embed format).
+    // ================================================================
+    
+    // ⬇️⬇️⬇️ CHANGE THIS URL TO YOUR PUBLISHED GOOGLE SHEET CSV LINK ⬇️⬇️⬇️
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTExZ8z2eKxltk7zL7jPT7R6lRIrEEHMScT-rM96GJRp9_1SxPwQXhqBwMyUclIucOxyB8QO0pO8I4R/pub?output=csv";
+    
+    // Fallback demo videos (only if sheet fetch fails OR empty)
+    const FALLBACK_VIDEOS = [
+        { title: "🎨 Hair Color Theory Basics", link: "https://www.youtube.com/watch?v=QRdMR0QZT3U" },
+        { title: "✂️ How to Do a Perfect Bleach & Tone", link: "https://www.youtube.com/watch?v=EjxfQviGihI" },
+        { title: "💇‍♀️ Professional Balayage Step by Step", link: "https://www.youtube.com/watch?v=0rOzwPZ1qzI" },
+        { title: "🌈 Complementary Colors & Neutralizing", link: "https://www.youtube.com/watch?v=e9_J6vI-ZMU" }
+    ];
+
+    // Helper: Convert YouTube various formats to embed URL
+    function getYoutubeEmbedUrl(url) {
+        if (!url) return null;
+        let videoId = null;
+        // Handle youtu.be format
+        if (url.includes("youtu.be")) {
+            const parts = url.split("/");
+            let last = parts.pop();
+            if (last.includes("?")) last = last.split("?")[0];
+            videoId = last;
+        }
+        // Handle youtube.com watch?v=...
+        else if (url.includes("youtube.com/watch")) {
+            const urlParams = new URL(url);
+            videoId = urlParams.searchParams.get("v");
+        }
+        // Handle youtube.com/embed/...
+        else if (url.includes("youtube.com/embed/")) {
+            const parts = url.split("/embed/");
+            if (parts[1]) videoId = parts[1].split("?")[0];
+        }
+        // if direct embed link passed without domain
+        else if (url.match(/^[a-zA-Z0-9_-]{11}$/)) {
+            videoId = url;
+        }
+        if (videoId) {
+            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1`;
+        }
+        return null;
+    }
+
+    // Parse CSV string into array of objects { title, link }
+    function parseCSV(csvText) {
+        const lines = csvText.split(/\r?\n/);
+        if (lines.length === 0) return [];
+        // headers: assume first row "Title,Link" (case-insensitive)
+        const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+        const titleIndex = headers.findIndex(h => h.includes("title"));
+        const linkIndex = headers.findIndex(h => h.includes("link") || h.includes("url") || h === "link");
+        
+        if (titleIndex === -1 || linkIndex === -1) {
+            console.warn("CSV headers missing 'Title' or 'Link' column. Using fallback.");
+            return null;
+        }
+        
+        const results = [];
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            // simple CSV parse respecting quotes (basic)
+            let row = [];
+            let inQuote = false;
+            let current = "";
+            for (let ch of lines[i]) {
+                if (ch === '"') {
+                    inQuote = !inQuote;
+                } else if (ch === ',' && !inQuote) {
+                    row.push(current.trim());
+                    current = "";
+                } else {
+                    current += ch;
+                }
+            }
+            row.push(current.trim());
+            
+            let rawTitle = (row[titleIndex] || "").replace(/^"|"$/g, '').trim();
+            let rawLink = (row[linkIndex] || "").replace(/^"|"$/g, '').trim();
+            
+            if (rawTitle && rawLink && rawLink.startsWith("http")) {
+                results.push({ title: rawTitle, link: rawLink });
+            }
+        }
+        return results;
+    }
+
+    // render video cards
+    function renderVideos(videoList) {
+        const grid = document.getElementById("videoGrid");
+        if (!grid) return;
+        
+        if (!videoList || videoList.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#b87a44" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="20" height="12" rx="2" ry="2"></rect>
+                        <polygon points="10 6 10 18 17 12 10 6"></polygon>
+                    </svg>
+                    <p>📭 No videos found in Google Sheet</p>
+                    <small>Add rows with Title and YouTube link columns → refresh to see content</small>
+                    <button id="manualRefreshBtn" class="refresh-btn">⟳ Refresh data</button>
+                </div>
+            `;
+            const refreshBtn = document.getElementById("manualRefreshBtn");
+            if (refreshBtn) refreshBtn.addEventListener("click", () => loadVideosFromSheet());
+            return;
+        }
+        
+        // build cards
+        let cardsHtml = "";
+        for (let idx = 0; idx < videoList.length; idx++) {
+            const v = videoList[idx];
+            const embedUrl = getYoutubeEmbedUrl(v.link);
+            if (!embedUrl) {
+                console.warn(`Invalid YouTube link: ${v.link}`);
+                continue;
+            }
+            const fallbackThumb = `https://img.youtube.com/vi/${embedUrl.split('/embed/')[1]?.split('?')[0]}/mqdefault.jpg`;
+            cardsHtml += `
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe 
+                            src="${embedUrl}" 
+                            title="${escapeHtml(v.title)}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">
+                            <span>${escapeHtml(v.title)}</span>
+                            <span class="badge">tutorial</span>
+                        </div>
+                        <div class="video-desc">
+                            🎯 Practical demonstration • Hair professional techniques
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (cardsHtml === "") {
+            grid.innerHTML = `<div class="empty-state"><p>⚠️ No valid YouTube links found. Please check sheet links.</p><button id="manualRefreshBtn" class="refresh-btn">⟳ Retry</button></div>`;
+            const refreshBtn = document.getElementById("manualRefreshBtn");
+            if (refreshBtn) refreshBtn.addEventListener("click", () => loadVideosFromSheet());
+            return;
+        }
+        
+        grid.innerHTML = cardsHtml;
+    }
+    
+    // simple escape to prevent XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+    
+    // fetch data from Google Sheet CSV
+    async function loadVideosFromSheet() {
+        const grid = document.getElementById("videoGrid");
+        if (grid) grid.innerHTML = `<div class="loader"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span style="margin-left: 8px;">Fetching latest videos...</span></div>`;
+        
+        try {
+            // Fetch CSV with cache buster
+            const response = await fetch(`${SHEET_CSV_URL}?t=${Date.now()}`, {
+                method: 'GET',
+                headers: { 'Cache-Control': 'no-cache' }
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const csvText = await response.text();
+            const videos = parseCSV(csvText);
+            
+            if (videos && videos.length > 0) {
+                renderVideos(videos);
+            } else {
+                // if sheet has no valid rows, fallback to demo content (but still show manual option)
+                console.log("No video rows found in CSV, using fallback gallery.");
+                renderVideos(FALLBACK_VIDEOS);
+                // add note inside footer after render? extra subtle indicator
+                const footerNote = document.querySelector('.footer-note');
+                if (footerNote && !footerNote.innerHTML.includes('Demo mode')) {
+                    footerNote.innerHTML = `✨ Demo mode — using sample videos. To use your own sheet, replace SHEET_CSV_URL in script. ✨<br>⚡ Content synced from Google Sheets — add new rows with Title & YouTube link to update gallery.`;
+                }
+            }
+        } catch (err) {
+            console.error("Failed to fetch sheet:", err);
+            // Show fallback videos and retry button
+            const errorHtml = `
+                <div class="empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#b87a44" stroke-width="1.2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <circle cx="12" cy="16" r="0.5" fill="#b87a44" stroke="none"></circle>
+                    </svg>
+                    <p>⚠️ Could not connect to Google Sheet</p>
+                    <small>Using built-in video library instead.</small>
+                    <button id="retrySheetBtn" class="refresh-btn">⟳ Retry connection</button>
+                </div>
+            `;
+            grid.innerHTML = errorHtml;
+            // display fallback videos after small delay? better show fallback directly
+            renderVideos(FALLBACK_VIDEOS);
+            const retryBtn = document.getElementById("retrySheetBtn");
+            if (retryBtn) {
+                retryBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    loadVideosFromSheet();
+                });
+            }
+            // also add manual refresh if fallback shows empty-state but we already render fallback
+            const fallbackRefresh = document.getElementById("manualRefreshBtn");
+            if (fallbackRefresh) fallbackRefresh.addEventListener("click", () => loadVideosFromSheet());
+        }
+    }
+    
+    // load on page ready
+    document.addEventListener("DOMContentLoaded", () => {
+        loadVideosFromSheet();
+    });
+    
+    // Note: This chat.html is fully embedded inside page 42 iframe in script (1).js
+    // It works standalone and also when opened via iframe. All styles are responsive.
+    // Google Sheet columns requirement: "Title" and "Link" (CSV headers). 
+    // Link must be full YouTube URL (watch?v=... or youtu.be/...)
+</script>
+</body>
+</html>
