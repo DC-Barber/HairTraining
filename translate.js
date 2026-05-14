@@ -1,74 +1,30 @@
-// translate.js - Google Translate Integration (Fixed Version)
+// translate.js - Simple Version
 
-const TranslationManager = {
-    currentLang: 'my',
+(function() {
+    console.log('🌐 Translation script loading...');
     
-    languages: {
-        'my': { name: 'မြန်မာ', flag: '🇲🇲', code: 'my', googleCode: 'my' },
-        'en': { name: 'English', flag: '🇬🇧', code: 'en', googleCode: 'en' },
-        'vi': { name: 'Tiếng Việt', flag: '🇻🇳', code: 'vi', googleCode: 'vi' },
-        'ja': { name: '日本語', flag: '🇯🇵', code: 'ja', googleCode: 'ja' },
-        'th': { name: 'ภาษาไทย', flag: '🇹🇭', code: 'th', googleCode: 'th' }
-    },
+    let currentLang = 'my';
     
-    excludeSelectors: [
-        'input', 'textarea', 'code', 'pre', '.no-translate',
-        '#auth-modal-overlay input', '#auth-modal-overlay select',
-        '#login-username', '#login-password', '#register-phone', '#register-fullname',
-        '[type="password"]', '[type="text"]', '[type="tel"]'
-    ],
+    const languages = {
+        'my': { name: 'မြန်မာ', flag: '🇲🇲' },
+        'en': { name: 'English', flag: '🇬🇧' },
+        'vi': { name: 'Tiếng Việt', flag: '🇻🇳' },
+        'ja': { name: '日本語', flag: '🇯🇵' },
+        'th': { name: 'ภาษาไทย', flag: '🇹🇭' }
+    };
     
-    translationCache: new Map(),
+    // စာသားတွေ သိမ်းမယ်
+    const originalTexts = new Map();
     
-    init() {
-        const savedLang = localStorage.getItem('preferred_language');
-        if (savedLang && this.languages[savedLang]) {
-            this.currentLang = savedLang;
-        } else {
-            this.currentLang = 'my';
-        }
+    // Button တည်ဆောက်မယ်
+    function createDropdown() {
+        console.log('🔧 Creating language dropdown...');
         
-        // Wait for DOM to be fully ready and auth modal to potentially close
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.waitForHeaderAndCreateDropdown());
-        } else {
-            this.waitForHeaderAndCreateDropdown();
-        }
-    },
-    
-    waitForHeaderAndCreateDropdown() {
-        // Wait for header to be available (auth modal might be blocking)
-        let attempts = 0;
-        const maxAttempts = 30;
+        // ရှိပြီးသားကို ဖျက်မယ်
+        const existing = document.getElementById('lang-dropdown-container');
+        if (existing) existing.remove();
         
-        const checkInterval = setInterval(() => {
-            attempts++;
-            
-            // Look for header or profile icon
-            const header = document.querySelector('.clean-header');
-            const profileIcon = document.getElementById('profile-icon-btn');
-            
-            // Also check if auth modal is not visible (user is logged in)
-            const authModal = document.getElementById('auth-modal-overlay');
-            const isLoggedIn = !authModal || authModal.style.display === 'none' || authModal.style.display === '';
-            
-            if ((header && profileIcon) || (header && isLoggedIn && attempts > 10)) {
-                clearInterval(checkInterval);
-                this.createLanguageDropdown();
-                console.log('✅ Translation dropdown created');
-            } else if (attempts >= maxAttempts) {
-                clearInterval(checkInterval);
-                console.log('⚠️ Could not find header, creating dropdown at body');
-                this.createLanguageDropdownFallback();
-            }
-        }, 200);
-    },
-    
-    createLanguageDropdownFallback() {
-        // Create dropdown in top-right corner as fallback
-        const existingContainer = document.getElementById('lang-dropdown-container');
-        if (existingContainer) return;
-        
+        // Container ဆောက်မယ်
         const container = document.createElement('div');
         container.id = 'lang-dropdown-container';
         container.style.cssText = `
@@ -78,55 +34,12 @@ const TranslationManager = {
             z-index: 30001;
         `;
         
-        this.buildDropdownElements(container);
-        document.body.appendChild(container);
-    },
-    
-    createLanguageDropdown() {
-        const existingContainer = document.getElementById('lang-dropdown-container');
-        if (existingContainer) return;
-        
-        // Try to find header
-        const header = document.querySelector('.clean-header');
-        const profileIcon = document.getElementById('profile-icon-btn');
-        
-        const container = document.createElement('div');
-        container.id = 'lang-dropdown-container';
-        container.style.cssText = `
-            position: relative;
-            display: inline-block;
-            margin-right: 8px;
-        `;
-        
-        this.buildDropdownElements(container);
-        
-        if (header) {
-            const headerRightDiv = header.querySelector('div:last-child');
-            if (headerRightDiv) {
-                headerRightDiv.insertBefore(container, profileIcon);
-            } else {
-                header.appendChild(container);
-            }
-        } else {
-            // Fallback to fixed position
-            container.style.cssText = `
-                position: fixed;
-                top: 12px;
-                right: 70px;
-                z-index: 30001;
-            `;
-            document.body.appendChild(container);
-        }
-    },
-    
-    buildDropdownElements(container) {
-        // Create button
-        const dropdownBtn = document.createElement('button');
-        dropdownBtn.id = 'lang-dropdown-btn';
-        dropdownBtn.innerHTML = `${this.languages[this.currentLang].flag} ${this.languages[this.currentLang].name}`;
-        dropdownBtn.style.cssText = `
-            background: rgba(30, 58, 95, 0.9);
-            backdrop-filter: blur(4px);
+        // Button ဆောက်မယ်
+        const btn = document.createElement('button');
+        btn.id = 'lang-dropdown-btn';
+        btn.innerHTML = '🇲🇲 မြန်မာ ▼';
+        btn.style.cssText = `
+            background: #1e3a5f;
             border: none;
             border-radius: 30px;
             padding: 6px 12px;
@@ -137,274 +50,152 @@ const TranslationManager = {
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s ease;
-            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         `;
         
-        dropdownBtn.onmouseenter = () => {
-            dropdownBtn.style.background = 'rgba(30, 58, 95, 1)';
-        };
-        dropdownBtn.onmouseleave = () => {
-            dropdownBtn.style.background = 'rgba(30, 58, 95, 0.9)';
-        };
-        
-        // Create menu
-        const dropdownMenu = document.createElement('div');
-        dropdownMenu.id = 'lang-dropdown-menu';
-        dropdownMenu.style.cssText = `
+        // Menu ဆောက်မယ်
+        const menu = document.createElement('div');
+        menu.id = 'lang-dropdown-menu';
+        menu.style.cssText = `
             position: absolute;
             top: 100%;
             right: 0;
             margin-top: 5px;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             min-width: 140px;
             z-index: 30002;
             display: none;
             overflow: hidden;
         `;
         
-        // Add language options
-        for (const [code, lang] of Object.entries(this.languages)) {
+        // Language options တွေထည့်မယ်
+        for (const [code, lang] of Object.entries(languages)) {
             const option = document.createElement('div');
-            option.className = 'lang-option';
-            option.setAttribute('data-lang', code);
             option.innerHTML = `${lang.flag} ${lang.name}`;
             option.style.cssText = `
                 padding: 10px 15px;
                 cursor: pointer;
                 font-size: 0.85rem;
-                transition: background 0.15s;
                 color: #333;
                 display: flex;
                 align-items: center;
                 gap: 10px;
+                transition: background 0.15s;
             `;
-            
-            option.onmouseenter = () => { option.style.backgroundColor = '#f0e7dc'; };
-            option.onmouseleave = () => { option.style.backgroundColor = 'white'; };
-            
-            option.onclick = (e) => {
-                e.stopPropagation();
-                this.switchLanguage(code);
-                dropdownMenu.style.display = 'none';
-            };
-            
-            dropdownMenu.appendChild(option);
+            option.onmouseenter = () => option.style.background = '#f0e7dc';
+            option.onmouseleave = () => option.style.background = 'white';
+            option.onclick = () => switchLanguage(code);
+            menu.appendChild(option);
         }
         
-        container.appendChild(dropdownBtn);
-        container.appendChild(dropdownMenu);
+        container.appendChild(btn);
+        container.appendChild(menu);
+        document.body.appendChild(container);
         
-        // Toggle dropdown
-        dropdownBtn.onclick = (e) => {
+        // Toggle menu
+        btn.onclick = (e) => {
             e.stopPropagation();
-            const isVisible = dropdownMenu.style.display === 'block';
-            dropdownMenu.style.display = isVisible ? 'none' : 'block';
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         };
         
-        // Close when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!container.contains(e.target)) {
-                dropdownMenu.style.display = 'none';
+        document.addEventListener('click', () => {
+            menu.style.display = 'none';
+        });
+        
+        console.log('✅ Language dropdown created!');
+    }
+    
+    // စာသားတွေကို သိမ်းမယ်
+    function saveOriginalTexts() {
+        const elements = document.querySelectorAll('.page-content p, .page-content li, .page-content h2, .page-header h2, .counter-simple, #toc-list li, .title-section h1, .title-section .eng-sub');
+        
+        elements.forEach(el => {
+            const text = el.innerText;
+            if (text && text.trim() && !originalTexts.has(el)) {
+                originalTexts.set(el, text);
             }
         });
-    },
+        
+        console.log('📝 Saved', originalTexts.size, 'original texts');
+    }
     
-    async switchLanguage(langCode) {
-        if (!this.languages[langCode] || this.currentLang === langCode) return;
+    // ဘာသာပြန်မယ်
+    async function translateText(text, targetLang) {
+        if (!text || text.trim() === '') return text;
+        if (targetLang === 'my') return text;
         
-        console.log('🌐 Switching to:', langCode);
-        this.currentLang = langCode;
-        localStorage.setItem('preferred_language', langCode);
-        
-        // Update button
-        const btn = document.getElementById('lang-dropdown-btn');
-        if (btn) {
-            btn.innerHTML = `${this.languages[langCode].flag} ${this.languages[langCode].name}`;
+        try {
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=my&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data[0][0][0] || text;
+        } catch (error) {
+            console.error('Translation error:', error);
+            return text;
         }
-        
-        this.showToast(`Translating to ${this.languages[langCode].name}...`);
-        
-        if (langCode === 'my') {
-            this.restoreOriginalContent();
-            this.showToast(`✅ Language: ${this.languages[langCode].name}`);
-        } else {
-            await this.applyTranslations();
-            this.showToast(`✅ Language: ${this.languages[langCode].name}`);
-        }
-    },
+    }
     
-    async applyTranslations() {
-        if (this.currentLang === 'my') return;
-        
-        const elements = this.getTranslatableElements();
-        console.log(`Translating ${elements.length} elements...`);
-        
-        const batchSize = 8;
-        for (let i = 0; i < elements.length; i += batchSize) {
-            const batch = elements.slice(i, i + batchSize);
-            await this.translateBatch(batch);
-        }
-    },
-    
-    getTranslatableElements() {
-        const elements = [];
-        const excludeSelectors = this.excludeSelectors.join(',');
-        
-        // Target specific content areas
-        const contentSelectors = [
-            '.page-content', '.page-header h2', '.page-header .page-number',
-            '.counter-simple', '.menu-header span', '#toc-list li',
-            '.title-section h1', '.title-section .eng-sub',
-            '.page-indicator-compact', '.profile-modal h3', '.profile-name',
-            '.profile-username', '.profile-info', '.logout-btn',
-            '#close-profile', '.lang-option'
-        ];
-        
-        const targetElements = document.querySelectorAll(contentSelectors.join(','));
-        
-        for (const el of targetElements) {
-            if (el.closest(excludeSelectors)) continue;
-            if (el.hasAttribute('data-translated')) continue;
-            
-            const text = this.getDirectText(el);
-            if (text && text.trim().length > 0 && !this.isNumericOnly(text.trim())) {
-                elements.push({
-                    element: el,
-                    originalText: text.trim(),
-                    isSimple: true
-                });
-            }
-        }
-        
-        // Also get paragraphs and list items in page content
-        const pageContent = document.querySelectorAll('.page-content p, .page-content li, .page-content div:not(.page-image)');
-        for (const el of pageContent) {
-            if (el.closest(excludeSelectors)) continue;
-            if (el.hasAttribute('data-translated')) continue;
-            
-            const text = this.getDirectText(el);
-            if (text && text.trim().length > 0 && !this.isNumericOnly(text.trim())) {
-                elements.push({
-                    element: el,
-                    originalText: text.trim(),
-                    isSimple: true
-                });
-            }
-        }
-        
-        return elements;
-    },
-    
-    getDirectText(element) {
-        let text = '';
-        for (const node of element.childNodes) {
-            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-                text += node.textContent;
-            }
-        }
-        return text;
-    },
-    
-    isNumericOnly(str) {
-        return /^[\d\s\/\.\-\[\]\(\)]+$/.test(str);
-    },
-    
-    async translateBatch(batch) {
-        const texts = batch.map(item => item.originalText);
-        const cacheKey = `${this.currentLang}|${texts.join('|')}`;
-        
-        if (this.translationCache.has(cacheKey)) {
-            const translations = this.translationCache.get(cacheKey);
-            batch.forEach((item, idx) => {
-                if (translations[idx] && translations[idx] !== item.originalText) {
-                    this.setElementText(item.element, translations[idx]);
+    // စာမျက်နှာတစ်ခုလုံးကို ဘာသာပြန်မယ်
+    async function translatePage(targetLang) {
+        if (targetLang === 'my') {
+            // မူရင်းအတိုင်း ပြန်ထားမယ်
+            for (const [el, original] of originalTexts) {
+                if (el && el.innerText !== original) {
+                    el.innerText = original;
                 }
-            });
+            }
             return;
         }
         
-        try {
-            const translations = await this.translateTexts(texts);
-            this.translationCache.set(cacheKey, translations);
-            
-            batch.forEach((item, idx) => {
-                if (translations[idx] && translations[idx] !== item.originalText) {
-                    this.setElementText(item.element, translations[idx]);
-                }
-            });
-        } catch (error) {
-            console.error('Batch error:', error);
-        }
-    },
-    
-    async translateTexts(texts) {
-        if (texts.length === 0) return [];
+        const elements = document.querySelectorAll('.page-content p, .page-content li, .page-content h2, .page-header h2, .counter-simple, #toc-list li, .title-section h1, .title-section .eng-sub');
         
-        const targetLang = this.languages[this.currentLang].googleCode;
-        const combined = texts.join('\n\n\n');
-        
-        try {
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=my&tl=${targetLang}&dt=t&q=${encodeURIComponent(combined)}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            if (data && data[0]) {
-                const translated = data[0].map(item => item[0]).join('');
-                const results = translated.split('\n\n\n');
-                while (results.length < texts.length) results.push(texts[results.length]);
-                return results;
-            }
-            return texts;
-        } catch (error) {
-            console.error('API error:', error);
-            return texts;
-        }
-    },
-    
-    setElementText(element, text) {
-        if (!element || !text) return;
-        
-        if (!element.hasAttribute('data-original-text')) {
-            element.setAttribute('data-original-text', this.getDirectText(element));
-        }
-        element.setAttribute('data-translated', this.currentLang);
-        
-        // Replace text nodes
-        for (const node of element.childNodes) {
-            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-                node.textContent = text;
-                break;
-            }
-        }
-    },
-    
-    restoreOriginalContent() {
-        const elements = document.querySelectorAll('[data-original-text]');
         for (const el of elements) {
-            const original = el.getAttribute('data-original-text');
-            if (original) {
-                for (const node of el.childNodes) {
-                    if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-                        node.textContent = original;
-                        break;
-                    }
+            const original = originalTexts.get(el);
+            if (original && el.innerText === original) {
+                const translated = await translateText(original, targetLang);
+                if (translated && translated !== original) {
+                    el.innerText = translated;
                 }
+                // Rate limit မကျော်အောင် နည်းနည်းစောင့်မယ်
+                await new Promise(r => setTimeout(r, 100));
             }
-            el.removeAttribute('data-translated');
         }
-        console.log('Restored original content');
-    },
+        
+        console.log('🌐 Translation to', targetLang, 'completed');
+    }
     
-    showToast(message) {
+    // Language ပြောင်းမယ်
+    async function switchLanguage(langCode) {
+        if (currentLang === langCode) return;
+        
+        console.log('Switching to:', langCode);
+        currentLang = langCode;
+        localStorage.setItem('preferred_language', langCode);
+        
+        // Button text ပြောင်းမယ်
+        const btn = document.getElementById('lang-dropdown-btn');
+        if (btn) {
+            btn.innerHTML = `${languages[langCode].flag} ${languages[langCode].name} ▼`;
+        }
+        
+        // Toast ပြမယ်
+        showToast(`Translating to ${languages[langCode].name}...`);
+        
+        await translatePage(langCode);
+        
+        showToast(`✅ ${languages[langCode].name}`);
+    }
+    
+    // Toast အကြောင်းကြားချက်
+    function showToast(msg) {
         const existing = document.getElementById('translation-toast');
         if (existing) existing.remove();
         
         const toast = document.createElement('div');
         toast.id = 'translation-toast';
-        toast.textContent = message;
+        toast.textContent = msg;
         toast.style.cssText = `
             position: fixed;
             bottom: 80px;
@@ -417,10 +208,6 @@ const TranslationManager = {
             font-size: 0.8rem;
             z-index: 30003;
             white-space: nowrap;
-            max-width: 90%;
-            white-space: normal;
-            text-align: center;
-            pointer-events: none;
         `;
         
         document.body.appendChild(toast);
@@ -429,11 +216,73 @@ const TranslationManager = {
             setTimeout(() => toast.remove(), 300);
         }, 2000);
     }
-};
-
-// Start when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => TranslationManager.init());
-} else {
-    TranslationManager.init();
-}
+    
+    // Page change ကို စောင့်မယ် (page navigation လုပ်ရင် ပြန်ဘာသာပြန်ဖို့)
+    function observePageChanges() {
+        const observer = new MutationObserver(() => {
+            if (currentLang !== 'my') {
+                setTimeout(() => {
+                    translatePage(currentLang);
+                }, 500);
+            }
+        });
+        
+        observer.observe(document.body, {
+            attributes: true,
+            attributeFilter: ['class'],
+            subtree: true
+        });
+        
+        // Next/prev buttons ကို နားဆင်မယ်
+        const nextBtn = document.getElementById('next-arrow');
+        const prevBtn = document.getElementById('prev-arrow');
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                setTimeout(() => {
+                    if (currentLang !== 'my') translatePage(currentLang);
+                }, 300);
+            });
+        }
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                setTimeout(() => {
+                    if (currentLang !== 'my') translatePage(currentLang);
+                }, 300);
+            });
+        }
+    }
+    
+    // Main - DOM ready ဖြစ်ရင် run မယ်
+    function init() {
+        console.log('🌐 Translation manager initializing...');
+        
+        // Button ကို 1 စက္ကန့်စောင့်ပြီးမှ တည်ဆောက်မယ် (auth modal ရှိနေလို့)
+        setTimeout(() => {
+            createDropdown();
+            saveOriginalTexts();
+            observePageChanges();
+            
+            // Saved language ရှိရင် ပြန်ဘာသာပြန်မယ်
+            const savedLang = localStorage.getItem('preferred_language');
+            if (savedLang && savedLang !== 'my' && languages[savedLang]) {
+                setTimeout(() => {
+                    switchLanguage(savedLang);
+                }, 500);
+            }
+        }, 1000);
+        
+        // DOM အပြည့်အဝ load ရင် ထပ်သိမ်းမယ်
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                saveOriginalTexts();
+                if (currentLang !== 'my') {
+                    translatePage(currentLang);
+                }
+            }, 500);
+        });
+    }
+    
+    init();
+})();
