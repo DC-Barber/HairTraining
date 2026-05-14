@@ -39,29 +39,6 @@ async function handleAuthSubmit() {
         if (data.status === 'success') {
             if (isRegisterMode) {
                 
-        // ...
-    } else {
-        await APIService.recordHistory(user, deviceId);
-        localStorage.setItem(CONFIG.AUTH_EXPIRY_KEY, (new Date().getTime() + CONFIG.LOGIN_DURATION_MS).toString());
-        
-        // ✅ Force refresh profile picture after login
-        const profileResult = await APIService.forceRefreshProfilePicture(user);
-        
-        const userData = { 
-            username: user, 
-            fullname: data.fullname, 
-            phone: data.phone,
-            profilePic: profileResult.success ? profileResult.imageUrl : null
-        };
-        localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
-        
-        if (profileResult.success && profileResult.imageUrl) {
-            localStorage.setItem(`user_profile_${user}`, profileResult.imageUrl);
-        }
-        
-        location.reload();
-    }
-}
                 UIAuth.showMessage("✅ Register အောင်မြင်သည်။ Admin အတည်ပြုချက် စောင့်ပါ။", true);
                 setTimeout(() => location.reload(), 3000);
             } else {
