@@ -18,12 +18,64 @@
     const originalTexts = new Map();
     
     const TRANSLATE_SELECTORS = [
-        'p', 'h1', 'h2', 'h3', 'h4', 'li', 'td', 'th',
-        '.page-content', '.page-header h2', '.page-number',
-        '.counter-simple', '#toc-list li', '.title-section h1',
-        '.title-section .eng-sub', '.profile-modal h3', 
-        '.profile-name', '.profile-username', '.profile-info'
-    ];
+    // Basic text elements
+    'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'span', 'strong', 'em', 'b', 'i',
+    
+    // Table elements
+    'td', 'th', 'caption', 'figcaption',
+    
+    // Page structure
+    '.page-content', '.page-content p', '.page-content li', '.page-content h2', '.page-content h3',
+    '.page-header h2', '.page-number', '.counter-simple', '#center-counter', '#header-page-num',
+    '.page-indicator-compact',
+    
+    // Navigation
+    '#toc-list li', '#toc-list a', '.menu-header span', '.fab', '.fab-menu .menu-header',
+    '.arrow-btn', '.nav-simple .counter-simple',
+    
+    // Header
+    '.title-section h1', '.title-section .eng-sub', '.clean-header .title-section',
+    
+    // Profile modal
+    '.profile-modal h3', '.profile-name', '.profile-username', '.profile-info',
+    '.profile-info div', '.profile-info b', '.profile-info span', '.logout-btn', '#close-profile',
+    '#profile-overlay .profile-modal div',
+    
+    // Buttons
+    'button:not(#lang-dropdown-btn):not(#close-menu):not(#lang-dropdown-menu button)',
+    '#login-submit-btn', '#mode-toggle-btn', '#mode-toggle-text', '#guest-mode-btn',
+    
+    // Auth modal
+    '#form-title', '#modal-title', '#login-error', '#upload-status', '.auth-modal-text',
+    
+    // Links
+    'a:not(.no-translate)', '.privacy-link', '.about-link',
+    
+    // Lists
+    'ul li', 'ol li', '.page-content ul', '.page-content ol',
+    
+    // Table cells in page content
+    '.page-content td', '.page-content th',
+    
+    // Error and status
+    '.error-message', '.success-message', '.status-message', '.alert', '.notification',
+    
+    // Form labels
+    'label', '.form-label', '.input-group-text',
+    
+    // Modal content
+    '.modal-title', '.modal-body p', '.modal-body span',
+    
+    // Accordion and tabs
+    '.accordion-header', '.accordion-button', '.accordion-body', '.tab-title', '.nav-link',
+    
+    // Footer
+    'footer p', 'footer a', '.footer-text',
+    
+    // Any element with text content
+    '[class*="title"]', '[class*="header"]', '[class*="label"]', '[class*="message"]',
+    '[class*="description"]', '[class*="text"]'
+];
     
     // Create dropdown INSIDE header (not fixed)
     function createDropdown() {
