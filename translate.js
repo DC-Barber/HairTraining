@@ -1,70 +1,77 @@
-// translate.js - Global Translation for ALL Pages
+// translate.js - Header Inside Version
 
 (function() {
-    console.log('🌐 Global Translation Script Loaded');
+    console.log('🌐 Translation Script Loaded');
     
     let currentLang = localStorage.getItem('preferred_language') || 'my';
     
     const languages = {
-        'my': { name: 'မြန်မာ', flag: '🇲🇲', nameEn: 'Myanmar' },
-        'en': { name: 'English', flag: '🇬🇧', nameEn: 'English' },
-        'vi': { name: 'Tiếng Việt', flag: '🇻🇳', nameEn: 'Vietnamese' },
-        'ja': { name: '日本語', flag: '🇯🇵', nameEn: 'Japanese' },
-        'th': { name: 'ภาษาไทย', flag: '🇹🇭', nameEn: 'Thai' }
+        'my': { name: 'မြန်မာ', flag: '🇲🇲' },
+        'en': { name: 'English', flag: '🇬🇧' },
+        'vi': { name: 'Tiếng Việt', flag: '🇻🇳' },
+        'ja': { name: '日本語', flag: '🇯🇵' },
+        'th': { name: 'ภาษาไทย', flag: '🇹🇭' }
     };
     
     // Cache for translations
     const translationCache = new Map();
     const originalTexts = new Map();
     
-    // Elements to translate (for all pages)
     const TRANSLATE_SELECTORS = [
-        'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'td', 'th',
-        'button:not(#lang-dropdown-btn):not(#close-menu)',
+        'p', 'h1', 'h2', 'h3', 'h4', 'li', 'td', 'th',
         '.page-content', '.page-header h2', '.page-number',
         '.counter-simple', '#toc-list li', '.title-section h1',
-        '.title-section .eng-sub', '.page-indicator-compact',
-        '.profile-modal h3', '.profile-name', '.profile-username',
-        '.profile-info', '.logout-btn', '.menu-header span',
-        'label', 'legend', 'caption', 'summary', 'figcaption'
+        '.title-section .eng-sub', '.profile-modal h3', 
+        '.profile-name', '.profile-username', '.profile-info'
     ];
     
-    // Create dropdown (appears on ALL pages)
+    // Create dropdown INSIDE header (not fixed)
     function createDropdown() {
         const existing = document.getElementById('lang-dropdown-container');
         if (existing) return;
         
+        // Wait for header to exist
+        const header = document.querySelector('.clean-header');
+        if (!header) {
+            setTimeout(createDropdown, 200);
+            return;
+        }
+        
+        const headerRightDiv = header.querySelector('div:last-child');
+        if (!headerRightDiv) {
+            setTimeout(createDropdown, 200);
+            return;
+        }
+        
         const container = document.createElement('div');
         container.id = 'lang-dropdown-container';
         container.style.cssText = `
-    position: fixed;
-    top: 12px;
-    right: 120px;   
-    z-index: 999999;
-`;
+            position: relative;
+            display: inline-block;
+            margin: 0 8px;
+        `;
         
         const btn = document.createElement('button');
         btn.id = 'lang-dropdown-btn';
         btn.innerHTML = `${languages[currentLang].flag} ${languages[currentLang].name} ▼`;
         btn.style.cssText = `
-            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            background: #1e3a5f;
             border: none;
-            border-radius: 40px;
-            padding: 8px 16px;
-            font-size: 0.8rem;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
             font-weight: 600;
             color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+            gap: 6px;
             transition: all 0.2s ease;
-            font-family: inherit;
+            white-space: nowrap;
         `;
         
-        btn.onmouseenter = () => btn.style.transform = 'scale(1.02)';
-        btn.onmouseleave = () => btn.style.transform = 'scale(1)';
+        btn.onmouseenter = () => btn.style.background = '#2c5282';
+        btn.onmouseleave = () => btn.style.background = '#1e3a5f';
         
         const menu = document.createElement('div');
         menu.id = 'lang-dropdown-menu';
@@ -72,30 +79,28 @@
             position: absolute;
             top: 100%;
             right: 0;
-            margin-top: 10px;
+            margin-top: 5px;
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            min-width: 160px;
-            z-index: 999999;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            min-width: 140px;
+            z-index: 1000;
             display: none;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            background: rgba(255,255,255,0.98);
         `;
         
         for (const [code, lang] of Object.entries(languages)) {
             const option = document.createElement('div');
-            option.innerHTML = `${lang.flag} <span style="margin-left: 8px;">${lang.name}</span>`;
+            option.innerHTML = `${lang.flag} ${lang.name}`;
             option.style.cssText = `
-                padding: 12px 18px;
+                padding: 10px 15px;
                 cursor: pointer;
-                font-size: 0.85rem;
+                font-size: 0.8rem;
                 color: #333;
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                transition: all 0.15s;
+                transition: background 0.15s;
                 font-weight: ${currentLang === code ? '600' : '400'};
                 background: ${currentLang === code ? '#f0e7dc' : 'transparent'};
             `;
@@ -109,7 +114,14 @@
         
         container.appendChild(btn);
         container.appendChild(menu);
-        document.body.appendChild(container);
+        
+        // Insert before profile icon
+        const profileIcon = document.getElementById('profile-icon-btn');
+        if (profileIcon) {
+            headerRightDiv.insertBefore(container, profileIcon);
+        } else {
+            headerRightDiv.appendChild(container);
+        }
         
         btn.onclick = (e) => {
             e.stopPropagation();
@@ -122,7 +134,7 @@
             }
         });
         
-        console.log('✅ Global dropdown created');
+        console.log('✅ Dropdown added to header');
     }
     
     // Get all text from element
@@ -139,7 +151,7 @@
         return text.trim();
     }
     
-    // Save original texts on current page
+    // Save original texts
     function saveOriginalTexts() {
         const elements = document.querySelectorAll(TRANSLATE_SELECTORS.join(','));
         let newCount = 0;
@@ -147,15 +159,14 @@
         elements.forEach(el => {
             if (!originalTexts.has(el) && el.offsetParent !== null) {
                 const text = getAllText(el);
-                if (text && text.length > 0 && text.length < 500 && !/^[\d\s\/\.\-\[\]\(\)\<\>]+$/.test(text)) {
+                if (text && text.length > 0 && text.length < 500 && !/^[\d\s\/\.\-\[\]\(\)]+$/.test(text)) {
                     originalTexts.set(el, text);
                     newCount++;
                 }
             }
         });
         
-        // Also save table cells
-        document.querySelectorAll('td, th, caption').forEach(cell => {
+        document.querySelectorAll('td, th').forEach(cell => {
             if (!originalTexts.has(cell)) {
                 const text = getAllText(cell);
                 if (text && text.length > 0 && text.length < 500) {
@@ -165,10 +176,7 @@
             }
         });
         
-        if (newCount > 0) {
-            console.log(`📝 Saved ${newCount} new text elements (total: ${originalTexts.size})`);
-        }
-        
+        if (newCount > 0) console.log(`📝 Saved ${newCount} texts`);
         return elements.length;
     }
     
@@ -213,20 +221,18 @@
         }
     }
     
-    // Translate current page
+    // Translate page
     async function translatePage(targetLang) {
         if (targetLang === 'my') {
-            // Restore original
             for (const [el, original] of originalTexts) {
                 if (el && document.body.contains(el) && el.innerText !== original) {
                     el.innerText = original;
                 }
             }
-            console.log('📖 Restored Myanmar language');
+            console.log('📖 Restored Myanmar');
             return;
         }
         
-        // Get untranslated elements
         const toTranslate = [];
         for (const [el, original] of originalTexts) {
             if (document.body.contains(el) && el.innerText === original && original.trim().length > 0) {
@@ -234,12 +240,9 @@
             }
         }
         
-        if (toTranslate.length === 0) {
-            console.log('No new elements to translate');
-            return;
-        }
+        if (toTranslate.length === 0) return;
         
-        console.log(`🌐 Translating ${toTranslate.length} elements to ${targetLang}...`);
+        console.log(`🌐 Translating ${toTranslate.length} elements...`);
         
         const batchSize = 25;
         for (let i = 0; i < toTranslate.length; i += batchSize) {
@@ -263,7 +266,7 @@
     async function switchLanguage(langCode) {
         if (!languages[langCode] || currentLang === langCode) return;
         
-        console.log(`🔄 Switching from ${currentLang} to ${langCode}`);
+        console.log(`🔄 Switching to ${langCode}`);
         currentLang = langCode;
         localStorage.setItem('preferred_language', langCode);
         
@@ -272,7 +275,6 @@
             btn.innerHTML = `${languages[langCode].flag} ${languages[langCode].name} ▼`;
         }
         
-        // Update menu
         document.querySelectorAll('#lang-dropdown-menu > div').forEach(option => {
             const text = option.innerText;
             for (const [code, lang] of Object.entries(languages)) {
@@ -288,7 +290,6 @@
         showToast(`✅ ${languages[langCode].name}`);
     }
     
-    // Toast notification
     function showToast(msg) {
         const existing = document.getElementById('global-toast');
         if (existing) existing.remove();
@@ -303,56 +304,26 @@
             transform: translateX(-50%);
             background: rgba(0,0,0,0.85);
             color: white;
-            padding: 10px 24px;
+            padding: 8px 20px;
             border-radius: 40px;
-            font-size: 0.85rem;
-            z-index: 999999;
+            font-size: 0.8rem;
+            z-index: 10000;
             white-space: nowrap;
-            max-width: 90%;
-            white-space: normal;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            backdrop-filter: blur(4px);
         `;
         
         document.body.appendChild(toast);
         setTimeout(() => {
             toast.style.opacity = '0';
-            toast.style.transition = 'opacity 0.3s';
             setTimeout(() => toast.remove(), 300);
         }, 2000);
     }
     
-    // Watch for page changes (SPA navigation)
+    // Watch for page changes
     function watchPageChanges() {
-        let lastUrl = window.location.href;
-        
-        const checkForChanges = () => {
-            const currentUrl = window.location.href;
-            if (currentUrl !== lastUrl) {
-                lastUrl = currentUrl;
-                console.log('📍 Page changed to:', currentUrl);
-                
-                // Wait for new page to load
-                setTimeout(() => {
-                    saveOriginalTexts();
-                    if (currentLang !== 'my') {
-                        translatePage(currentLang);
-                    }
-                }, 500);
-            }
-        };
-        
-        // Watch for URL changes
-        setInterval(checkForChanges, 500);
-        
-        // Watch for DOM changes (for SPAs)
         const observer = new MutationObserver(() => {
             if (document.readyState === 'complete') {
-                const currentTextCount = originalTexts.size;
                 const newCount = saveOriginalTexts();
-                
-                if (newCount > currentTextCount && currentLang !== 'my') {
+                if (newCount > 0 && currentLang !== 'my') {
                     clearTimeout(window.translateDelay);
                     window.translateDelay = setTimeout(() => {
                         translatePage(currentLang);
@@ -361,94 +332,44 @@
             }
         });
         
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-    
-    // Apply to iframes (for vlibrary.html etc)
-    function watchIframes() {
-        setInterval(() => {
-            const iframes = document.querySelectorAll('iframe');
-            iframes.forEach(iframe => {
-                try {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-                    if (iframeDoc && !iframe.hasAttribute('data-translate-injected')) {
-                        iframe.setAttribute('data-translate-injected', 'true');
-                        
-                        // Add translation capability to iframe
-                        const script = iframeDoc.createElement('script');
-                        script.textContent = `
-                            (function() {
-                                const parentLang = localStorage.getItem('preferred_language') || 'my';
-                                if (parentLang !== 'my') {
-                                    setTimeout(() => {
-                                        const elements = document.querySelectorAll('p, h1, h2, h3, li, td, th, button');
-                                        elements.forEach(el => {
-                                            const text = el.innerText;
-                                            if (text && text.trim()) {
-                                                fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=my&tl=' + parentLang + '&dt=t&q=' + encodeURIComponent(text))
-                                                    .then(r => r.json())
-                                                    .then(data => {
-                                                        if (data && data[0] && data[0][0]) {
-                                                            el.innerText = data[0][0][0];
-                                                        }
-                                                    });
-                                            }
-                                        });
-                                    }, 1000);
-                                }
-                            })();
-                        `;
-                        iframeDoc.body.appendChild(script);
-                    }
-                } catch(e) {
-                    // Cross-origin iframe - cannot access
-                }
+        observer.observe(document.body, { childList: true, subtree: true });
+        
+        // Watch navigation buttons
+        const nextBtn = document.getElementById('next-arrow');
+        const prevBtn = document.getElementById('prev-arrow');
+        
+        const handleNav = () => {
+            if (currentLang !== 'my') {
+                setTimeout(() => saveOriginalTexts(), 200);
+                setTimeout(() => translatePage(currentLang), 400);
             }
-        }, 2000);
+        };
+        
+        if (nextBtn) nextBtn.addEventListener('click', handleNav);
+        if (prevBtn) prevBtn.addEventListener('click', handleNav);
     }
     
     // Initialize
     function init() {
-        console.log('🌐 Global Translation System Starting...');
+        console.log('🌐 Translation System Starting...');
         
-        // Create dropdown immediately
-        createDropdown();
-        
-        // Save original texts after page loads
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
+                createDropdown();
                 setTimeout(() => {
                     saveOriginalTexts();
-                    if (currentLang !== 'my') {
-                        translatePage(currentLang);
-                    }
-                }, 300);
+                    watchPageChanges();
+                    if (currentLang !== 'my') translatePage(currentLang);
+                }, 500);
             });
         } else {
+            createDropdown();
             setTimeout(() => {
                 saveOriginalTexts();
-                if (currentLang !== 'my') {
-                    translatePage(currentLang);
-                }
-            }, 300);
-        }
-        
-        // Watch for changes
-        watchPageChanges();
-        watchIframes();
-        
-        // Also run on full load
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                saveOriginalTexts();
-                if (currentLang !== 'my') {
-                    translatePage(currentLang);
-                }
+                watchPageChanges();
+                if (currentLang !== 'my') translatePage(currentLang);
             }, 500);
-        });
+        }
     }
     
     init();
