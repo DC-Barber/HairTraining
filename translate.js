@@ -1,51 +1,35 @@
-// translate.js - Complete Translation with Table Support
+// translate.js - Global Translation for ALL Pages
 
 (function() {
-    console.log('🌐 Translation script loading...');
+    console.log('🌐 Global Translation Script Loaded');
     
-    let currentLang = 'my';
-    let isTranslating = false;
-    let pendingTranslate = false;
+    let currentLang = localStorage.getItem('preferred_language') || 'my';
     
     const languages = {
-        'my': { name: 'မြန်မာ', flag: '🇲🇲', code: 'my' },
-        'en': { name: 'English', flag: '🇬🇧', code: 'en' },
-        'vi': { name: 'Tiếng Việt', flag: '🇻🇳', code: 'vi' },
-        'ja': { name: '日本語', flag: '🇯🇵', code: 'ja' },
-        'th': { name: 'ภาษาไทย', flag: '🇹🇭', code: 'th' }
+        'my': { name: 'မြန်မာ', flag: '🇲🇲', nameEn: 'Myanmar' },
+        'en': { name: 'English', flag: '🇬🇧', nameEn: 'English' },
+        'vi': { name: 'Tiếng Việt', flag: '🇻🇳', nameEn: 'Vietnamese' },
+        'ja': { name: '日本語', flag: '🇯🇵', nameEn: 'Japanese' },
+        'th': { name: 'ภาษาไทย', flag: '🇹🇭', nameEn: 'Thai' }
     };
     
-    // Store original texts
+    // Cache for translations
+    const translationCache = new Map();
     const originalTexts = new Map();
     
-    // All translatable selectors (including tables)
+    // Elements to translate (for all pages)
     const TRANSLATE_SELECTORS = [
-        '.page-content p',
-        '.page-content li',
-        '.page-content h2',
-        '.page-content h3',
-        '.page-content h4',
-        '.page-content strong',
-        '.page-content td',
-        '.page-content th',
-        '.page-header h2',
-        '.page-number',
-        '.counter-simple',
-        '#toc-list li',
-        '.title-section h1',
-        '.title-section .eng-sub',
-        '.page-indicator-compact',
-        '.profile-modal h3',
-        '.profile-name',
-        '.profile-username',
-        '.profile-info',
-        '.logout-btn',
-        '.lang-option',
-        '.menu-header span',
-        'button:not(#lang-dropdown-btn):not(#close-menu)'
+        'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'td', 'th',
+        'button:not(#lang-dropdown-btn):not(#close-menu)',
+        '.page-content', '.page-header h2', '.page-number',
+        '.counter-simple', '#toc-list li', '.title-section h1',
+        '.title-section .eng-sub', '.page-indicator-compact',
+        '.profile-modal h3', '.profile-name', '.profile-username',
+        '.profile-info', '.logout-btn', '.menu-header span',
+        'label', 'legend', 'caption', 'summary', 'figcaption'
     ];
     
-    // Create dropdown button
+    // Create dropdown (appears on ALL pages)
     function createDropdown() {
         const existing = document.getElementById('lang-dropdown-container');
         if (existing) return;
@@ -53,29 +37,30 @@
         const container = document.createElement('div');
         container.id = 'lang-dropdown-container';
         container.style.cssText = `
-            position: fixed;
-            top: 12px;
-            right: 70px;
-            z-index: 30001;
-        `;
+    position: fixed;
+    top: 12px;
+    right: 120px;   
+    z-index: 999999;
+`;
         
         const btn = document.createElement('button');
         btn.id = 'lang-dropdown-btn';
-        btn.innerHTML = '🇲🇲 မြန်မာ ▼';
+        btn.innerHTML = `${languages[currentLang].flag} ${languages[currentLang].name} ▼`;
         btn.style.cssText = `
             background: linear-gradient(135deg, #1e3a5f, #2c5282);
             border: none;
-            border-radius: 30px;
-            padding: 8px 14px;
-            font-size: 0.75rem;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
             font-weight: 600;
             color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
             transition: all 0.2s ease;
+            font-family: inherit;
         `;
         
         btn.onmouseenter = () => btn.style.transform = 'scale(1.02)';
@@ -87,12 +72,12 @@
             position: absolute;
             top: 100%;
             right: 0;
-            margin-top: 8px;
+            margin-top: 10px;
             background: white;
             border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            min-width: 150px;
-            z-index: 30002;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            min-width: 160px;
+            z-index: 999999;
             display: none;
             overflow: hidden;
             backdrop-filter: blur(10px);
@@ -101,9 +86,9 @@
         
         for (const [code, lang] of Object.entries(languages)) {
             const option = document.createElement('div');
-            option.innerHTML = `${lang.flag} <span style="margin-left: 5px;">${lang.name}</span>`;
+            option.innerHTML = `${lang.flag} <span style="margin-left: 8px;">${lang.name}</span>`;
             option.style.cssText = `
-                padding: 12px 16px;
+                padding: 12px 18px;
                 cursor: pointer;
                 font-size: 0.85rem;
                 color: #333;
@@ -137,10 +122,10 @@
             }
         });
         
-        console.log('✅ Dropdown created');
+        console.log('✅ Global dropdown created');
     }
     
-    // Get all text from an element (including nested)
+    // Get all text from element
     function getAllText(element) {
         let text = '';
         for (const node of element.childNodes) {
@@ -154,43 +139,54 @@
         return text.trim();
     }
     
-    // Save all original texts
-    function saveAllOriginalTexts() {
+    // Save original texts on current page
+    function saveOriginalTexts() {
         const elements = document.querySelectorAll(TRANSLATE_SELECTORS.join(','));
+        let newCount = 0;
         
         elements.forEach(el => {
-            if (!originalTexts.has(el)) {
+            if (!originalTexts.has(el) && el.offsetParent !== null) {
                 const text = getAllText(el);
-                if (text && text.length > 0 && !/^[\d\s\/\.\-\[\]\(\)\<\>]+$/.test(text)) {
+                if (text && text.length > 0 && text.length < 500 && !/^[\d\s\/\.\-\[\]\(\)\<\>]+$/.test(text)) {
                     originalTexts.set(el, text);
+                    newCount++;
                 }
             }
         });
         
-        // Also save table headers and cells specifically
-        document.querySelectorAll('table th, table td').forEach(cell => {
+        // Also save table cells
+        document.querySelectorAll('td, th, caption').forEach(cell => {
             if (!originalTexts.has(cell)) {
                 const text = getAllText(cell);
-                if (text && text.length > 0 && !/^[\d\s\/\.\-]+$/.test(text)) {
+                if (text && text.length > 0 && text.length < 500) {
                     originalTexts.set(cell, text);
+                    newCount++;
                 }
             }
         });
         
-        console.log('📝 Saved', originalTexts.size, 'text elements');
+        if (newCount > 0) {
+            console.log(`📝 Saved ${newCount} new text elements (total: ${originalTexts.size})`);
+        }
+        
+        return elements.length;
     }
     
-    // Batch translate using single API call
+    // Batch translate
     async function batchTranslate(texts, targetLang) {
         if (texts.length === 0) return [];
         if (targetLang === 'my') return texts;
         
-        const uniqueTexts = [...new Map(texts.map(t => [t, t])).values()];
-        const translationMap = new Map();
+        const cacheKey = `${targetLang}|${texts.join('|')}`;
+        if (translationCache.has(cacheKey)) {
+            return translationCache.get(cacheKey);
+        }
         
         try {
-            // Split into chunks of 30 texts to avoid URL length limits
-            const chunkSize = 25;
+            const uniqueTexts = [...new Map(texts.map(t => [t, t])).values()];
+            const translationMap = new Map();
+            
+            const chunkSize = 20;
             for (let i = 0; i < uniqueTexts.length; i += chunkSize) {
                 const chunk = uniqueTexts.slice(i, i + chunkSize);
                 const combined = chunk.join('\n\n\n');
@@ -202,100 +198,81 @@
                 if (data && data[0]) {
                     const translated = data[0].map(item => item[0]).join('');
                     const results = translated.split('\n\n\n');
-                    
                     chunk.forEach((orig, idx) => {
                         translationMap.set(orig, results[idx] || orig);
                     });
                 }
             }
             
-            return texts.map(text => translationMap.get(text) || text);
+            const result = texts.map(text => translationMap.get(text) || text);
+            translationCache.set(cacheKey, result);
+            return result;
         } catch (error) {
-            console.error('Batch translation error:', error);
+            console.error('Translation error:', error);
             return texts;
         }
     }
     
-    // Translate page content
+    // Translate current page
     async function translatePage(targetLang) {
-        if (isTranslating) {
-            pendingTranslate = true;
+        if (targetLang === 'my') {
+            // Restore original
+            for (const [el, original] of originalTexts) {
+                if (el && document.body.contains(el) && el.innerText !== original) {
+                    el.innerText = original;
+                }
+            }
+            console.log('📖 Restored Myanmar language');
             return;
         }
         
-        isTranslating = true;
-        
-        try {
-            if (targetLang === 'my') {
-                // Restore original texts
-                for (const [el, original] of originalTexts) {
-                    if (el && el.innerText !== original && document.body.contains(el)) {
-                        el.innerText = original;
-                    }
-                }
-                isTranslating = false;
-                return;
-            }
-            
-            // Get elements that need translation
-            const elementsToTranslate = [];
-            for (const [el, original] of originalTexts) {
-                if (document.body.contains(el) && el.innerText === original) {
-                    elementsToTranslate.push({ el, original });
-                }
-            }
-            
-            if (elementsToTranslate.length === 0) {
-                isTranslating = false;
-                return;
-            }
-            
-            console.log(`🌐 Translating ${elementsToTranslate.length} items to ${targetLang}...`);
-            
-            // Translate in batches
-            const batchSize = 20;
-            for (let i = 0; i < elementsToTranslate.length; i += batchSize) {
-                const batch = elementsToTranslate.slice(i, i + batchSize);
-                const texts = batch.map(item => item.original);
-                const translations = await batchTranslate(texts, targetLang);
-                
-                batch.forEach((item, idx) => {
-                    if (translations[idx] && translations[idx] !== item.original) {
-                        item.el.innerText = translations[idx];
-                    }
-                });
-                
-                // Small delay to avoid rate limiting
-                await new Promise(r => setTimeout(r, 50));
-            }
-            
-            console.log('✅ Translation completed');
-        } catch (error) {
-            console.error('Translation error:', error);
-        } finally {
-            isTranslating = false;
-            if (pendingTranslate) {
-                pendingTranslate = false;
-                translatePage(targetLang);
+        // Get untranslated elements
+        const toTranslate = [];
+        for (const [el, original] of originalTexts) {
+            if (document.body.contains(el) && el.innerText === original && original.trim().length > 0) {
+                toTranslate.push({ el, original });
             }
         }
+        
+        if (toTranslate.length === 0) {
+            console.log('No new elements to translate');
+            return;
+        }
+        
+        console.log(`🌐 Translating ${toTranslate.length} elements to ${targetLang}...`);
+        
+        const batchSize = 25;
+        for (let i = 0; i < toTranslate.length; i += batchSize) {
+            const batch = toTranslate.slice(i, i + batchSize);
+            const texts = batch.map(item => item.original);
+            const translations = await batchTranslate(texts, targetLang);
+            
+            batch.forEach((item, idx) => {
+                if (translations[idx] && translations[idx] !== item.original) {
+                    item.el.innerText = translations[idx];
+                }
+            });
+            
+            await new Promise(r => setTimeout(r, 30));
+        }
+        
+        console.log('✅ Translation complete');
     }
     
     // Switch language
     async function switchLanguage(langCode) {
         if (!languages[langCode] || currentLang === langCode) return;
         
-        console.log('🔄 Switching to:', langCode);
+        console.log(`🔄 Switching from ${currentLang} to ${langCode}`);
         currentLang = langCode;
         localStorage.setItem('preferred_language', langCode);
         
-        // Update button
         const btn = document.getElementById('lang-dropdown-btn');
         if (btn) {
             btn.innerHTML = `${languages[langCode].flag} ${languages[langCode].name} ▼`;
         }
         
-        // Update menu highlight
+        // Update menu
         document.querySelectorAll('#lang-dropdown-menu > div').forEach(option => {
             const text = option.innerText;
             for (const [code, lang] of Object.entries(languages)) {
@@ -312,24 +289,24 @@
     }
     
     // Toast notification
-    function showToast(msg, isError = false) {
-        const existing = document.getElementById('translation-toast');
+    function showToast(msg) {
+        const existing = document.getElementById('global-toast');
         if (existing) existing.remove();
         
         const toast = document.createElement('div');
-        toast.id = 'translation-toast';
+        toast.id = 'global-toast';
         toast.textContent = msg;
         toast.style.cssText = `
             position: fixed;
             bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
-            background: ${isError ? 'rgba(220, 53, 69, 0.95)' : 'rgba(0,0,0,0.85)'};
+            background: rgba(0,0,0,0.85);
             color: white;
             padding: 10px 24px;
             border-radius: 40px;
             font-size: 0.85rem;
-            z-index: 30003;
+            z-index: 999999;
             white-space: nowrap;
             max-width: 90%;
             white-space: normal;
@@ -346,70 +323,41 @@
         }, 2000);
     }
     
-    // Observe page changes (navigation)
-    function observePageChanges() {
-        // Watch for page class changes
-        const observer = new MutationObserver(() => {
-            if (currentLang !== 'my' && !isTranslating) {
-                clearTimeout(window.translateDelay);
-                window.translateDelay = setTimeout(() => {
-                    // Re-save new page content
-                    setTimeout(() => saveAllOriginalTexts(), 100);
-                    setTimeout(() => translatePage(currentLang), 200);
-                }, 300);
-            }
-        });
+    // Watch for page changes (SPA navigation)
+    function watchPageChanges() {
+        let lastUrl = window.location.href;
         
-        observer.observe(document.getElementById('pages-wrapper') || document.body, {
-            attributes: true,
-            attributeFilter: ['class'],
-            subtree: true
-        });
-        
-        // Watch for navigation buttons
-        const nextBtn = document.getElementById('next-arrow');
-        const prevBtn = document.getElementById('prev-arrow');
-        
-        const handleNav = () => {
-            if (currentLang !== 'my') {
-                setTimeout(() => saveAllOriginalTexts(), 200);
-                setTimeout(() => translatePage(currentLang), 400);
+        const checkForChanges = () => {
+            const currentUrl = window.location.href;
+            if (currentUrl !== lastUrl) {
+                lastUrl = currentUrl;
+                console.log('📍 Page changed to:', currentUrl);
+                
+                // Wait for new page to load
+                setTimeout(() => {
+                    saveOriginalTexts();
+                    if (currentLang !== 'my') {
+                        translatePage(currentLang);
+                    }
+                }, 500);
             }
         };
         
-        if (nextBtn) nextBtn.addEventListener('click', handleNav);
-        if (prevBtn) prevBtn.addEventListener('click', handleNav);
+        // Watch for URL changes
+        setInterval(checkForChanges, 500);
         
-        // Watch for TOC clicks
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('#toc-list li')) {
-                setTimeout(() => {
-                    if (currentLang !== 'my') {
-                        setTimeout(() => saveAllOriginalTexts(), 200);
-                        setTimeout(() => translatePage(currentLang), 400);
-                    }
-                }, 300);
-            }
-        });
-    }
-    
-    // Re-save texts when new content loads
-    function observeContentChanges() {
-        const observer = new MutationObserver((mutations) => {
-            let hasNewContent = false;
-            for (const mutation of mutations) {
-                if (mutation.addedNodes.length > 0) {
-                    hasNewContent = true;
-                    break;
+        // Watch for DOM changes (for SPAs)
+        const observer = new MutationObserver(() => {
+            if (document.readyState === 'complete') {
+                const currentTextCount = originalTexts.size;
+                const newCount = saveOriginalTexts();
+                
+                if (newCount > currentTextCount && currentLang !== 'my') {
+                    clearTimeout(window.translateDelay);
+                    window.translateDelay = setTimeout(() => {
+                        translatePage(currentLang);
+                    }, 300);
                 }
-            }
-            
-            if (hasNewContent && currentLang !== 'my') {
-                clearTimeout(window.saveDelay);
-                window.saveDelay = setTimeout(() => {
-                    saveAllOriginalTexts();
-                    translatePage(currentLang);
-                }, 500);
             }
         });
         
@@ -419,38 +367,83 @@
         });
     }
     
+    // Apply to iframes (for vlibrary.html etc)
+    function watchIframes() {
+        setInterval(() => {
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                    if (iframeDoc && !iframe.hasAttribute('data-translate-injected')) {
+                        iframe.setAttribute('data-translate-injected', 'true');
+                        
+                        // Add translation capability to iframe
+                        const script = iframeDoc.createElement('script');
+                        script.textContent = `
+                            (function() {
+                                const parentLang = localStorage.getItem('preferred_language') || 'my';
+                                if (parentLang !== 'my') {
+                                    setTimeout(() => {
+                                        const elements = document.querySelectorAll('p, h1, h2, h3, li, td, th, button');
+                                        elements.forEach(el => {
+                                            const text = el.innerText;
+                                            if (text && text.trim()) {
+                                                fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=my&tl=' + parentLang + '&dt=t&q=' + encodeURIComponent(text))
+                                                    .then(r => r.json())
+                                                    .then(data => {
+                                                        if (data && data[0] && data[0][0]) {
+                                                            el.innerText = data[0][0][0];
+                                                        }
+                                                    });
+                                            }
+                                        });
+                                    }, 1000);
+                                }
+                            })();
+                        `;
+                        iframeDoc.body.appendChild(script);
+                    }
+                } catch(e) {
+                    // Cross-origin iframe - cannot access
+                }
+            }
+        }, 2000);
+    }
+    
     // Initialize
     function init() {
-        console.log('🌐 Translation manager starting...');
+        console.log('🌐 Global Translation System Starting...');
         
-        // Wait for DOM and auth modal to potentially close
-        const startInterval = setInterval(() => {
-            const authModal = document.getElementById('auth-modal-overlay');
-            const isLoggedIn = !authModal || authModal.style.display === 'none';
-            
-            if (isLoggedIn || document.readyState === 'complete') {
-                clearInterval(startInterval);
-                
-                createDropdown();
-                
-                // Small delay to ensure page content is loaded
+        // Create dropdown immediately
+        createDropdown();
+        
+        // Save original texts after page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
-                    saveAllOriginalTexts();
-                    observePageChanges();
-                    observeContentChanges();
-                    
-                    const savedLang = localStorage.getItem('preferred_language');
-                    if (savedLang && savedLang !== 'my' && languages[savedLang]) {
-                        setTimeout(() => switchLanguage(savedLang), 500);
+                    saveOriginalTexts();
+                    if (currentLang !== 'my') {
+                        translatePage(currentLang);
                     }
                 }, 300);
-            }
-        }, 200);
+            });
+        } else {
+            setTimeout(() => {
+                saveOriginalTexts();
+                if (currentLang !== 'my') {
+                    translatePage(currentLang);
+                }
+            }, 300);
+        }
+        
+        // Watch for changes
+        watchPageChanges();
+        watchIframes();
         
         // Also run on full load
         window.addEventListener('load', () => {
             setTimeout(() => {
-                saveAllOriginalTexts();
+                saveOriginalTexts();
                 if (currentLang !== 'my') {
                     translatePage(currentLang);
                 }
