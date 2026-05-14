@@ -1,4 +1,4 @@
-// translate.js - Header Inside Version
+// translate.js - Fixed Version
 
 (function() {
     console.log('🌐 Translation Script Loaded');
@@ -18,80 +18,53 @@
     const originalTexts = new Map();
     
     const TRANSLATE_SELECTORS = [
-    // Basic text elements
-    'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'span', 'strong', 'em', 'b', 'i',
+        'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'span', 'strong', 'em', 'b', 'i',
+        'td', 'th', 'caption', 'figcaption',
+        '.page-content', '.page-content p', '.page-content li', '.page-content h2', '.page-content h3',
+        '.page-header h2', '.page-number', '.counter-simple', '#center-counter', '#header-page-num',
+        '.page-indicator-compact', '#toc-list li', '#toc-list a', '.menu-header span',
+        '.title-section h1', '.title-section .eng-sub',
+        '.profile-modal h3', '.profile-name', '.profile-username', '.profile-info',
+        '.profile-info div', '.profile-info b', '.profile-info span', '.logout-btn', '#close-profile',
+        'button:not(#lang-dropdown-btn):not(#close-menu)',
+        '#login-submit-btn', '#mode-toggle-btn', '#mode-toggle-text', '#guest-mode-btn',
+        '#form-title', '#modal-title', '#login-error', '#upload-status',
+        'a:not(.no-translate)', 'label', 'footer p', 'footer a'
+    ];
     
-    // Table elements
-    'td', 'th', 'caption', 'figcaption',
-    
-    // Page structure
-    '.page-content', '.page-content p', '.page-content li', '.page-content h2', '.page-content h3',
-    '.page-header h2', '.page-number', '.counter-simple', '#center-counter', '#header-page-num',
-    '.page-indicator-compact',
-    
-    // Navigation
-    '#toc-list li', '#toc-list a', '.menu-header span', '.fab', '.fab-menu .menu-header',
-    '.arrow-btn', '.nav-simple .counter-simple',
-    
-    // Header
-    '.title-section h1', '.title-section .eng-sub', '.clean-header .title-section',
-    
-    // Profile modal
-    '.profile-modal h3', '.profile-name', '.profile-username', '.profile-info',
-    '.profile-info div', '.profile-info b', '.profile-info span', '.logout-btn', '#close-profile',
-    '#profile-overlay .profile-modal div',
-    
-    // Buttons
-    'button:not(#lang-dropdown-btn):not(#close-menu):not(#lang-dropdown-menu button)',
-    '#login-submit-btn', '#mode-toggle-btn', '#mode-toggle-text', '#guest-mode-btn',
-    
-    // Auth modal
-    '#form-title', '#modal-title', '#login-error', '#upload-status', '.auth-modal-text',
-    
-    // Links
-    'a:not(.no-translate)', '.privacy-link', '.about-link',
-    
-    // Lists
-    'ul li', 'ol li', '.page-content ul', '.page-content ol',
-    
-    // Table cells in page content
-    '.page-content td', '.page-content th',
-    
-    // Error and status
-    '.error-message', '.success-message', '.status-message', '.alert', '.notification',
-    
-    // Form labels
-    'label', '.form-label', '.input-group-text',
-    
-    // Modal content
-    '.modal-title', '.modal-body p', '.modal-body span',
-    
-    // Accordion and tabs
-    '.accordion-header', '.accordion-button', '.accordion-body', '.tab-title', '.nav-link',
-    
-    // Footer
-    'footer p', 'footer a', '.footer-text',
-    
-    // Any element with text content
-    '[class*="title"]', '[class*="header"]', '[class*="label"]', '[class*="message"]',
-    '[class*="description"]', '[class*="text"]'
-];
-    
-    // Create dropdown INSIDE header (not fixed)
+    // Create dropdown - Fixed version
     function createDropdown() {
         const existing = document.getElementById('lang-dropdown-container');
         if (existing) return;
         
-        // Wait for header to exist
+        // Try multiple ways to find where to insert the button
+        let insertTarget = null;
+        
+        // Method 1: Look for header right div
         const header = document.querySelector('.clean-header');
-        if (!header) {
-            setTimeout(createDropdown, 200);
-            return;
+        if (header) {
+            // Find the div that contains profile icon
+            const profileIcon = document.getElementById('profile-icon-btn');
+            if (profileIcon && profileIcon.parentElement) {
+                insertTarget = profileIcon.parentElement;
+                console.log('✅ Found profile icon parent');
+            } else {
+                // Find any div with flex/gap inside header
+                const rightDiv = header.querySelector('div[style*="display: flex"], div:last-child');
+                if (rightDiv) {
+                    insertTarget = rightDiv;
+                    console.log('✅ Found header right div');
+                } else {
+                    insertTarget = header;
+                    console.log('✅ Using header as target');
+                }
+            }
         }
         
-        const headerRightDiv = header.querySelector('div:last-child');
-        if (!headerRightDiv) {
-            setTimeout(createDropdown, 200);
+        // Method 2: If header not found, use fixed position
+        if (!insertTarget) {
+            console.log('⚠️ Header not found, using fixed position');
+            createFixedDropdown();
             return;
         }
         
@@ -110,7 +83,7 @@
             background: #1e3a5f;
             border: none;
             border-radius: 30px;
-            padding: 4px 12px;
+            padding: 6px 12px;
             font-size: 0.7rem;
             font-weight: 600;
             color: white;
@@ -136,7 +109,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             min-width: 140px;
-            z-index: 1000;
+            z-index: 10000;
             display: none;
             overflow: hidden;
         `;
@@ -167,12 +140,12 @@
         container.appendChild(btn);
         container.appendChild(menu);
         
-        // Insert before profile icon
+        // Insert before profile icon or at the beginning
         const profileIcon = document.getElementById('profile-icon-btn');
-        if (profileIcon) {
-            headerRightDiv.insertBefore(container, profileIcon);
+        if (profileIcon && insertTarget === profileIcon.parentElement) {
+            insertTarget.insertBefore(container, profileIcon);
         } else {
-            headerRightDiv.appendChild(container);
+            insertTarget.appendChild(container);
         }
         
         btn.onclick = (e) => {
@@ -186,7 +159,97 @@
             }
         });
         
-        console.log('✅ Dropdown added to header');
+        console.log('✅ Dropdown added successfully');
+    }
+    
+    // Fallback: Fixed position dropdown
+    function createFixedDropdown() {
+        const existing = document.getElementById('lang-dropdown-container');
+        if (existing) return;
+        
+        const container = document.createElement('div');
+        container.id = 'lang-dropdown-container';
+        container.style.cssText = `
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 999999;
+        `;
+        
+        const btn = document.createElement('button');
+        btn.id = 'lang-dropdown-btn';
+        btn.innerHTML = `${languages[currentLang].flag} ${languages[currentLang].name} ▼`;
+        btn.style.cssText = `
+            background: #1e3a5f;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        `;
+        
+        btn.onmouseenter = () => btn.style.background = '#2c5282';
+        btn.onmouseleave = () => btn.style.background = '#1e3a5f';
+        
+        const menu = document.createElement('div');
+        menu.id = 'lang-dropdown-menu';
+        menu.style.cssText = `
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 5px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            min-width: 140px;
+            z-index: 10000;
+            display: none;
+            overflow: hidden;
+        `;
+        
+        for (const [code, lang] of Object.entries(languages)) {
+            const option = document.createElement('div');
+            option.innerHTML = `${lang.flag} ${lang.name}`;
+            option.style.cssText = `
+                padding: 10px 15px;
+                cursor: pointer;
+                font-size: 0.8rem;
+                color: #333;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: background 0.15s;
+            `;
+            option.onmouseenter = () => option.style.background = '#f0e7dc';
+            option.onmouseleave = () => option.style.background = 'transparent';
+            option.onclick = () => switchLanguage(code);
+            menu.appendChild(option);
+        }
+        
+        container.appendChild(btn);
+        container.appendChild(menu);
+        document.body.appendChild(container);
+        
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        };
+        
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        });
+        
+        console.log('✅ Fixed dropdown added');
     }
     
     // Get all text from element
@@ -218,17 +281,7 @@
             }
         });
         
-        document.querySelectorAll('td, th').forEach(cell => {
-            if (!originalTexts.has(cell)) {
-                const text = getAllText(cell);
-                if (text && text.length > 0 && text.length < 500) {
-                    originalTexts.set(cell, text);
-                    newCount++;
-                }
-            }
-        });
-        
-        if (newCount > 0) console.log(`📝 Saved ${newCount} texts`);
+        if (newCount > 0) console.log(`📝 Saved ${newCount} texts (total: ${originalTexts.size})`);
         return elements.length;
     }
     
@@ -359,7 +412,7 @@
             padding: 8px 20px;
             border-radius: 40px;
             font-size: 0.8rem;
-            z-index: 10000;
+            z-index: 100000;
             white-space: nowrap;
         `;
         
@@ -386,7 +439,6 @@
         
         observer.observe(document.body, { childList: true, subtree: true });
         
-        // Watch navigation buttons
         const nextBtn = document.getElementById('next-arrow');
         const prevBtn = document.getElementById('prev-arrow');
         
@@ -405,22 +457,39 @@
     function init() {
         console.log('🌐 Translation System Starting...');
         
+        // Try to create dropdown immediately and retry if needed
+        function tryCreateDropdown(attempt = 0) {
+            if (attempt > 10) {
+                console.log('⚠️ Max attempts reached, using fixed dropdown');
+                createFixedDropdown();
+                return;
+            }
+            
+            const header = document.querySelector('.clean-header');
+            if (header) {
+                createDropdown();
+            } else {
+                console.log(`⏳ Waiting for header... attempt ${attempt + 1}`);
+                setTimeout(() => tryCreateDropdown(attempt + 1), 500);
+            }
+        }
+        
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                createDropdown();
+                tryCreateDropdown();
                 setTimeout(() => {
                     saveOriginalTexts();
                     watchPageChanges();
                     if (currentLang !== 'my') translatePage(currentLang);
-                }, 500);
+                }, 800);
             });
         } else {
-            createDropdown();
+            tryCreateDropdown();
             setTimeout(() => {
                 saveOriginalTexts();
                 watchPageChanges();
                 if (currentLang !== 'my') translatePage(currentLang);
-            }, 500);
+            }, 800);
         }
     }
     
