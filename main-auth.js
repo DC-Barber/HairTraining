@@ -38,6 +38,30 @@ async function handleAuthSubmit() {
         
         if (data.status === 'success') {
             if (isRegisterMode) {
+                
+        // ...
+    } else {
+        await APIService.recordHistory(user, deviceId);
+        localStorage.setItem(CONFIG.AUTH_EXPIRY_KEY, (new Date().getTime() + CONFIG.LOGIN_DURATION_MS).toString());
+        
+        // ✅ Force refresh profile picture after login
+        const profileResult = await APIService.forceRefreshProfilePicture(user);
+        
+        const userData = { 
+            username: user, 
+            fullname: data.fullname, 
+            phone: data.phone,
+            profilePic: profileResult.success ? profileResult.imageUrl : null
+        };
+        localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
+        
+        if (profileResult.success && profileResult.imageUrl) {
+            localStorage.setItem(`user_profile_${user}`, profileResult.imageUrl);
+        }
+        
+        location.reload();
+    }
+}
                 UIAuth.showMessage("✅ Register အောင်မြင်သည်။ Admin အတည်ပြုချက် စောင့်ပါ။", true);
                 setTimeout(() => location.reload(), 3000);
             } else {
@@ -77,75 +101,104 @@ async function setupProfileSystem() {
     const uploadStatus = document.getElementById('upload-status');
     const fileInput = document.getElementById('profile-upload');
     
-    if (!profileImg || !fileInput || !uploadStatus) return;
+    if (!profileBtn || !profileImg) return;
 
+    // ===== UPDATE PROFILE ICON (Header) =====
+    function updateHeaderProfileIcon(imageUrl) {
+        const profileIcon = document.getElementById('profile-icon-btn');
+        if (profileIcon) {
+            if (imageUrl && imageUrl !== 'null') {
+                // If there's a profile picture, show as image
+                profileIcon.style.background = 'none';
+                profileIcon.style.padding = '0';
+                profileIcon.style.overflow = 'hidden';
+                profileIcon.innerHTML = `<img src="${imageUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            } else {
+                // Default: show emoji
+                profileIcon.style.background = '#1e3a5f';
+                profileIcon.innerHTML = '👤';
+                profileIcon.style.display = 'flex';
+                profileIcon.style.alignItems = 'center';
+                profileIcon.style.justifyContent = 'center';
+            }
+        }
+    }
+
+    // Load user data and update header icon
+    const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+    if (userData.profilePic && userData.profilePic !== 'null') {
+        updateHeaderProfileIcon(userData.profilePic);
+    } else {
+        updateHeaderProfileIcon(null);
+    }
+
+    // Profile button click handler
     if (profileBtn) {
         profileBtn.onclick = async function() {
-            // ✅ Show modal immediately
             const overlay = document.getElementById('profile-overlay');
             if (overlay) overlay.style.display = 'block';
             
-            // ✅ Get user data from localStorage instantly
-            let userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+            // Get latest user data
+            let currentUserData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
             
-            // ✅ Update basic info instantly
-            if(document.getElementById('p-fullname')) document.getElementById('p-fullname').innerText = userData.fullname || '-';
-            if(document.getElementById('p-username')) document.getElementById('p-username').innerText = userData.username || '-';
-            if(document.getElementById('p-phone')) document.getElementById('p-phone').innerText = userData.phone || '-';
+            // Update modal fields
+            if(document.getElementById('p-fullname')) document.getElementById('p-fullname').innerText = currentUserData.fullname || '-';
+            if(document.getElementById('p-username')) document.getElementById('p-username').innerText = currentUserData.username || '-';
+            if(document.getElementById('p-phone')) document.getElementById('p-phone').innerText = currentUserData.phone || '-';
             
-            // ✅ Show cached profile picture instantly
-            if (userData.profilePic && userData.profilePic !== 'null') {
-                profileImg.src = userData.profilePic;
+            // Update modal profile image
+            if (currentUserData.profilePic && currentUserData.profilePic !== 'null') {
+                profileImg.src = currentUserData.profilePic;
             } else {
                 profileImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="50" fill="%231e3a5f"/%3E%3Ctext x="50" y="67" text-anchor="middle" fill="white" font-size="40"%3E👤%3C/text%3E%3C/svg%3E';
             }
             
-            // ✅ Background refresh from server (force refresh to get cross-device updates)
-            if (userData.username) {
-                APIService.forceRefreshProfilePicture(userData.username).then(freshProfile => {
+            // Background refresh from server
+            if (currentUserData.username) {
+                APIService.forceRefreshProfilePicture(currentUserData.username).then(freshProfile => {
                     if (freshProfile.success && freshProfile.imageUrl) {
-                        if (freshProfile.imageUrl !== userData.profilePic) {
-                            userData.profilePic = freshProfile.imageUrl;
-                            localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
+                        if (freshProfile.imageUrl !== currentUserData.profilePic) {
+                            currentUserData.profilePic = freshProfile.imageUrl;
+                            localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(currentUserData));
                             profileImg.src = freshProfile.imageUrl;
-                            console.log('✅ Profile picture updated from server (cross-device sync)');
+                            updateHeaderProfileIcon(freshProfile.imageUrl);
+                            console.log('✅ Profile picture updated from server');
                         }
                     }
                 }).catch(err => console.error('Background refresh failed:', err));
             }
+        };
+    }
+
+    // File upload handler
+    if (fileInput && !fileInput.hasListener) {
+        fileInput.hasListener = true;
+        fileInput.onchange = async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
             
-            // ✅ Setup file upload handler (only once)
-            if (fileInput && !fileInput.hasListener) {
-                fileInput.hasListener = true;
-                fileInput.onchange = async (event) => {
-                    const file = event.target.files[0];
-                    if (!file) return;
-                    
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        profileImg.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                    
-                    uploadStatus.innerHTML = '<span style="color:blue;">⏳ ပုံတင်နေသည်...</span>';
-                    
-                    const currentUserData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
-                    const result = await APIService.uploadProfilePicture(file, currentUserData.username, currentUserData.fullname);
-                    
-                    if (result.success) {
-                        currentUserData.profilePic = result.imageUrl;
-                        localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(currentUserData));
-                        localStorage.setItem(`user_profile_${currentUserData.username}`, result.imageUrl);
-                        uploadStatus.innerHTML = '<span style="color:green;">✅ ပုံတင်ခြင်း အောင်မြင်ပါသည်။</span>';
-                        
-                        // Clear cache to ensure fresh fetch next time
-                        APIService.clearProfileCache(currentUserData.username);
-                        
-                        setTimeout(() => uploadStatus.innerHTML = '', 3000);
-                    } else {
-                        uploadStatus.innerHTML = '<span style="color:red;">❌ ပုံတင်ခြင်း မအောင်မြင်ပါ။</span>';
-                    }
-                };
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profileImg.src = e.target.result;
+                updateHeaderProfileIcon(e.target.result); // Update header immediately
+            };
+            reader.readAsDataURL(file);
+            
+            uploadStatus.innerHTML = '<span style="color:blue;">⏳ ပုံတင်နေသည်...</span>';
+            
+            const currentUserData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+            const result = await APIService.uploadProfilePicture(file, currentUserData.username, currentUserData.fullname);
+            
+            if (result.success) {
+                currentUserData.profilePic = result.imageUrl;
+                localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(currentUserData));
+                localStorage.setItem(`user_profile_${currentUserData.username}`, result.imageUrl);
+                uploadStatus.innerHTML = '<span style="color:green;">✅ ပုံတင်ခြင်း အောင်မြင်ပါသည်။</span>';
+                updateHeaderProfileIcon(result.imageUrl); // Final update with server URL
+                
+                setTimeout(() => uploadStatus.innerHTML = '', 3000);
+            } else {
+                uploadStatus.innerHTML = '<span style="color:red;">❌ ပုံတင်ခြင်း မအောင်မြင်ပါ။</span>';
             }
         };
     }
@@ -155,13 +208,11 @@ async function setupProfileSystem() {
         closeBtn.onclick = function() {
             const overlay = document.getElementById('profile-overlay');
             if (overlay) overlay.style.display = 'none';
-            
             const statusDiv = document.getElementById('upload-status');
             if (statusDiv) statusDiv.innerHTML = '';
         };
     }
 }
-
 // ========== CHAT SYSTEM COMPATIBILITY ==========
 // Inject Barber Button into Profile Modal
 function injectBarberButton() {
