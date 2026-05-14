@@ -625,14 +625,13 @@ body {
     max-height: 90vh;
     overflow-y: auto;
 }
-
-/* Language Dropdown Styles */
-.lang-dropdown-container {
+/* Language Dropdown */
+#lang-dropdown-container {
     position: relative;
     display: inline-block;
 }
 
-.lang-dropdown-btn {
+#lang-dropdown-btn {
     background: rgba(30, 58, 95, 0.9);
     backdrop-filter: blur(4px);
     border: none;
@@ -649,21 +648,21 @@ body {
     white-space: nowrap;
 }
 
-.lang-dropdown-btn:hover {
+#lang-dropdown-btn:hover {
     background: rgba(30, 58, 95, 1);
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
-.lang-dropdown-menu {
+#lang-dropdown-menu {
     position: absolute;
     top: 100%;
     right: 0;
     margin-top: 5px;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     min-width: 140px;
-    z-index: 1000;
+    z-index: 30002;
     display: none;
     overflow: hidden;
 }
@@ -672,7 +671,6 @@ body {
     padding: 10px 15px;
     cursor: pointer;
     font-size: 0.85rem;
-    transition: background 0.15s;
     color: #333;
     display: flex;
     align-items: center;
@@ -680,20 +678,17 @@ body {
 }
 
 .lang-option:hover {
-    background: #f0e7dc;
+    background: #f0e7dc !important;
 }
 
-/* Mobile responsive */
 @media (max-width: 480px) {
-    .lang-dropdown-btn {
+    #lang-dropdown-btn {
         padding: 4px 8px;
         font-size: 0.65rem;
     }
-    
-    .lang-dropdown-menu {
+    #lang-dropdown-menu {
         min-width: 120px;
     }
-    
     .lang-option {
         padding: 8px 12px;
         font-size: 0.75rem;
