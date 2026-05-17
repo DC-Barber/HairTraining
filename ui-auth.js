@@ -14,7 +14,7 @@ const UIAuth = {
                 <div style="position:absolute;top:-50px;left:50%;transform:translateX(-50%);z-index:10;">
                     <div style="width:100px;height:100px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.2);padding:4px;">
                         <div style="width:92px;height:92px;background:#1e3a5f;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-                            <img src="https://i.ibb.co/v4qLdS2j/836d9479315a.png" 
+                            <img src="https://i.ibb.co/hJ0gXVHx/90ca1c90c577.png" 
                                  alt="Logo"
                                  style="width:92px;height:92px;border-radius:50%;object-fit:cover;"
                                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%231e3a5f'/%3E%3Ctext x='50' y='67' text-anchor='middle' fill='white' font-size='40'%3E✂️%3C/text%3E%3C/svg%3E'">
