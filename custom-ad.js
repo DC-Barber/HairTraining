@@ -232,7 +232,6 @@ const CustomAd = {
             '.arrow-btn',
             '#fab-btn',
             '#profile-icon-btn',
-            '#mode-toggle-btn',
             '.back-link',
             '.logout-btn',
             '#prev-arrow',
