@@ -1,4 +1,4 @@
-// custom-ad.js - နောက်ဆုံး (Guest Proceed Button ပါ)
+
 
 const CustomAd = {
     CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQLQKYGz1FbjIZPXkrvbrWv3ktfoplkY8thdxAArpnhvwgk-fu7z0ahtUOBacuEC_BWzO9_oKpq3Upr/pub?output=csv',
@@ -233,8 +233,6 @@ const CustomAd = {
             '#profile-icon-btn',
             '.back-link',
             '.logout-btn',
-            '#prev-arrow',
-            '#next-arrow',
             '#guest-info-proceed' 
         ];
         
