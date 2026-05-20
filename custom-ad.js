@@ -229,7 +229,6 @@ const CustomAd = {
         
         // ========== Ad ပြမယ့် ခလုတ်တွေ ==========
         const selectors = [
-            '.arrow-btn',
             '#profile-icon-btn',
             '.back-link',
             '.logout-btn',
