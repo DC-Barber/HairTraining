@@ -1,31 +1,24 @@
-// custom-ad.js - Custom Ad System with Google Sheets
+// custom-ad.js - နောက်ဆုံး (Guest Proceed Button ပါ)
 
 const CustomAd = {
-    SHEET_ID: '1T5OHebH3N6WLvGyqeab3okjFYPCYY9jAoa2sF49F4yM',
-    SHEET_NAME: 'Sheet1',
+    CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQLQKYGz1FbjIZPXkrvbrWv3ktfoplkY8thdxAArpnhvwgk-fu7z0ahtUOBacuEC_BWzO9_oKpq3Upr/pub?output=csv',
+    FORCE_TEST_MODE: false,
     
     currentAd: null,
     adLoaded: false,
     isAdShowing: false,
-    pendingCallback: null,
     
-    // Check if running on localhost
     isLocalhost: function() {
         return window.location.hostname === 'localhost' || 
                window.location.hostname === '127.0.0.1' ||
                window.location.protocol === 'file:';
     },
     
-    getSheetAPIUrl: function() {
-        return `https://docs.google.com/spreadsheets/d/${this.SHEET_ID}/gviz/tq?tqx=out:json&sheet=${this.SHEET_NAME}`;
-    },
-    
     loadAds: async function() {
-        if (this.isLocalhost()) {
-            console.log('🏠 Localhost detected - using test ad data');
+        if (this.isLocalhost() && this.FORCE_TEST_MODE) {
             this.currentAd = {
                 id: 1,
-                imageUrl: 'https://placehold.co/300x250/1e3a5f/white?text=Test+Ad+Localhost',
+                imageUrl: 'https://placehold.co/300x250/1e3a5f/white?text=Test+Ad',
                 linkUrl: 'https://dcbarber.shop'
             };
             this.adLoaded = true;
@@ -33,41 +26,12 @@ const CustomAd = {
         }
         
         try {
-            console.log('📡 Loading ads from Google Sheets...');
-            const response = await fetch(this.getSheetAPIUrl());
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            console.log('📡 Loading ads from CSV...');
+            const response = await fetch(this.CSV_URL);
+            if (!response.ok) throw new Error();
             
-            let text = await response.text();
-            text = text.replace(/^\/\*O_o\*\//, '');
-            text = text.replace('google.visualization.Query.setResponse(', '');
-            text = text.replace(/\);$/, '');
-            
-            const data = JSON.parse(text);
-            const rows = data.table.rows;
-            const cols = data.table.cols || [];
-            
-            let idCol = 0, imageCol = 1, linkCol = 2, activeCol = 3;
-            for (let i = 0; i < cols.length; i++) {
-                const label = (cols[i].label || '').toLowerCase();
-                if (label === 'id') idCol = i;
-                if (label === 'image' || label === 'image_url') imageCol = i;
-                if (label === 'link' || label === 'link_url') linkCol = i;
-                if (label === 'active' || label === 'is_active') activeCol = i;
-            }
-            
-            const ads = [];
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (!row || !row.c) continue;
-                const isActive = row.c[activeCol]?.v === true || row.c[activeCol]?.v === 'TRUE';
-                if (isActive) {
-                    ads.push({
-                        id: row.c[idCol]?.v || i,
-                        imageUrl: row.c[imageCol]?.v || '',
-                        linkUrl: row.c[linkCol]?.v || '#'
-                    });
-                }
-            }
+            const csvText = await response.text();
+            const ads = this.parseCSV(csvText);
             
             if (ads.length > 0) {
                 const randomIndex = Math.floor(Math.random() * ads.length);
@@ -92,12 +56,85 @@ const CustomAd = {
         }
     },
     
-    showAdDialog: function(callback) {
+    parseCSV: function(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length < 2) return [];
+        
+        const headers = this.parseCSVLine(lines[0]);
+        
+        let idCol = -1, imageCol = -1, linkCol = -1, activeCol = -1;
+        for (let i = 0; i < headers.length; i++) {
+            const header = headers[i].toLowerCase().trim();
+            if (header === 'id') idCol = i;
+            if (header === 'image_url') imageCol = i;
+            if (header === 'link_url') linkCol = i;
+            if (header === 'active') activeCol = i;
+        }
+        
+        if (idCol === -1 || imageCol === -1 || linkCol === -1 || activeCol === -1) {
+            return [];
+        }
+        
+        const ads = [];
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            const values = this.parseCSVLine(lines[i]);
+            if (values.length <= Math.max(idCol, imageCol, linkCol, activeCol)) continue;
+            
+            const isActive = values[activeCol] === 'TRUE' || values[activeCol] === 'true' || values[activeCol] === '1';
+            
+            if (isActive) {
+                const imageUrl = values[imageCol]?.trim() || '';
+                const linkUrl = values[linkCol]?.trim() || '#';
+                if (imageUrl) {
+                    ads.push({
+                        id: parseInt(values[idCol]) || i,
+                        imageUrl: imageUrl,
+                        linkUrl: linkUrl
+                    });
+                }
+            }
+        }
+        console.log(`📊 ${ads.length} active ads found`);
+        return ads;
+    },
+    
+    parseCSVLine: function(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                result.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        result.push(current.trim());
+        
+        return result.map(val => {
+            if (val.startsWith('"') && val.endsWith('"')) {
+                return val.slice(1, -1);
+            }
+            return val;
+        });
+    },
+    
+    showAd: function(callback) {
         if (this.isAdShowing) return;
         if (document.getElementById('custom-ad-overlay')) return;
         
+        if (!this.adLoaded || !this.currentAd) {
+            this.loadAds().then(() => this.showAd(callback));
+            return;
+        }
+        
         this.isAdShowing = true;
-        this.pendingCallback = callback;
         
         const overlay = document.createElement('div');
         overlay.id = 'custom-ad-overlay';
@@ -123,17 +160,15 @@ const CustomAd = {
         }
         adCard.style.animation = 'adFadeIn 0.3s ease';
         
-        // Close button (hidden initially)
         const closeBtn = document.createElement('button');
         closeBtn.innerHTML = '✕';
         closeBtn.style.cssText = 'position:absolute;top:10px;right:10px;width:36px;height:36px;background:#1e3a5f;color:white;border:none;border-radius:50%;font-size:18px;cursor:pointer;z-index:10;display:none;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+        closeBtn.setAttribute('data-ad-close', 'true');
         
-        // Timer display
         const timerDisplay = document.createElement('div');
         timerDisplay.style.cssText = 'position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.65);color:white;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:bold;z-index:10;font-family:monospace;';
         timerDisplay.innerHTML = '⏳ 5';
         
-        // Ad link and image
         const adLink = document.createElement('a');
         adLink.href = this.currentAd.linkUrl;
         adLink.target = '_blank';
@@ -168,107 +203,103 @@ const CustomAd = {
                 clearInterval(countdown);
                 timerDisplay.style.display = 'none';
                 closeBtn.style.display = 'flex';
-                closeBtn.style.animation = 'adPulse 0.5s ease';
-                setTimeout(() => {
-                    closeBtn.style.animation = '';
-                }, 500);
             }
         }, 1000);
         
-        // Close button click handler - execute original function
-        closeBtn.onclick = () => {
+        closeBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             overlay.remove();
             this.isAdShowing = false;
-            if (this.pendingCallback) {
-                this.pendingCallback();
-                this.pendingCallback = null;
-            }
+            if (callback) callback();
         };
         
-        // Click outside only after timer ends
         overlay.onclick = (e) => {
             if (e.target === overlay && seconds <= 0) {
                 overlay.remove();
                 this.isAdShowing = false;
-                if (this.pendingCallback) {
-                    this.pendingCallback();
-                    this.pendingCallback = null;
-                }
+                if (callback) callback();
             }
         };
     },
     
     init: function() {
-        console.log('🎯 Custom Ad System Initialized');
-        if (this.isLocalhost()) {
-            console.log('🏠 Running on localhost - using test ads');
-        }
+        console.log('🎯 Custom Ad Initialized');
         this.loadAds();
         
-        // ========== SPECIFY WHICH BUTTONS TRIGGER ADS ==========
-        // ဒီနေရာမှာ သတ်မှတ်ထားတဲ့ ခလုတ်တွေပဲ Ad ပြမယ်
-        const adTriggerSelectors = [
-            '.arrow-btn',           // မြှားခလုတ် (နောက်/ရှေ့)
-            '#fab-btn',             // FAB button (☰)
-            '#profile-icon-btn',    // Profile icon
-            '#guest-mode-btn',      // Guest user button
-            '#login-submit-btn',    // Login button
-            '#mode-toggle-btn',     // Register toggle
-            '.back-link',           // Privacy/About back links
-            '.logout-btn',          // Logout button
-            '#prev-arrow',          // Previous arrow
-            '#next-arrow'           // Next arrow
+        // ========== Ad ပြမယ့် ခလုတ်တွေ ==========
+        const selectors = [
+            '.arrow-btn',
+            '#fab-btn',
+            '#profile-icon-btn',
+            '#mode-toggle-btn',
+            '.back-link',
+            '.logout-btn',
+            '#prev-arrow',
+            '#next-arrow',
+            '#guest-info-proceed' 
         ];
         
-        const selectorString = adTriggerSelectors.join(',');
-        
         const hookButtons = () => {
-            const btns = document.querySelectorAll(selectorString);
-            console.log(`🔘 Found ${btns.length} buttons to hook for ads`);
-            
-            btns.forEach(btn => {
-                if (btn && !btn.hasAdHook) {
-                    btn.hasAdHook = true;
-                    
-                    // Store original click handler
-                    const originalOnClick = btn.onclick;
-                    const originalClickListener = btn.click;
-                    
-                    // Remove original onclick attribute if exists
-                    if (originalOnClick) {
-                        btn.removeAttribute('onclick');
-                    }
-                    
-                    // Add new click handler
-                    btn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        console.log('🔘 Button clicked, showing ad first');
-                        
-                        // Show ad, then execute original action after close
-                        this.showAdDialog(() => {
-                            console.log('✅ Ad closed, executing original button action');
-                            
-                            // Execute original handler
-                            if (originalOnClick) {
-                                originalOnClick.call(btn, e);
-                            }
-                            
-                            // Trigger native click if needed
-                            if (btn.click && btn !== e.target) {
-                                // Prevent infinite loop
-                            }
-                        });
-                    });
+            document.querySelectorAll(selectors.join(',')).forEach(btn => {
+                // Ad overlay ထဲက button ဆိုရင် ကျော်
+                if (btn.closest('#custom-ad-overlay')) return;
+                if (btn.hasAttribute('data-ad-close')) return;
+                if (btn.hasAdHook) return;
+                
+                // Guest mode ရဲ့ မူလခလုတ် (ဒိုင်ယာလော့ခ်ဖွင့်တဲ့ခလုတ်) ကို ကျော်
+                if (btn.id === 'guest-mode-btn') return;
+                
+                btn.hasAdHook = true;
+                
+                const originalOnClick = btn.getAttribute('onclick');
+                const originalOnClickFn = btn.onclick;
+                const originalHref = btn.href;
+                
+                if (originalOnClick) {
+                    btn.removeAttribute('onclick');
                 }
+                
+                btn.addEventListener('click', (e) => {
+                    // Guest info popup ရှိနေရင် Ad မပြနဲ့
+                    if (document.getElementById('guest-info-overlay')) return;
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('🔘 Showing ad for:', btn.id || btn.className);
+                    
+                    this.showAd(() => {
+                        console.log('✅ Ad closed, executing original action');
+                        
+                        if (originalOnClick) {
+                            try {
+                                const fn = new Function('event', originalOnClick);
+                                fn.call(btn, e);
+                            } catch(err) {}
+                        }
+                        
+                        if (originalOnClickFn && !originalOnClick) {
+                            originalOnClickFn.call(btn, e);
+                        }
+                        
+                        if (originalHref && originalHref !== '#') {
+                            window.location.href = originalHref;
+                        }
+                        
+                        if (!originalOnClick && !originalOnClickFn && !originalHref) {
+                            const wasHook = btn.hasAdHook;
+                            btn.hasAdHook = false;
+                            btn.click();
+                            btn.hasAdHook = wasHook;
+                        }
+                    });
+                });
             });
         };
         
-        setTimeout(hookButtons, 1500);
-        
-        const observer = new MutationObserver(() => hookButtons());
-        observer.observe(document.body, { childList: true, subtree: true });
+        setTimeout(hookButtons, 1000);
+        new MutationObserver(() => hookButtons()).observe(document.body, { childList: true, subtree: true });
     }
 };
 
