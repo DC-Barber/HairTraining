@@ -10,5 +10,5 @@ const CONFIG = {
     
     AUTH_EXPIRY_KEY: 'hair_auth_expiry',
     USER_DATA_KEY: 'hair_user_data',
-    LOGIN_DURATION_MS: 86400000
+    LOGIN_DURATION_MS: 6048000000
 };
