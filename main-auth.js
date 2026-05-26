@@ -1,81 +1,5 @@
 // main-auth.js - Full Optimized Version with Cross-Device Sync
 
-// Add this CSS for the spinner
-const spinnerStyles = `
-    .loading-spinner {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid rgba(255,255,255,.3);
-        border-radius: 50%;
-        border-top-color: #fff;
-        animation: spin 1s ease-in-out infinite;
-        margin-right: 8px;
-    }
-    
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-    
-    .loading-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-`;
-
-// Inject styles
-if (!document.getElementById('spinner-styles')) {
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'spinner-styles';
-    styleSheet.textContent = spinnerStyles;
-    document.head.appendChild(styleSheet);
-}
-
-// Modified UIAuth object with spinner support
-const UIAuth = {
-    showMessage: function(message, isLoading = false) {
-        const errorDiv = document.getElementById('login-error');
-        if (!errorDiv) return;
-        
-        if (isLoading) {
-            // Create spinner container
-            errorDiv.innerHTML = `
-                <div class="loading-container">
-                    <div class="loading-spinner"></div>
-                    <span>${message}</span>
-                </div>
-            `;
-            errorDiv.style.color = '#007bff';
-            errorDiv.style.display = 'block';
-        } else {
-            errorDiv.innerHTML = message;
-            errorDiv.style.color = message.includes('✅') || message.includes('အောင်မြင်') ? '#28a745' : '#dc3545';
-            errorDiv.style.display = 'block';
-        }
-    },
-    
-    clearMessage: function() {
-        const errorDiv = document.getElementById('login-error');
-        if (errorDiv) {
-            errorDiv.style.display = 'none';
-            errorDiv.innerHTML = '';
-        }
-    },
-    
-    showModal: function(submitHandler) {
-        // Your existing modal logic here
-        const modal = document.getElementById('auth-modal');
-        if (modal) modal.style.display = 'block';
-        
-        const submitBtn = document.getElementById('auth-submit');
-        if (submitBtn) {
-            submitBtn.onclick = submitHandler;
-        }
-    }
-};
-
 async function handleAuthSubmit() {
     const user = document.getElementById('login-username').value.trim();
     const pass = document.getElementById('login-password').value.trim();
@@ -85,16 +9,8 @@ async function handleAuthSubmit() {
 
     const error = Validator.validate(user, pass, isRegisterMode, phone, name);
     if (error) return UIAuth.showMessage(error);
-    
-    // Disable submit button to prevent multiple submissions
-    const submitBtn = document.getElementById('auth-submit');
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = '0.6';
-    }
 
-    // Show loading spinner
-    UIAuth.showMessage("လုပ်ဆောင်နေပါသည်...", true);
+    UIAuth.showMessage("⏳ လုပ်ဆောင်နေပါသည်...", true);
     
     let deviceId = localStorage.getItem('device_id');
     
@@ -147,21 +63,11 @@ async function handleAuthSubmit() {
                 location.reload();
             }
         } else { 
-            UIAuth.showMessage("❌ " + data.message);
-            // Re-enable submit button on error
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
-            }
+            UIAuth.showMessage("❌ " + data.message); 
         }
     } catch (e) { 
         console.error(e);
-        UIAuth.showMessage("❌ ချိတ်ဆက်မှု အဆင်မပြေပါ။");
-        // Re-enable submit button on error
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-        }
+        UIAuth.showMessage("❌ ချိတ်ဆက်မှု အဆင်မပြေပါ။"); 
     }
 }
 
