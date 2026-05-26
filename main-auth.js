@@ -1,3 +1,52 @@
+// ========== COMPLETE UIAuth OBJECT ==========
+const UIAuth = {
+    showMessage: function(msg, isLoading = false) {
+        const errorDiv = document.getElementById('login-error');
+        if (!errorDiv) return;
+        
+        if (isLoading) {
+            errorDiv.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <div style="width: 18px; height: 18px; border: 2px solid #007bff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                    <span>${msg}</span>
+                </div>
+            `;
+            if (!document.querySelector('#spinner-keyframe')) {
+                const style = document.createElement('style');
+                style.id = 'spinner-keyframe';
+                style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+                document.head.appendChild(style);
+            }
+        } else {
+            errorDiv.innerHTML = msg;
+        }
+        errorDiv.style.display = 'block';
+    },
+    
+    showModal: function(submitHandler) {
+        // Show auth modal
+        const modal = document.getElementById('auth-modal');
+        if (modal) modal.style.display = 'block';
+        
+        // Set submit button handler
+        const submitBtn = document.getElementById('auth-submit');
+        if (submitBtn) {
+            // Remove previous listeners to avoid duplicates
+            const newBtn = submitBtn.cloneNode(true);
+            submitBtn.parentNode.replaceChild(newBtn, submitBtn);
+            newBtn.onclick = submitHandler;
+        }
+        
+        // Optional: Close modal when clicking outside
+        const closeBtn = document.getElementById('close-auth-modal');
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                if (modal) modal.style.display = 'none';
+            };
+        }
+    }
+};
+// ========== END UIAuth ==========
 // main-auth.js - Full Optimized Version with Cross-Device Sync
 
 async function handleAuthSubmit() {
