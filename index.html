@@ -23,7 +23,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Professional Hair Training Manual</title>
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="style.css">
 <script src="ui-auth.js"></script>
 <script src="noss.js"></script>
 
@@ -31,7 +31,6 @@
 
 </head>
 <body>
-
 <div class="clean-header">
     <div class="title-section">
         <h1>ဆံသား လေ့ကျင့်ရေး လမ်းညွှန်</h1>
@@ -39,10 +38,11 @@
     </div>
     <div style="display: flex; align-items: center; gap: 12px;">
         <div class="page-indicator-compact" id="header-page-num">1 / 42</div>
-        <div id="profile-icon-btn" class="profile-icon">👤</div>
+        <div id="profile-icon-wrapper" style="position: relative;">
+            <div id="profile-icon-btn" class="profile-icon">👤</div>
+        </div>
     </div>
 </div>
-
 <div class="book-container">
     <div id="pages-wrapper"></div>
 </div>
@@ -103,7 +103,10 @@
  <script src="guest-ui.js"></script>  
 <script src="validation.js"></script>
 <script src="api-service.js"></script>
-<script src="main-auth.js"></script>    
+<script src="main-auth.js"></script>
+
+     
+
 </div>
 
 </body>

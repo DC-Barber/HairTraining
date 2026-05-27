@@ -1660,18 +1660,15 @@ Highlight ပုံစံ အချောင်းရွေးထုတ်ခြ
     <p><strong>မှတ်ချက်</strong></p>
     <p>ဤဆေးစပ်နည်းသည် Level 8-10 တွင် ကျန်ရှိသော အဝါရောင်ကို ဖျောက်ဖျက်ရန်အတွက်ဖြစ်သည်။ ဆံသားအခြေအနေပေါ်မူတည်၍ အချိန်ကို အနည်းငယ် လျှော့/များ ပြုလုပ်နိုင်ပါသည်။</p>
 </div>`, img: "img/i41.png" },
-    { id: 42, title: "ဆံပင်ပုံစံများ - Diamond Crown", content: `<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; margin: 0; padding: 0; background: white; z-index: 9999;">
+    { id: 42, title: "ဆံပင်ပုံစံများ - Diamond Crown", content: `<div style="width:100%; min-height:400px;">
     <iframe 
         src="vlibrary/vlibrary.html" 
-        style="width: 100%; height: 100%; border: none; display: block;">
+        style="width: 100%; height: 450px; border: none; border-radius: 12px;">
     </iframe>
-    
-    <div style="position: fixed; top: 20px; left: 20px; z-index: 100000; pointer-events: auto;">
-        <a href="${window.location.pathname}?page=1" target="_self" style="background: rgba(139, 69, 19, 0.95); backdrop-filter: blur(8px); color: white; text-decoration: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); overflow: hidden;" onmouseover="this.style.background='rgba(90, 45, 14, 1)';" onmouseout="this.style.background='rgba(139, 69, 19, 0.95)';">
-            <img src="img/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='🏠'; this.parentElement.style.fontSize='24px'; this.parentElement.style.fontWeight='bold';">
-        </a>
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="vlibrary/vlibrary.html" target="_blank" style="background: #1e3a5f; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 0.8rem;">🔗 သီးသန့်ဖွင့်ရန်</a>
     </div>
-</div>`, img: "" },
+</div>`, img: "" }
     ];
 
 // DOM
@@ -1696,15 +1693,92 @@ function renderAllPages() {
         pageDiv.className = 'page';
         if (page.id === 1) pageDiv.classList.add('active');
         pageDiv.id = `page-${page.id}`;
+        
+        // Image section with better glass button
+        const hasImage = page.img && page.img.trim() !== '';
+        
+        // Button HTML - DARK TEXT
+        const buttonHtml = hasImage ? `
+            <button class="image-toggle-btn" data-id="${page.id}" style="background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #1a1a1a; border: 1px solid rgba(0, 0, 0, 0.15); border-radius: 40px; padding: 5px 14px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.08); letter-spacing: 0.5px;">
+                    🖼️ ${page.img ? 'view_img' : ''}
+                </button>
+        ` : '';
+        
+        const imageHtml = hasImage ? `
+            <div class="image-wrapper" style="margin: 12px 0 16px 0;">
+                <img src="${page.img}" class="page-image" alt="hair diagram" style="width: 100%; border-radius: 16px; cursor: pointer; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" onerror="this.src='https://picsum.photos/id/1015/800/500'">
+            </div>
+        ` : `<div style="margin: 12px 0 16px 0; text-align: center; color: #999; font-size: 12px;">📷 ပုံမရှိပါ</div>`;
+        
         pageDiv.innerHTML = `
             <div class="page-header">
                 <span class="page-number">${page.id}</span>
                 <h2>${page.title}</h2>
             </div>
-            <img src="${page.img}" class="page-image" alt="hair diagram" onerror="this.src='https://picsum.photos/id/1015/800/500'">
+            <div style="display: flex; justify-content: flex-start; margin-bottom: 8px;">
+                ${buttonHtml}
+            </div>
+            ${imageHtml}
             <div class="page-content">${page.content}</div>
         `;
         pagesWrapper.appendChild(pageDiv);
+    });
+    
+    // Image toggle button event listeners
+    document.querySelectorAll('.image-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const pageDiv = this.closest('.page');
+            const wrapper = pageDiv.querySelector('.image-wrapper');
+            const img = wrapper ? wrapper.querySelector('.page-image') : null;
+            
+            if (img) {
+                const isHidden = img.style.display === 'none';
+                if (isHidden) {
+                    img.style.display = 'block';
+                    this.innerHTML = '🖼️ hide_img';
+                    this.style.background = 'rgba(255, 255, 255, 0.4)';
+                    this.style.color = '#1a1a1a';
+                } else {
+                    img.style.display = 'none';
+                    this.innerHTML = '🖼️ view_img';
+                    this.style.background = 'rgba(255, 255, 255, 0.25)';
+                    this.style.color = '#1a1a1a';
+                }
+            }
+        });
+    });
+}
+// Image modal for fullscreen view (optional - ထည့်ချင်ရင်)
+function initImageModal() {
+    if (!document.getElementById('image-modal-overlay')) {
+        const modalDiv = document.createElement('div');
+        modalDiv.id = 'image-modal-overlay';
+        modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:50000;display:none;justify-content:center;align-items:center;cursor:pointer;';
+        modalDiv.innerHTML = `
+            <div style="position:relative; max-width:90%; max-height:90%;">
+                <img id="modal-full-img" src="" style="max-width:100%; max-height:90vh; border-radius:12px;">
+                <button id="close-image-modal" style="position:absolute; top:-40px; right:0; background:none; border:none; color:white; font-size:30px; cursor:pointer;">&times;</button>
+            </div>
+        `;
+        document.body.appendChild(modalDiv);
+        
+        modalDiv.addEventListener('click', function(e) {
+            if (e.target === modalDiv || e.target.id === 'close-image-modal') {
+                modalDiv.style.display = 'none';
+            }
+        });
+    }
+    
+    document.addEventListener('click', function(e) {
+        if (e.target.classList && e.target.classList.contains('page-image')) {
+            const modal = document.getElementById('image-modal-overlay');
+            const modalImg = document.getElementById('modal-full-img');
+            if (modal && modalImg) {
+                modalImg.src = e.target.src;
+                modal.style.display = 'flex';
+            }
+        }
     });
 }
 
@@ -1784,6 +1858,7 @@ function init() {
     bindEvents();
     initSwipe();
     initKeyboard();
+    initImageModal(); 
     updatePageUI(1);
 }
 

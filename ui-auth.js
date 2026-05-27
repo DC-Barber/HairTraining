@@ -3,14 +3,21 @@ let isRegisterMode = false;
 
 const UIAuth = {
     showModal: function(onSubmitCallback) {
+        // Remove existing modal if any
+        const existingModal = document.getElementById('auth-modal-overlay');
+        if (existingModal) existingModal.remove();
+        
         const modal = document.createElement('div');
         modal.id = "auth-modal-overlay";
-        modal.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:#1e3a5f;z-index:30000;display:flex;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(3px);box-sizing:border-box;";
+        modal.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:30000;display:flex;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(5px);box-sizing:border-box;";
         
         modal.innerHTML = `
             <div style="background:white;padding:30px;border-radius:20px;width:100%;max-width:340px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);position:relative;margin:0 auto;overflow:visible;">
                 
-                <!-- ========== OVERLAPPING PROFILE IMAGE (ဘောင်ကျော်ထွက်နေသောပုံစံ) ========== -->
+                <!-- CLOSE BUTTON (ထိပ်ဆုံးမှာ) -->
+                <button id="close-auth-modal" style="position:absolute;top:10px;right:15px;background:none;border:none;font-size:26px;cursor:pointer;color:#999;z-index:10;">&times;</button>
+                
+                <!-- Profile Image -->
                 <div style="position:absolute;top:-50px;left:50%;transform:translateX(-50%);z-index:10;">
                     <div style="width:100px;height:100px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.2);padding:4px;">
                         <div style="width:92px;height:92px;background:#1e3a5f;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
@@ -21,12 +28,10 @@ const UIAuth = {
                         </div>
                     </div>
                 </div>
-                <!-- =========================================================== -->
                 
                 <div style="margin-top:55px;">
                     <h3 id="modal-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.1rem;">DC_BARBER_ACADEMY</h3>
                     <h2 id="form-title" style="margin-bottom:20px;color:#1e3a5f;font-size:1.1rem;">Login</h2>
-              
                 </div>
                 
                 <input type="text" id="login-username" maxlength="10" placeholder="Username (6-10 chars)" style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;outline:none;box-sizing:border-box;">
@@ -56,16 +61,43 @@ const UIAuth = {
                     <span id="mode-toggle-btn" style="color:#1e3a5f;font-weight:bold;cursor:pointer;text-decoration:underline;">Register</span>
                 </p>
                 
-                <!-- Guest button will be added here by guest-mode.js -->
-                
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 16px;">
-                    <a href="/privacy.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;"> Privacy Policy </a>
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 12px;">
+                    <a href="/privacy.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;"> Privacy Policy</a>
                     <span style="color: #ccc;">|</span>
                     <a href="/about.html" style="color: #1e3a5f; text-decoration: none; margin: 0 8px;"> ⓘ </a>
                 </div>
             </div>`;
+        
         document.body.appendChild(modal);
 
+        // ========== CLOSE FUNCTIONALITIES ==========
+        
+        // 1. Close when clicking outside (on the overlay background)
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+        
+        // 2. Close button functionality
+        const closeBtn = modal.querySelector('#close-auth-modal');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                modal.remove();
+            });
+        }
+        
+        // 3. ESC key to close
+        const escHandler = function(e) {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+        
+        // ========== EXISTING AUTH LOGIC ==========
+        
         document.getElementById('mode-toggle-btn').onclick = () => {
             isRegisterMode = !isRegisterMode;
             document.getElementById('form-title').innerText = isRegisterMode ? "Register" : "Login";
