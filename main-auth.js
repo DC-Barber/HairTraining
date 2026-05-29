@@ -356,13 +356,8 @@ async function loadChatMessagesForBadge() {
         
         // Chat system integration
         setTimeout(() => {
-            injectBadge();
-            observeProfileModal();
-            injectBarberButton();
-            
-            // Update badge periodically
-            loadChatMessagesForBadge();
-            setInterval(loadChatMessagesForBadge, 5000);
+    observeProfileModal();
+    injectBarberButton();
         }, 500);
         
         // Show guest active indicator if guest mode

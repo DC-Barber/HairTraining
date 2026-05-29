@@ -1,4 +1,4 @@
-// guest-mode.js - Only fills username/password + clears old page state
+// guest-mode.js - Fill credentials from sheet
 
 const GuestMode = {
     SHEET_ID: '1JOeXdjVD0uiCmKjw2AokfgQxLxOBifFqPt0rqhynupM',
@@ -48,6 +48,7 @@ const GuestMode = {
                 }
             }
             
+            console.log(`✅ Loaded ${accounts.length} guest accounts`);
             return accounts;
         } catch (error) {
             console.error('Guest mode error:', error);
@@ -64,24 +65,28 @@ const GuestMode = {
     
     fillCredentials: async function() {
         const btn = document.getElementById('guest-mode-btn');
+        
+        // Show loading on button if exists
         if (btn) {
             btn.disabled = true;
-            btn.textContent = '⏳...';
+            btn.innerHTML = '⏳ Loading...';
+            btn.style.opacity = '0.6';
         }
         
         // Clear old page state
         localStorage.removeItem('currentPage');
         localStorage.removeItem('hairTraining_currentPage');
         
-        // 🔥 SET GUEST MODE FLAG (ဒီတစ်ကြောင်း အရေးကြီးတယ်)
+        // Set guest mode flag
         localStorage.setItem('guest_mode_active', 'true');
-        console.log('Guest mode: flag set (guest_mode_active = true)');
+        console.log('Guest mode: flag set');
         
         const account = await this.getRandomAccount();
         
         if (btn) {
             btn.disabled = false;
-            btn.textContent = '🎭 Guest User';
+            btn.innerHTML = '🎭 Guest User';
+            btn.style.opacity = '1';
         }
         
         if (!account) {
@@ -93,46 +98,68 @@ const GuestMode = {
             return;
         }
         
-        const usernameField = document.getElementById('login-username');
-        const passwordField = document.getElementById('login-password');
+        // Wait for input fields to exist (modal might not be ready yet)
+        let attempts = 0;
+        const maxAttempts = 20; // 2 seconds max
         
-        if (usernameField) usernameField.value = account.username;
-        if (passwordField) passwordField.value = account.password;
-    },
-    
-    addGuestButton: function() {
-        const checkModal = setInterval(() => {
-            const modal = document.getElementById('auth-modal-overlay');
-            if (modal && !document.getElementById('guest-mode-btn')) {
-                const container = modal.querySelector('div');
-                if (container) {
-                    const guestBtn = document.createElement('button');
-                    guestBtn.id = 'guest-mode-btn';
-                    guestBtn.textContent = '🎭 Guest User';
-                    guestBtn.style.cssText = 'width:100%;padding:12px;background:#6c757d;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:0.9rem;margin-top:10px;';
-                    guestBtn.onclick = () => this.fillCredentials();
-                    
-                    const submitBtn = document.getElementById('login-submit-btn');
-                    const togglePara = document.querySelector('#auth-modal-overlay p:last-of-type');
-                    
-                    if (submitBtn && submitBtn.parentNode) {
-                        if (togglePara) {
-                            submitBtn.parentNode.insertBefore(guestBtn, togglePara);
-                        } else {
-                            submitBtn.parentNode.appendChild(guestBtn);
-                        }
-                    } else {
-                        container.appendChild(guestBtn);
-                    }
-                    
-                    clearInterval(checkModal);
+        const fillAndSubmit = setInterval(() => {
+            const usernameField = document.getElementById('login-username');
+            const passwordField = document.getElementById('login-password');
+            
+            if (usernameField && passwordField) {
+                clearInterval(fillAndSubmit);
+                usernameField.value = account.username;
+                passwordField.value = account.password;
+                console.log('✅ Guest credentials filled:', account.username);
+                
+                // Auto submit
+                const submitBtn = document.getElementById('login-submit-btn');
+                if (submitBtn) {
+                    setTimeout(() => {
+                        submitBtn.click();
+                    }, 100);
                 }
             }
-        }, 200);
+            
+            attempts++;
+            if (attempts >= maxAttempts) {
+                clearInterval(fillAndSubmit);
+                console.error('❌ Could not find login form fields');
+                const errorDiv = document.getElementById('login-error');
+                if (errorDiv) {
+                    errorDiv.style.color = 'red';
+                    errorDiv.textContent = '❌ Login form not ready. Please try again.';
+                }
+            }
+        }, 100);
     },
     
     init: function() {
-        this.addGuestButton();
+        // Wait for modal to be created and attach event to guest button
+        const attachEvent = () => {
+            const guestBtn = document.getElementById('guest-mode-btn');
+            if (guestBtn && !guestBtn.hasListener) {
+                guestBtn.hasListener = true;
+                guestBtn.onclick = () => this.fillCredentials();
+                console.log('✅ Guest button event attached');
+                return true;
+            }
+            return false;
+        };
+        
+        // Try immediately
+        if (attachEvent()) return;
+        
+        // If not found, observe DOM changes
+        const observer = new MutationObserver(() => {
+            if (attachEvent()) {
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        
+        // Timeout fallback - remove observer after 10 seconds
+        setTimeout(() => observer.disconnect(), 10000);
     }
 };
 
