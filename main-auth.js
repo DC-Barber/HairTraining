@@ -33,7 +33,7 @@ async function handleAuthSubmit() {
     const error = Validator.validate(user, pass, isRegisterMode, phone, name);
     if (error) return UIAuth.showMessage(error);
 
-    UIAuth.showMessage("⏳ လုပ်ဆောင်နေပါသည်...", true);
+    UIAuth.showSpinner("လုပ်ဆောင်နေပါသည်...");
     
     let deviceId = localStorage.getItem('device_id');
     

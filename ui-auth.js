@@ -152,5 +152,16 @@ if (guestBtn) {
             errDiv.style.color = isSuccess ? "green" : "red";
             errDiv.innerText = msg;
         }
+    },
+
+showSpinner: function(msg) {
+    const errDiv = document.getElementById('login-error');
+    if (errDiv) {
+        errDiv.innerHTML = `<div style="display:flex; align-items:center; gap:10px;"><div class="spinner"></div><span>${msg}</span></div>`;
     }
-};
+},
+hideSpinner: function() {
+    const errDiv = document.getElementById('login-error');
+    if (errDiv) errDiv.innerHTML = "";
+}
+    };
