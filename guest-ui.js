@@ -144,7 +144,7 @@
                 <div style="background:#e8f5e9;padding:10px;border-radius:12px;margin-bottom:15px;">
                     <p style="margin:0 0 5px 0;font-size:0.75rem;font-weight:bold;color:#2e7d32;">${lang.helpTitle}</p>
                     <p style="margin:0 0 8px 0;font-size:0.65rem;color:#555;">${lang.helpText}</p>
-                    <a href="https://t.me/BroHtet_official" target="_blank" style="display:inline-block;background:#0088cc;color:white;padding:8px 14px;border-radius:30px;text-decoration:none;font-size:0.7rem;font-weight:bold;">
+                    <a href="https://t.me/dcbarber_shop" target="_blank" style="display:inline-block;background:#0088cc;color:white;padding:8px 14px;border-radius:30px;text-decoration:none;font-size:0.7rem;font-weight:bold;">
                         💬 Telegram
                     </a>
                 </div>
