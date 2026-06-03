@@ -12,6 +12,60 @@ function checkLoginStatus() {
     return isAuth;
 }
 
+// ========== PROFILE TEXT & ICON UPDATE ==========
+function updateProfileTextAndIcon() {
+    const profileTextEl = document.getElementById('profile-text');
+    const profileIconEl = document.getElementById('profile-icon-btn');
+    
+    if (!profileTextEl) return;
+    
+    if (checkLoginStatus()) {
+        // User is logged in
+        const userData = JSON.parse(localStorage.getItem(CONFIG.USER_DATA_KEY) || '{}');
+        const username = userData.username || '';
+        const fullname = userData.fullname || '';
+        const profilePic = userData.profilePic || null;
+        
+        // Display name (fullname if available, otherwise username)
+        const displayName = fullname && fullname !== '-' ? fullname : username;
+        
+        if (displayName && displayName !== '') {
+            const shortName = displayName.length > 12 ? displayName.substring(0, 10) + '..' : displayName;
+            profileTextEl.innerHTML = `👤 ${shortName}`;
+            profileTextEl.style.background = '#1e3a5f';
+            profileTextEl.style.color = 'white';
+        } else {
+            profileTextEl.innerHTML = 'Profile';
+            profileTextEl.style.background = '#1e3a5f';
+            profileTextEl.style.color = 'white';
+        }
+        
+        // Update profile icon with user's profile picture if available
+        if (profileIconEl && profilePic && profilePic !== 'null') {
+            profileIconEl.style.background = 'transparent';
+            profileIconEl.style.padding = '0';
+            profileIconEl.style.overflow = 'hidden';
+            profileIconEl.innerHTML = `<img src="${profilePic}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+        } else if (profileIconEl) {
+            profileIconEl.style.background = '#1e3a5f';
+            profileIconEl.style.padding = '';
+            profileIconEl.innerHTML = '👤';
+        }
+    } else {
+        // User not logged in
+        profileTextEl.innerHTML = '🔓 Login/Register';
+        profileTextEl.style.background = 'rgba(255, 255, 255, 0.8)';
+        profileTextEl.style.color = '#1e3a5f';
+        
+        // Reset profile icon to default
+        if (profileIconEl) {
+            profileIconEl.style.background = '#1e3a5f';
+            profileIconEl.style.padding = '';
+            profileIconEl.innerHTML = '👤';
+        }
+    }
+}
+
 // Show login modal (for profile/exam access)
 function showLoginModal(callback) {
     UIAuth.showModal(async () => {
@@ -83,6 +137,9 @@ async function handleAuthSubmit() {
                     localStorage.setItem(`user_profile_${user}`, profileResult.imageUrl);
                 }
                 
+                // ✅ Update profile text and icon before reload
+                updateProfileTextAndIcon();
+                
                 location.reload();
             }
         } else { 
@@ -103,7 +160,11 @@ async function setupProfileSystem() {
     if (!profileImg || !fileInput || !uploadStatus) return;
 
     if (profileBtn) {
-        profileBtn.onclick = async function() {
+        // Remove existing click listener by cloning
+        const newProfileBtn = profileBtn.cloneNode(true);
+        profileBtn.parentNode.replaceChild(newProfileBtn, profileBtn);
+        
+        newProfileBtn.onclick = async function() {
             // Check if user is logged in
             if (!checkLoginStatus()) {
                 // Show login modal first
@@ -198,6 +259,9 @@ async function openProfileModal() {
                 localStorage.setItem(`user_profile_${currentUserData.username}`, result.imageUrl);
                 if (uploadStatus) uploadStatus.innerHTML = '<span style="color:green;">✅ ပုံတင်ခြင်း အောင်မြင်ပါသည်။</span>';
                 
+                // ✅ Update profile icon with new picture
+                updateProfileTextAndIcon();
+                
                 // Clear cache to ensure fresh fetch next time
                 APIService.clearProfileCache(currentUserData.username);
                 
@@ -252,14 +316,17 @@ function observeProfileModal() {
     observer.observe(document.body, { childList: true, subtree: true });
 }
 
-// Inject badge on profile icon
+// Inject badge on profile icon (for chat notifications)
 function injectBadge() {
-    const profileBtn = document.getElementById('profile-icon-btn');
-    if (!profileBtn) return;
+    const profileContainer = document.getElementById('profile-container');
+    if (!profileContainer) return;
     
-    // Make profile-btn a wrapper if needed
-    if (profileBtn.parentElement && profileBtn.parentElement.id !== 'profile-icon-wrapper') {
-        const wrapper = document.createElement('div');
+    // Check if wrapper already exists
+    let wrapper = document.getElementById('profile-icon-wrapper');
+    let profileBtn = document.getElementById('profile-icon-btn');
+    
+    if (!wrapper && profileBtn) {
+        wrapper = document.createElement('div');
         wrapper.id = 'profile-icon-wrapper';
         wrapper.style.position = 'relative';
         wrapper.style.display = 'inline-flex';
@@ -267,7 +334,6 @@ function injectBadge() {
         wrapper.appendChild(profileBtn);
     }
     
-    const wrapper = document.getElementById('profile-icon-wrapper');
     if (!wrapper) return;
     
     let badge = document.getElementById('message-badge');
@@ -296,6 +362,7 @@ window.openExam = () => {
 
 window.logout = () => { 
     localStorage.clear(); 
+    updateProfileTextAndIcon(); // Update before reload
     location.reload(); 
 };
 
@@ -308,6 +375,7 @@ window.syncProfilePicture = async function() {
             localStorage.setItem(CONFIG.USER_DATA_KEY, JSON.stringify(userData));
             const profileImg = document.getElementById('profile-img');
             if (profileImg) profileImg.src = result.imageUrl;
+            updateProfileTextAndIcon(); // Update icon as well
             console.log('✅ Manual sync completed');
             return true;
         }
@@ -351,13 +419,16 @@ async function loadChatMessagesForBadge() {
 (function init() {
     const isAuth = checkLoginStatus();
     
+    // ✅ Update profile text and icon on every page load
+    updateProfileTextAndIcon();
+    
     if (isAuth) {
         setupProfileSystem();
         
         // Chat system integration
         setTimeout(() => {
-    observeProfileModal();
-    injectBarberButton();
+            observeProfileModal();
+            injectBarberButton();
         }, 500);
         
         // Show guest active indicator if guest mode
