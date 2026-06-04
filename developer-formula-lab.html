@@ -40,7 +40,6 @@
             font-size: 0.55rem;
         }
         
-        /* Two Button Row */
         .info-buttons {
             display: flex;
             gap: 12px;
@@ -68,7 +67,6 @@
             color: white;
         }
         
-        /* Developer Mixer Section */
         .mixer-section {
             background: linear-gradient(135deg, #2c3e50, #1a252f);
             border-radius: 20px;
@@ -99,7 +97,6 @@
             min-width: min-content;
         }
         
-        /* Developer Button Style */
         .dev-btn {
             text-align: center;
             flex-shrink: 0;
@@ -218,6 +215,64 @@
             margin-top: 15px;
         }
         
+        /* ========== ACCORDION STYLE FORMULA LIST ========== */
+        .formula-accordion {
+            margin-top: 10px;
+        }
+        .formula-item {
+            margin-bottom: 8px;
+        }
+        .formula-header {
+            background: #f9f6f2;
+            padding: 14px 16px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid #b87333;
+            font-weight: bold;
+            color: #1e3a5f;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .formula-header:hover {
+            background: #f0e7dc;
+        }
+        .formula-header .arrow {
+            font-size: 12px;
+            transition: transform 0.2s;
+            color: #b87333;
+        }
+        .formula-header.active .arrow {
+            transform: rotate(90deg);
+        }
+        .formula-content {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 8px;
+            border: 1px solid #f0e2d0;
+        }
+        .formula-content.show {
+            display: block;
+        }
+        .formula-desc-full {
+            font-size: 0.75rem;
+            color: #5a4a3a;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .formula-dev-full {
+            font-size: 0.7rem;
+            color: #b87333;
+            font-weight: bold;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #f0e2d0;
+        }
+        
         /* Popup Selector Modal */
         .selector-modal {
             position: fixed;
@@ -285,37 +340,39 @@
             cursor: pointer;
         }
         
-        /* Popup Modal for Chart/Formula */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: all 0.2s;
-        }
-        .modal-overlay.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .modal-content {
-            background: white;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 20px;
-            position: relative;
-        }
+        /* Modal for Developer Chart & Formula List */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    align-items: flex-start;  /* ← ဒီနေရာကို center ကနေ flex-start ပြောင်း */
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s;
+    padding-top: 80px;  /* ← အပေါ်ကနေ အကွာအဝေး (Toggle button အောက်) */
+}
+.modal-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+.modal-content {
+    background: white;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+    /* margin-top: 60px;  ← ဒီလိုင်းကို ဖျက်ပါ (သို့) comment လုပ်ပါ */
+}
         .modal-close {
             position: absolute;
             top: 12px;
@@ -348,40 +405,15 @@
             font-weight: 600;
         }
         
-        .formula-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .formula-item {
-            background: #f9f6f2;
-            border-radius: 12px;
-            padding: 12px;
-            border-left: 4px solid #b87333;
-        }
-        .formula-name {
-            font-weight: bold;
-            color: #1e3a5f;
-            font-size: 0.8rem;
-            margin-bottom: 6px;
-        }
-        .formula-desc {
-            font-size: 0.7rem;
-            color: #5a4a3a;
-            line-height: 1.4;
-        }
-        .formula-dev {
-            margin-top: 6px;
-            font-size: 0.65rem;
-            color: #b87333;
-        }
-        
         @media (max-width: 550px) {
             .dev-btn { padding: 6px 10px; }
             .dev-value { padding: 8px 16px; min-width: 85px; font-size: 11px; }
             .mix-operator { font-size: 18px; }
             .mix-result-box { min-width: 85px; padding: 8px 12px; }
             .result-percent { font-size: 16px; }
+            .formula-header { padding: 12px 14px; font-size: 0.8rem; }
+            .formula-desc-full { font-size: 0.7rem; }
+            .modal-content { margin-top: 40px; max-height: 75vh; }
         }
         
         @media (max-width: 450px) {
@@ -410,23 +442,16 @@
             
             <div class="mixer-scroll-wrapper">
                 <div class="mixer-row">
-                    <!-- Developer 1 Button -->
                     <div class="dev-btn" id="dev1Btn">
                         <label>🔹 DEVELOPER 1</label>
                         <div class="dev-value" id="dev1Value">6% (20 VOL)</div>
                     </div>
-                    
                     <div class="mix-operator">+</div>
-                    
-                    <!-- Developer 2 Button -->
                     <div class="dev-btn" id="dev2Btn">
                         <label>🔸 DEVELOPER 2</label>
                         <div class="dev-value" id="dev2Value">6% (20 VOL)</div>
                     </div>
-                    
                     <div class="mix-operator">=</div>
-                    
-                    <!-- Result -->
                     <div class="mix-result-box">
                         <div class="result-percent" id="resultPercent">-</div>
                         <div class="result-vol" id="resultVol">-</div>
@@ -434,7 +459,6 @@
                 </div>
             </div>
             
-            <!-- Formula Display -->
             <div class="formula-box" id="formulaBox">
                 <div class="formula-text" id="formulaText">📐 (6% + 6%) ÷ 2 = 6%</div>
                 <div class="formula-example" id="formulaExample">💡 6% ချင်းတူတူ ရောစပ်ရင် ရလဒ်က 6% အတိုင်းပါပဲ</div>
@@ -455,20 +479,6 @@
         </div>
     </div>
     
-    <!-- Selector Modal for Developer -->
-    <div id="selectorModal" class="selector-modal">
-        <div class="selector-content">
-            <div class="selector-title" id="selectorTitle">Select Developer 1</div>
-            <div class="selector-options" id="selectorOptions">
-                <div class="selector-option" data-value="3">3% (10 VOL)</div>
-                <div class="selector-option" data-value="6">6% (20 VOL)</div>
-                <div class="selector-option" data-value="9">9% (30 VOL)</div>
-                <div class="selector-option" data-value="12">12% (40 VOL)</div>
-            </div>
-            <div class="selector-close" id="selectorCloseBtn">Cancel</div>
-        </div>
-    </div>
-    
     <!-- Modal for Developer Chart -->
     <div id="chartModal" class="modal-overlay">
         <div class="modal-content">
@@ -476,7 +486,7 @@
             <div class="modal-title">📊 Developer Reference Chart</div>
             <table class="ref-table">
                 <thead>
-                    <tr><th>%</th><th>VOL</th><th>Usage</th><th>Lifting</th></tr>
+                    <tr><th>%</th><th>VOL</th><th>Usage</th><th>Lifting</th></td>
                 </thead>
                 <tbody>
                     <tr><td style="background:#e74c3c; color:white; font-weight:bold;">3%</td><td>10 VOL</td><td>Grey coverage, Color deposit</td><td>0-1 level</td></tr>
@@ -491,48 +501,151 @@
         </div>
     </div>
     
-    <!-- Modal for Developer Formula List -->
+    <!-- Modal for Developer Formula List (Accordion Style - Moved to Top) -->
     <div id="formulaModal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content" style="margin-top: 30px;">
             <div class="modal-close" onclick="closeModal('formulaModal')">&times;</div>
             <div class="modal-title">📋 Developer Formula List</div>
-            <div class="formula-list">
+            <div class="formula-accordion" id="formulaAccordion">
+                <!-- Formula 1 -->
                 <div class="formula-item">
-                    <div class="formula-name">🎓 Formula 1 - Grey Coverage (အဖြူဖုံး)</div>
-                    <div class="formula-desc">Main Color (60%) + 2 Level Darker (30%) + Helper (7%) + Intensifier (3%)</div>
-                    <div class="formula-dev">➜ Developer: 6% (20 VOL) | Processing: 30-40 min</div>
+                    <div class="formula-header" data-idx="0">
+                        <span>🎓 Formula 1 - Grey Coverage (အဖြူဖုံး)</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="formula-content" id="formulaContent0">
+                        <div class="formula-desc-full">
+                            Main Color (60%) + 2 Level Darker (30%) + Helper (7%) + Intensifier (3%)
+                        </div>
+                        <div class="formula-dev-full">
+                            ➜ Developer: 6% (20 VOL) | Processing: 30-40 min
+                        </div>
+                    </div>
                 </div>
+                <!-- Formula 2 -->
                 <div class="formula-item">
-                    <div class="formula-name">🎓 Formula 2 - One Color (အရောင်တစ်မျိုးဆိုး)</div>
-                    <div class="formula-desc">Color Cream + Developer (1:1 ratio)</div>
-                    <div class="formula-dev">➜ Developer: 3%-6% (10-20 VOL) | Processing: 25-35 min</div>
+                    <div class="formula-header" data-idx="1">
+                        <span>🎓 Formula 2 - One Color (အရောင်တစ်မျိုးဆိုး)</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="formula-content" id="formulaContent1">
+                        <div class="formula-desc-full">
+                            Color Cream + Developer (1:1 ratio)
+                        </div>
+                        <div class="formula-dev-full">
+                            ➜ Developer: 3%-6% (10-20 VOL) | Processing: 25-35 min
+                        </div>
+                    </div>
                 </div>
+                <!-- Formula 3 -->
                 <div class="formula-item">
-                    <div class="formula-name">🎓 Formula 3 - Lightening (Level တက်စေရန်)</div>
-                    <div class="formula-desc">Bleach Powder + Developer (1:1.5 or 1:2 ratio)</div>
-                    <div class="formula-dev">➜ Developer: 9%-12% (30-40 VOL) | Processing: 30-45 min</div>
+                    <div class="formula-header" data-idx="2">
+                        <span>🎓 Formula 3 - Lightening (Level တက်စေရန်)</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="formula-content" id="formulaContent2">
+                        <div class="formula-desc-full">
+                            Bleach Powder + Developer (1:1.5 or 1:2 ratio)
+                        </div>
+                        <div class="formula-dev-full">
+                            ➜ Developer: 9%-12% (30-40 VOL) | Processing: 30-45 min
+                        </div>
+                    </div>
                 </div>
+                <!-- Formula 4 -->
                 <div class="formula-item">
-                    <div class="formula-name">🎓 Formula 4 - Hot Roots Correction</div>
-                    <div class="formula-desc">2 Levels Darker Color OR Add Complementary Color (5-10g)</div>
-                    <div class="formula-dev">➜ Developer: 3%-6% (10-20 VOL) | Processing: 10-15 min</div>
+                    <div class="formula-header" data-idx="3">
+                        <span>🎓 Formula 4 - Hot Roots Correction</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="formula-content" id="formulaContent3">
+                        <div class="formula-desc-full">
+                            2 Levels Darker Color OR Add Complementary Color (5-10g)
+                        </div>
+                        <div class="formula-dev-full">
+                            ➜ Developer: 3%-6% (10-20 VOL) | Processing: 10-15 min
+                        </div>
+                    </div>
                 </div>
+                <!-- Formula 5 -->
                 <div class="formula-item">
-                    <div class="formula-name">🎓 Formula 5 - No Yellow (အဝါသတ်)</div>
-                    <div class="formula-desc">Violet (0.66) or Blue (0.88) + Shampoo + 9% Developer (1:1:1)</div>
-                    <div class="formula-dev">➜ Apply for 15 min on shampoo bowl</div>
+                    <div class="formula-header" data-idx="4">
+                        <span>🎓 Formula 5 - No Yellow (အဝါသတ်)</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="formula-content" id="formulaContent4">
+                        <div class="formula-desc-full">
+                            Violet (0.66) or Blue (0.88) + Shampoo + 9% Developer (1:1:1)
+                        </div>
+                        <div class="formula-dev-full">
+                            ➜ Apply for 15 min on shampoo bowl
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Selector Modal for Developer -->
+    <div id="selectorModal" class="selector-modal">
+        <div class="selector-content">
+            <div class="selector-title" id="selectorTitle">Select Developer 1</div>
+            <div class="selector-options" id="selectorOptions">
+                <div class="selector-option" data-value="3">3% (10 VOL)</div>
+                <div class="selector-option" data-value="6">6% (20 VOL)</div>
+                <div class="selector-option" data-value="9">9% (30 VOL)</div>
+                <div class="selector-option" data-value="12">12% (40 VOL)</div>
+            </div>
+            <div class="selector-close" id="selectorCloseBtn">Cancel</div>
+        </div>
+    </div>
+
     <script>
-        // Developer values
+        // ========== ACCORDION FUNCTIONALITY ==========
+        function initAccordion() {
+            const headers = document.querySelectorAll('.formula-header');
+            
+            headers.forEach(header => {
+                // Remove existing listener to avoid duplicates
+                header.removeEventListener('click', header.clickHandler);
+                
+                // Create new click handler
+                const clickHandler = function(e) {
+                    e.stopPropagation();
+                    const idx = this.getAttribute('data-idx');
+                    const content = document.getElementById(`formulaContent${idx}`);
+                    const isActive = this.classList.contains('active');
+                    
+                    // Close all other accordions
+                    headers.forEach(h => {
+                        if (h !== this) {
+                            h.classList.remove('active');
+                            const otherIdx = h.getAttribute('data-idx');
+                            const otherContent = document.getElementById(`formulaContent${otherIdx}`);
+                            if (otherContent) otherContent.classList.remove('show');
+                        }
+                    });
+                    
+                    // Toggle current accordion
+                    if (!isActive) {
+                        this.classList.add('active');
+                        if (content) content.classList.add('show');
+                    } else {
+                        this.classList.remove('active');
+                        if (content) content.classList.remove('show');
+                    }
+                };
+                
+                header.clickHandler = clickHandler;
+                header.addEventListener('click', clickHandler);
+            });
+        }
+        
+        // ========== DEVELOPER MIXER ==========
         let dev1 = 6;
         let dev2 = 6;
-        let activeSelector = 'dev1'; // 'dev1' or 'dev2'
+        let activeSelector = 'dev1';
         
-        // DOM elements
         const dev1ValueEl = document.getElementById('dev1Value');
         const dev2ValueEl = document.getElementById('dev2Value');
         const resultPercentEl = document.getElementById('resultPercent');
@@ -547,7 +660,6 @@
         const selectorOptions = document.getElementById('selectorOptions');
         const selectorCloseBtn = document.getElementById('selectorCloseBtn');
         
-        // Helper functions
         function getVol(percent) {
             const volMap = { 3: 10, 6: 20, 9: 30, 12: 40 };
             return volMap[percent] || 0;
@@ -564,7 +676,6 @@
             resultPercentEl.textContent = avgPercent.toFixed(1) + '%';
             resultVolEl.textContent = Math.round(avgVol) + ' VOL';
             
-            // Description
             let description = '';
             if (avgPercent <= 4.5) {
                 description = '🔹 Soft / Deposit - Best for: Grey coverage, Color deposit, Darker shades';
@@ -575,7 +686,6 @@
             }
             mixDescriptionEl.innerHTML = '💡 ' + description;
             
-            // Formula display
             formulaTextEl.innerHTML = `📐 (${dev1}% + ${dev2}%) ÷ 2 = ${avgPercent.toFixed(1)}%`;
             
             if (dev1 === dev2) {
@@ -596,12 +706,10 @@
             calculateAndUpdate();
         }
         
-        // Show selector modal
         function showSelector(which) {
             activeSelector = which;
             selectorTitle.textContent = which === 'dev1' ? '🔹 Select Developer 1' : '🔸 Select Developer 2';
             
-            // Highlight current selection
             const options = selectorOptions.querySelectorAll('.selector-option');
             const currentVal = which === 'dev1' ? dev1 : dev2;
             options.forEach(opt => {
@@ -612,7 +720,6 @@
                     opt.classList.remove('selected');
                 }
             });
-            
             selectorModal.classList.add('active');
         }
         
@@ -631,20 +738,20 @@
             closeSelector();
         }
         
-        // Modal functions
         function openModal(modalId) {
             document.getElementById(modalId).classList.add('active');
+            if (modalId === 'formulaModal') {
+                setTimeout(initAccordion, 100);
+            }
         }
         
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
         
-        // Event listeners
         document.getElementById('dev1Btn').onclick = () => showSelector('dev1');
         document.getElementById('dev2Btn').onclick = () => showSelector('dev2');
         
-        // Preset buttons
         document.querySelectorAll('.preset-btn').forEach(btn => {
             btn.onclick = () => {
                 dev1 = parseInt(btn.getAttribute('data-d1'));
@@ -653,14 +760,12 @@
             };
         });
         
-        // Selector options click
         selectorOptions.querySelectorAll('.selector-option').forEach(opt => {
             opt.onclick = () => setDeveloper(opt.getAttribute('data-value'));
         });
         
         selectorCloseBtn.onclick = closeSelector;
         
-        // Close modal when clicking outside
         selectorModal.onclick = (e) => {
             if (e.target === selectorModal) closeSelector();
         };
@@ -674,7 +779,6 @@
         document.getElementById('showChartBtn').onclick = () => openModal('chartModal');
         document.getElementById('showFormulaBtn').onclick = () => openModal('formulaModal');
         
-        // Initialize
         updateDisplay();
     </script>
 </body>
