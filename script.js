@@ -1687,34 +1687,37 @@ function renderAllPages() {
         if (page.id === 1) pageDiv.classList.add('active');
         pageDiv.id = `page-${page.id}`;
         
-        // Special case for page 42 - Custom header with toggle buttons
-        if (page.id === 42) {
-            pageDiv.innerHTML = `
-                <div class="page-header" style="flex-direction: column; align-items: stretch; gap: 12px;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span class="page-number">${page.id}</span>
-                        <h2 style="flex: 1;">${page.title}</h2>
-                    </div>
-                    <div class="lab-toggle-container" style="display: flex; gap: 12px;">
-                        <button id="toggleColorLab" class="lab-toggle-btn active" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #1e3a5f; color: white; cursor: pointer;">🎨 Color Mixing Lab</button>
-                        <button id="toggleFormulaLab" class="lab-toggle-btn" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #e0d6cc; color: #5a4a3a; cursor: pointer;">🧪 Developer Formula Lab</button>
-                    </div>
-                </div>
-                <div id="colorLabContainer" class="lab-iframe-container" style="flex:1; min-height: 400px; margin-top: 10px;">
-                    <iframe class="lab-iframe" src="color-mixing-lab.html" style="width:100%; height:100%; border:none; border-radius:16px;"></iframe>
-                </div>
-                <div id="formulaLabContainer" class="lab-iframe-container" style="flex:1; min-height: 400px; margin-top: 10px; display: none;">
-                    <iframe class="lab-iframe" src="developer-formula-lab.html" style="width:100%; height:100%; border:none; border-radius:16px;"></iframe>
-                </div>
-                <style>
-                    .lab-toggle-btn { transition: all 0.2s; }
-                    .lab-iframe-container { background: #f5f0eb; border-radius: 16px; overflow: hidden; }
-                    @media (max-width: 550px) {
-                        .lab-iframe-container { min-height: 500px; }
-                    }
-                </style>
-            `;
-        } else {
+        // Special case for page 42 - Full height iframe
+if (page.id === 42) {
+    // Calculate available height
+    const viewportHeight = window.innerHeight;
+    const headerHeight = document.querySelector('.clean-header')?.offsetHeight || 70;
+    const navHeight = 70;
+    const availableHeight = viewportHeight - headerHeight - navHeight - 50;
+    
+    pageDiv.innerHTML = `
+        <div class="page-header" style="flex-direction: column; align-items: stretch; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="page-number">${page.id}</span>
+                <h2 style="flex: 1;">${page.title}</h2>
+            </div>
+            <div class="lab-toggle-container" style="display: flex; gap: 12px;">
+                <button id="toggleColorLab" class="lab-toggle-btn active" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #1e3a5f; color: white; cursor: pointer;">🎨 Color Mixing Lab</button>
+                <button id="toggleFormulaLab" class="lab-toggle-btn" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #e0d6cc; color: #5a4a3a; cursor: pointer;">🧪 Developer Formula Lab</button>
+            </div>
+        </div>
+        <div id="colorLabContainer" class="lab-iframe-container" style="flex: 1; margin-top: 10px; display: block;">
+            <iframe class="lab-iframe" src="color-mixing-lab.html" style="width:100%; height:${availableHeight}px; border:none; border-radius:16px;"></iframe>
+        </div>
+        <div id="formulaLabContainer" class="lab-iframe-container" style="flex: 1; margin-top: 10px; display: none;">
+            <iframe class="lab-iframe" src="developer-formula-lab.html" style="width:100%; height:${availableHeight}px; border:none; border-radius:16px;"></iframe>
+        </div>
+        <style>
+            .lab-toggle-btn { transition: all 0.2s; }
+            .lab-iframe-container { background: #f5f0eb; border-radius: 16px; overflow: hidden; }
+        </style>
+    `;
+} else {
             // Normal pages
             const hasImage = page.img && page.img.trim() !== '';
             const buttonHtml = hasImage ? `<button class="image-toggle-btn" data-id="${page.id}" style="background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(12px); color: #1a1a1a; border: 1px solid rgba(0,0,0,0.15); border-radius: 40px; padding: 5px 14px; font-size: 11px; font-weight: 600; cursor: pointer;">🖼️ view_img</button>` : '';

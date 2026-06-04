@@ -27,7 +27,6 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
         
-        /* Header */
         .lab-header {
             text-align: center;
             margin-bottom: 16px;
@@ -69,7 +68,7 @@
             color: white;
         }
         
-        /* Developer Mixer - Single Row */
+        /* Developer Mixer Section */
         .mixer-section {
             background: linear-gradient(135deg, #2c3e50, #1a252f);
             border-radius: 20px;
@@ -84,14 +83,12 @@
             margin-bottom: 15px;
         }
         
-        /* Horizontal scroll wrapper for small screens */
         .mixer-scroll-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             padding-bottom: 5px;
         }
         
-        /* Single row layout - no wrap */
         .mixer-row {
             display: flex;
             flex-direction: row;
@@ -102,31 +99,38 @@
             min-width: min-content;
         }
         
-        .dev-select {
+        /* Developer Button Style */
+        .dev-btn {
             text-align: center;
             flex-shrink: 0;
-            background: rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 8px 12px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 10px 14px;
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+            transition: all 0.1s;
         }
-        .dev-select label {
+        .dev-btn:active {
+            transform: scale(0.97);
+        }
+        .dev-btn label {
             display: block;
             font-size: 10px;
             color: #f4a460;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-weight: bold;
             letter-spacing: 0.5px;
         }
-        .dev-select select {
-            padding: 10px 12px;
+        .dev-value {
+            padding: 10px 20px;
             border-radius: 40px;
-            border: none;
             background: white;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
-            cursor: pointer;
-            min-width: 90px;
             text-align: center;
+            color: #1e3a5f;
+            min-width: 100px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
         
         .mix-operator {
@@ -139,34 +143,49 @@
         
         .mix-result-box {
             background: #1e3a5f;
-            border-radius: 16px;
-            padding: 8px 16px;
+            border-radius: 20px;
+            padding: 10px 18px;
             text-align: center;
             flex-shrink: 0;
-            min-width: 95px;
+            min-width: 100px;
             border: 1px solid rgba(255,255,255,0.2);
         }
         .result-percent {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #f4a460;
         }
         .result-vol {
-            font-size: 10px;
+            font-size: 11px;
             color: #ccc;
         }
         
-        .mix-description {
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
-            font-size: 11px;
-            color: #ddd;
+        .formula-box {
+            background: #f0e7dc;
+            border-radius: 14px;
+            padding: 12px;
             margin-top: 15px;
+            text-align: center;
+            border-left: 4px solid #1e3a5f;
+        }
+        .formula-text {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1e3a5f;
+            margin-bottom: 6px;
+        }
+        .formula-example {
+            font-size: 11px;
+            color: #7c6e5d;
+        }
+        .formula-result-info {
+            font-size: 10px;
+            color: #b87333;
+            margin-top: 6px;
+            font-style: italic;
         }
         
-        /* Preset Buttons */
         .preset-buttons {
             display: flex;
             flex-wrap: wrap;
@@ -189,23 +208,84 @@
             background: rgba(255,255,255,0.3);
         }
         
-        .reset-btn {
+        .mix-description {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            font-size: 11px;
+            color: #ddd;
+            margin-top: 15px;
+        }
+        
+        /* Popup Selector Modal */
+        .selector-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s;
+        }
+        .selector-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .selector-content {
+            background: white;
+            border-radius: 28px;
+            width: 280px;
+            padding: 20px;
+            text-align: center;
+        }
+        .selector-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #1e3a5f;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0e2d0;
+        }
+        .selector-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .selector-option {
+            padding: 12px;
+            background: #f9f6f2;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-weight: bold;
+            color: #1e3a5f;
+        }
+        .selector-option:active {
+            transform: scale(0.97);
+            background: #e0d6cc;
+        }
+        .selector-option.selected {
+            background: #1e3a5f;
+            color: white;
+        }
+        .selector-close {
+            margin-top: 15px;
             padding: 10px;
             background: #b87333;
             color: white;
-            border: none;
             border-radius: 40px;
-            font-weight: bold;
             cursor: pointer;
-            font-size: 0.8rem;
-            margin-top: 10px;
-        }
-        .reset-btn:active {
-            transform: scale(0.97);
         }
         
-        /* Popup Modal */
+        /* Popup Modal for Chart/Formula */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -244,9 +324,6 @@
             cursor: pointer;
             color: #999;
         }
-        .modal-close:hover {
-            color: #333;
-        }
         .modal-title {
             color: #1e3a5f;
             font-size: 1.1rem;
@@ -255,7 +332,6 @@
             padding-right: 25px;
         }
         
-        /* Table Styles */
         .ref-table {
             width: 100%;
             border-collapse: collapse;
@@ -272,7 +348,6 @@
             font-weight: 600;
         }
         
-        /* Formula List Styles */
         .formula-list {
             display: flex;
             flex-direction: column;
@@ -301,46 +376,20 @@
             color: #b87333;
         }
         
-        /* Responsive - smaller screens */
         @media (max-width: 550px) {
-            .dev-select {
-                padding: 6px 8px;
-            }
-            .dev-select select {
-                padding: 8px 8px;
-                min-width: 75px;
-                font-size: 11px;
-            }
-            .mix-operator {
-                font-size: 18px;
-            }
-            .mix-result-box {
-                min-width: 80px;
-                padding: 6px 10px;
-            }
-            .result-percent {
-                font-size: 14px;
-            }
-            .result-vol {
-                font-size: 9px;
-            }
+            .dev-btn { padding: 6px 10px; }
+            .dev-value { padding: 8px 16px; min-width: 85px; font-size: 11px; }
+            .mix-operator { font-size: 18px; }
+            .mix-result-box { min-width: 85px; padding: 8px 12px; }
+            .result-percent { font-size: 16px; }
         }
         
         @media (max-width: 450px) {
-            .dev-select select {
-                min-width: 65px;
-                padding: 6px 6px;
-                font-size: 10px;
-            }
-            .mix-operator {
-                font-size: 14px;
-            }
-            .mix-result-box {
-                min-width: 70px;
-            }
-            .result-percent {
-                font-size: 12px;
-            }
+            .dev-value { min-width: 75px; padding: 6px 12px; font-size: 10px; }
+            .mix-operator { font-size: 14px; }
+            .mix-result-box { min-width: 75px; }
+            .result-percent { font-size: 14px; }
+            .formula-text { font-size: 10px; }
         }
     </style>
 </head>
@@ -351,40 +400,28 @@
             <p>Professional Hair Color Developer Guide</p>
         </div>
         
-        <!-- Button Row -->
         <div class="info-buttons">
             <button class="info-btn btn-chart" id="showChartBtn">📊 Developer Chart</button>
             <button class="info-btn btn-formula" id="showFormulaBtn">📋 Developer Formula</button>
         </div>
         
-        <!-- Developer Mixer Section - Single Row -->
         <div class="mixer-section">
             <div class="mixer-title">🔬 1:1 Developer Mixer</div>
             
             <div class="mixer-scroll-wrapper">
                 <div class="mixer-row">
-                    <!-- Developer 1 -->
-                    <div class="dev-select">
+                    <!-- Developer 1 Button -->
+                    <div class="dev-btn" id="dev1Btn">
                         <label>🔹 DEVELOPER 1</label>
-                        <select id="dev1Select">
-                            <option value="3">3% (10 VOL)</option>
-                            <option value="6">6% (20 VOL)</option>
-                            <option value="9">9% (30 VOL)</option>
-                            <option value="12">12% (40 VOL)</option>
-                        </select>
+                        <div class="dev-value" id="dev1Value">6% (20 VOL)</div>
                     </div>
                     
                     <div class="mix-operator">+</div>
                     
-                    <!-- Developer 2 -->
-                    <div class="dev-select">
+                    <!-- Developer 2 Button -->
+                    <div class="dev-btn" id="dev2Btn">
                         <label>🔸 DEVELOPER 2</label>
-                        <select id="dev2Select">
-                            <option value="3">3% (10 VOL)</option>
-                            <option value="6" selected>6% (20 VOL)</option>
-                            <option value="9">9% (30 VOL)</option>
-                            <option value="12">12% (40 VOL)</option>
-                        </select>
+                        <div class="dev-value" id="dev2Value">6% (20 VOL)</div>
                     </div>
                     
                     <div class="mix-operator">=</div>
@@ -397,6 +434,13 @@
                 </div>
             </div>
             
+            <!-- Formula Display -->
+            <div class="formula-box" id="formulaBox">
+                <div class="formula-text" id="formulaText">📐 (6% + 6%) ÷ 2 = 6%</div>
+                <div class="formula-example" id="formulaExample">💡 6% ချင်းတူတူ ရောစပ်ရင် ရလဒ်က 6% အတိုင်းပါပဲ</div>
+                <div class="formula-result-info" id="formulaResultInfo">🔬 Result: 6% (20 VOL)</div>
+            </div>
+            
             <div class="preset-buttons">
                 <button class="preset-btn" data-d1="3" data-d2="6">3% + 6%</button>
                 <button class="preset-btn" data-d1="3" data-d2="9">3% + 9%</button>
@@ -406,11 +450,23 @@
             </div>
             
             <div class="mix-description" id="mixDescription">
-                💡 Select two developers to see the result
+                💡 Tap DEVELOPER 1 or DEVELOPER 2 to change
             </div>
         </div>
-        
-        <button class="reset-btn" id="resetBtn">🔄 Reset Mixer</button>
+    </div>
+    
+    <!-- Selector Modal for Developer -->
+    <div id="selectorModal" class="selector-modal">
+        <div class="selector-content">
+            <div class="selector-title" id="selectorTitle">Select Developer 1</div>
+            <div class="selector-options" id="selectorOptions">
+                <div class="selector-option" data-value="3">3% (10 VOL)</div>
+                <div class="selector-option" data-value="6">6% (20 VOL)</div>
+                <div class="selector-option" data-value="9">9% (30 VOL)</div>
+                <div class="selector-option" data-value="12">12% (40 VOL)</div>
+            </div>
+            <div class="selector-close" id="selectorCloseBtn">Cancel</div>
+        </div>
     </div>
     
     <!-- Modal for Developer Chart -->
@@ -471,6 +527,110 @@
     </div>
 
     <script>
+        // Developer values
+        let dev1 = 6;
+        let dev2 = 6;
+        let activeSelector = 'dev1'; // 'dev1' or 'dev2'
+        
+        // DOM elements
+        const dev1ValueEl = document.getElementById('dev1Value');
+        const dev2ValueEl = document.getElementById('dev2Value');
+        const resultPercentEl = document.getElementById('resultPercent');
+        const resultVolEl = document.getElementById('resultVol');
+        const mixDescriptionEl = document.getElementById('mixDescription');
+        const formulaTextEl = document.getElementById('formulaText');
+        const formulaExampleEl = document.getElementById('formulaExample');
+        const formulaResultInfoEl = document.getElementById('formulaResultInfo');
+        
+        const selectorModal = document.getElementById('selectorModal');
+        const selectorTitle = document.getElementById('selectorTitle');
+        const selectorOptions = document.getElementById('selectorOptions');
+        const selectorCloseBtn = document.getElementById('selectorCloseBtn');
+        
+        // Helper functions
+        function getVol(percent) {
+            const volMap = { 3: 10, 6: 20, 9: 30, 12: 40 };
+            return volMap[percent] || 0;
+        }
+        
+        function getDisplayValue(percent) {
+            return `${percent}% (${getVol(percent)} VOL)`;
+        }
+        
+        function calculateAndUpdate() {
+            const avgPercent = (dev1 + dev2) / 2;
+            const avgVol = (getVol(dev1) + getVol(dev2)) / 2;
+            
+            resultPercentEl.textContent = avgPercent.toFixed(1) + '%';
+            resultVolEl.textContent = Math.round(avgVol) + ' VOL';
+            
+            // Description
+            let description = '';
+            if (avgPercent <= 4.5) {
+                description = '🔹 Soft / Deposit - Best for: Grey coverage, Color deposit, Darker shades';
+            } else if (avgPercent <= 7.5) {
+                description = '🔸 Medium / Lifting - Best for: Lightening, Level up, One color application';
+            } else {
+                description = '🔺 Strong / High Lift - Best for: Bleaching, Fashion colors, High lift blonde';
+            }
+            mixDescriptionEl.innerHTML = '💡 ' + description;
+            
+            // Formula display
+            formulaTextEl.innerHTML = `📐 (${dev1}% + ${dev2}%) ÷ 2 = ${avgPercent.toFixed(1)}%`;
+            
+            if (dev1 === dev2) {
+                formulaExampleEl.innerHTML = `💡 ${dev1}% ချင်းတူတူ ရောစပ်ရင် ရလဒ်က ${dev1}% အတိုင်းပါပဲ`;
+                formulaResultInfoEl.innerHTML = `🔬 Result: ${dev1}% (${getVol(dev1)} VOL) - အရောင်မပြောင်းပါဘူး`;
+            } else if (dev1 < dev2) {
+                formulaExampleEl.innerHTML = `💡 ${dev1}% နဲ့ ${dev2}% ကို 1:1 ရောစပ်ရင် ပျမ်းမျှ (Average) ဖြစ်သွားပါတယ်`;
+                formulaResultInfoEl.innerHTML = `🔬 Result: ${avgPercent.toFixed(1)}% (${getVol(dev1)} VOL နဲ့ ${getVol(dev2)} VOL ကြား)`;
+            } else {
+                formulaExampleEl.innerHTML = `💡 ${dev1}% နဲ့ ${dev2}% ကို 1:1 ရောစပ်ရင် ပျမ်းမျှ (Average) ဖြစ်သွားပါတယ်`;
+                formulaResultInfoEl.innerHTML = `🔬 Result: ${avgPercent.toFixed(1)}% (${getVol(dev2)} VOL နဲ့ ${getVol(dev1)} VOL ကြား)`;
+            }
+        }
+        
+        function updateDisplay() {
+            dev1ValueEl.textContent = getDisplayValue(dev1);
+            dev2ValueEl.textContent = getDisplayValue(dev2);
+            calculateAndUpdate();
+        }
+        
+        // Show selector modal
+        function showSelector(which) {
+            activeSelector = which;
+            selectorTitle.textContent = which === 'dev1' ? '🔹 Select Developer 1' : '🔸 Select Developer 2';
+            
+            // Highlight current selection
+            const options = selectorOptions.querySelectorAll('.selector-option');
+            const currentVal = which === 'dev1' ? dev1 : dev2;
+            options.forEach(opt => {
+                const val = parseInt(opt.getAttribute('data-value'));
+                if (val === currentVal) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+            
+            selectorModal.classList.add('active');
+        }
+        
+        function closeSelector() {
+            selectorModal.classList.remove('active');
+        }
+        
+        function setDeveloper(value) {
+            const percent = parseInt(value);
+            if (activeSelector === 'dev1') {
+                dev1 = percent;
+            } else {
+                dev2 = percent;
+            }
+            updateDisplay();
+            closeSelector();
+        }
+        
         // Modal functions
         function openModal(modalId) {
             document.getElementById(modalId).classList.add('active');
@@ -480,71 +640,42 @@
             document.getElementById(modalId).classList.remove('active');
         }
         
+        // Event listeners
+        document.getElementById('dev1Btn').onclick = () => showSelector('dev1');
+        document.getElementById('dev2Btn').onclick = () => showSelector('dev2');
+        
+        // Preset buttons
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.onclick = () => {
+                dev1 = parseInt(btn.getAttribute('data-d1'));
+                dev2 = parseInt(btn.getAttribute('data-d2'));
+                updateDisplay();
+            };
+        });
+        
+        // Selector options click
+        selectorOptions.querySelectorAll('.selector-option').forEach(opt => {
+            opt.onclick = () => setDeveloper(opt.getAttribute('data-value'));
+        });
+        
+        selectorCloseBtn.onclick = closeSelector;
+        
         // Close modal when clicking outside
+        selectorModal.onclick = (e) => {
+            if (e.target === selectorModal) closeSelector();
+        };
+        
         window.onclick = function(event) {
             if (event.target.classList.contains('modal-overlay')) {
                 event.target.classList.remove('active');
             }
         }
         
-        // Mixer calculation - Average of two developers (1:1 ratio)
-        function calculateMix(dev1, dev2) {
-            const p1 = parseFloat(dev1);
-            const p2 = parseFloat(dev2);
-            const avgPercent = (p1 + p2) / 2;
-            
-            const volMap = { 3: 10, 6: 20, 9: 30, 12: 40 };
-            const avgVol = (volMap[p1] + volMap[p2]) / 2;
-            
-            let description = '';
-            if (avgPercent <= 4.5) {
-                description = '🔹 Soft / Deposit - Best for: Grey coverage, Color deposit, Darker shades';
-            } else if (avgPercent <= 7.5) {
-                description = '🔸 Medium / Lifting - Best for: Lightening, Level up, One color application';
-            } else {
-                description = '🔺 Strong / High Lift - Best for: Bleaching, Fashion colors, High lift blonde';
-            }
-            
-            return { 
-                percent: avgPercent.toFixed(1), 
-                vol: Math.round(avgVol), 
-                description: description 
-            };
-        }
-        
-        function updateMixer() {
-            const dev1 = document.getElementById('dev1Select').value;
-            const dev2 = document.getElementById('dev2Select').value;
-            const result = calculateMix(dev1, dev2);
-            
-            document.getElementById('resultPercent').textContent = result.percent + '%';
-            document.getElementById('resultVol').textContent = result.vol + ' VOL';
-            document.getElementById('mixDescription').innerHTML = '💡 ' + result.description;
-        }
-        
-        // Event listeners
         document.getElementById('showChartBtn').onclick = () => openModal('chartModal');
         document.getElementById('showFormulaBtn').onclick = () => openModal('formulaModal');
         
-        document.getElementById('dev1Select').onchange = updateMixer;
-        document.getElementById('dev2Select').onchange = updateMixer;
-        
-        document.getElementById('resetBtn').onclick = () => {
-            document.getElementById('dev1Select').value = '3';
-            document.getElementById('dev2Select').value = '6';
-            updateMixer();
-        };
-        
-        document.querySelectorAll('.preset-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.getElementById('dev1Select').value = btn.getAttribute('data-d1');
-                document.getElementById('dev2Select').value = btn.getAttribute('data-d2');
-                updateMixer();
-            };
-        });
-        
         // Initialize
-        updateMixer();
+        updateDisplay();
     </script>
 </body>
 </html>

@@ -23,128 +23,111 @@
         .lab-header { text-align: center; margin-bottom: 14px; }
         .lab-header h1 { color: #1e3a5f; font-size: 1rem; }
         .lab-header p { color: #7c6e5d; font-size: 0.55rem; }
-        .mix-result {
-            background: linear-gradient(135deg, #f0e7dc, #e8ddce);
-            border-radius: 18px;
-            padding: 12px;
+        
+        /* Color Display Box - With White Border */
+        .color-display {
+            background: #ddd;
+            border-radius: 16px;
+            padding: 25px 20px;
             margin-bottom: 14px;
             text-align: center;
+            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
         }
-        .result-circle { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 6px; transition: background 0.2s; box-shadow: 0 3px 8px rgba(0,0,0,0.15); border: 2px solid white; }
-        .result-name { font-size: 0.8rem; font-weight: bold; color: #1e3a5f; }
-        .result-rgb { font-size: 0.55rem; color: #7c6e5d; margin-top: 2px; font-family: monospace; }
-        .selected-colors { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px; min-height: 36px; }
+        .result-name { 
+            font-size: 1rem; 
+            font-weight: bold; 
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .result-rgb { 
+            font-size: 0.7rem; 
+            color: rgba(255,255,255,0.9);
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+            font-family: monospace;
+        }
+        .result-formula { 
+            font-size: 0.65rem; 
+            color: rgba(255,255,255,0.85);
+            margin-top: 8px;
+            font-style: italic;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+        }
+        
+        .selected-colors { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; min-height: 50px; }
         .selected-chip { 
-            width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15); position: relative; font-size: 14px; 
+            background: white;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px 5px 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            font-size: 14px;
+            border: 1px solid #e0d6cc;
+        }
+        .chip-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .chip-name { font-size: 11px; font-weight: bold; color: #1e3a5f; }
+        .chip-count { 
+            background: #1e3a5f; 
+            color: white; 
+            font-size: 9px; 
+            padding: 2px 6px; 
+            border-radius: 20px;
+            font-weight: bold;
         }
         .remove-chip { 
-            position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; background: #c62828; color: white; 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; 
-            cursor: pointer; border: 1px solid white; 
+            width: 18px; height: 18px; background: #c62828; color: white; 
+            border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; 
+            font-size: 10px; cursor: pointer; margin-left: 4px;
         }
-        .white-badge {
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            font-size: 8px;
-            padding: 1px 4px;
-            border-radius: 10px;
-            white-space: nowrap;
-        }
-        .color-keyboard { background: #2c3e50; border-radius: 16px; padding: 8px; }
-        .keyboard-row { display: flex; justify-content: center; gap: 5px; margin-bottom: 5px; }
+        
+        .color-keyboard { background: #2c3e50; border-radius: 16px; padding: 10px; }
+        .keyboard-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
         .keyboard-row:last-child { margin-bottom: 0; }
         .color-key { 
-            flex: 1; max-width: 50px; height: 50px; border-radius: 10px; display: flex; flex-direction: column; 
+            min-width: 55px; height: 55px; border-radius: 12px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; cursor: pointer; transition: all 0.05s linear; 
             box-shadow: 0 2px 0 rgba(0,0,0,0.3); font-size: 16px; position: relative;
         }
         .color-key:active { transform: translateY(2px); box-shadow: none; }
-        .key-label { font-size: 7px; margin-top: 2px; font-weight: normal; }
+        .key-label { font-size: 8px; margin-top: 2px; font-weight: normal; }
+        
+        .info-text {
+            font-size: 10px;
+            color: #7c6e5d;
+            text-align: center;
+            margin: 10px 0;
+            padding: 6px;
+            background: #f9f6f2;
+            border-radius: 12px;
+        }
+        
         .clear-btn { width: 100%; padding: 8px; background: #b87333; color: white; border: none; border-radius: 40px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 0.8rem; }
         
-        /* White Ratio Slider Modal */
-        .slider-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: all 0.2s;
+        @media (max-width: 500px) { 
+            .color-key { min-width: 48px; height: 48px; font-size: 14px; } 
+            .key-label { font-size: 7px; }
+            .color-display { padding: 18px 15px; min-height: 100px; }
+            .result-name { font-size: 0.85rem; }
         }
-        .slider-modal.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .slider-content {
-            background: white;
-            border-radius: 28px;
-            padding: 24px;
-            width: 280px;
-            text-align: center;
-        }
-        .slider-content h3 {
-            color: #1e3a5f;
-            margin-bottom: 15px;
-        }
-        .slider-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1e3a5f;
-            margin: 10px 0;
-        }
-        input[type="range"] {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            background: #e0d6cc;
-            border-radius: 3px;
-            outline: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            background: #1e3a5f;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        .slider-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .slider-buttons button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .btn-confirm {
-            background: #1e3a5f;
-            color: white;
-        }
-        .btn-cancel {
-            background: #b87333;
-            color: white;
-        }
-        
-        @media (max-width: 450px) { 
-            .color-key { max-width: 44px; height: 44px; font-size: 14px; } 
+        @media (max-width: 420px) { 
+            .color-key { min-width: 42px; height: 42px; font-size: 12px; } 
         }
     </style>
 </head>
@@ -152,14 +135,18 @@
     <div class="lab-container">
         <div class="lab-header">
             <h1>🎨 Color Mixing Lab</h1>
-            <p>Tap to mix (max 3 colors) | White: tap to set ratio (1-10)</p>
+            <p>Tap to add color (max 10x each, max 3 different colors)</p>
         </div>
-        <div class="mix-result">
-            <div class="result-circle" id="resultCircle" style="background: #ddd;"></div>
+        
+        <!-- Color Display - Square Box with White Border -->
+        <div class="color-display" id="colorDisplay">
             <div class="result-name" id="resultName">-</div>
             <div class="result-rgb" id="resultRGB">RGB: -</div>
-            <div class="selected-colors" id="selectedColors"></div>
+            <div class="result-formula" id="resultFormula"></div>
         </div>
+        
+        <div class="selected-colors" id="selectedColors"></div>
+        
         <div class="color-keyboard">
             <div class="keyboard-row">
                 <div class="color-key" data-color="red" style="background: #e74c3c;"><span>🔴</span><span class="key-label">RED</span></div>
@@ -178,107 +165,74 @@
                 <div class="color-key" data-color="yellow-green" style="background: #2ecc71;"><span>🟡🟢</span><span class="key-label">Y-GR</span></div>
             </div>
             <div class="keyboard-row">
-                <div class="color-key" id="whiteKey" data-color="white" style="background: #ecf0f1; color:#333;"><span>⚪</span><span class="key-label">WHT</span></div>
+                <div class="color-key" data-color="white" style="background: #ecf0f1; color:#333;"><span>⚪</span><span class="key-label">WHT</span></div>
                 <div class="color-key" data-color="black" style="background: #2c3e50;"><span>⚫</span><span class="key-label">BLK</span></div>
             </div>
         </div>
-        <button class="clear-btn" id="clearBtn">🗑️ CLEAR ALL</button>
-    </div>
-    
-    <!-- White Ratio Slider Modal -->
-    <div id="whiteSliderModal" class="slider-modal">
-        <div class="slider-content">
-            <h3>⚪ White Amount</h3>
-            <div class="slider-value" id="sliderValue">5</div>
-            <input type="range" id="whiteRatioSlider" min="1" max="10" value="5" step="1">
-            <div style="font-size: 11px; color: #999; margin: 8px 0;">1 = Less White | 10 = More White</div>
-            <div class="slider-buttons">
-                <button class="btn-cancel" id="cancelWhiteBtn">Cancel</button>
-                <button class="btn-confirm" id="confirmWhiteBtn">Add White</button>
-            </div>
+        
+        <div class="info-text">
+            💡 Tap to add color (max 10x each) | Max 3 different colors
         </div>
+        
+        <button class="clear-btn" id="clearBtn">🗑️ CLEAR ALL</button>
     </div>
 
     <script>
         (function() {
-            // Color database with base RGB values
+            // Color database
             const colors = {
-                'red': { name: 'Red', r: 255, g: 0, b: 0, emoji: '🔴', base: true },
-                'orange': { name: 'Orange', r: 255, g: 128, b: 0, emoji: '🟠', base: true },
-                'yellow': { name: 'Yellow', r: 255, g: 255, b: 0, emoji: '🟡', base: true },
-                'green': { name: 'Green', r: 0, g: 128, b: 0, emoji: '🟢', base: true },
-                'blue': { name: 'Blue', r: 0, g: 0, b: 255, emoji: '🔵', base: true },
-                'violet': { name: 'Violet', r: 128, g: 0, b: 128, emoji: '🟣', base: true },
-                'yellow-orange': { name: 'Yellow-Orange', r: 255, g: 192, b: 0, emoji: '🟡🟠', base: true },
-                'red-orange': { name: 'Red-Orange', r: 255, g: 64, b: 0, emoji: '🔴🟠', base: true },
-                'red-violet': { name: 'Red-Violet', r: 192, g: 0, b: 64, emoji: '🔴🟣', base: true },
-                'blue-violet': { name: 'Blue-Violet', r: 64, g: 0, b: 192, emoji: '🔵🟣', base: true },
-                'blue-green': { name: 'Blue-Green', r: 0, g: 192, b: 128, emoji: '🔵🟢', base: true },
-                'yellow-green': { name: 'Yellow-Green', r: 128, g: 255, b: 0, emoji: '🟡🟢', base: true },
-                'white': { name: 'White', r: 255, g: 255, b: 255, emoji: '⚪', base: false },
-                'black': { name: 'Black', r: 0, g: 0, b: 0, emoji: '⚫', base: true }
+                'red': { name: 'Red', r: 255, g: 0, b: 0, emoji: '🔴' },
+                'orange': { name: 'Orange', r: 255, g: 128, b: 0, emoji: '🟠' },
+                'yellow': { name: 'Yellow', r: 255, g: 255, b: 0, emoji: '🟡' },
+                'green': { name: 'Green', r: 0, g: 128, b: 0, emoji: '🟢' },
+                'blue': { name: 'Blue', r: 0, g: 0, b: 255, emoji: '🔵' },
+                'violet': { name: 'Violet', r: 128, g: 0, b: 128, emoji: '🟣' },
+                'yellow-orange': { name: 'Yellow-Orange', r: 255, g: 192, b: 0, emoji: '🟡🟠' },
+                'red-orange': { name: 'Red-Orange', r: 255, g: 64, b: 0, emoji: '🔴🟠' },
+                'red-violet': { name: 'Red-Violet', r: 192, g: 0, b: 64, emoji: '🔴🟣' },
+                'blue-violet': { name: 'Blue-Violet', r: 64, g: 0, b: 192, emoji: '🔵🟣' },
+                'blue-green': { name: 'Blue-Green', r: 0, g: 192, b: 128, emoji: '🔵🟢' },
+                'yellow-green': { name: 'Yellow-Green', r: 128, g: 255, b: 0, emoji: '🟡🟢' },
+                'white': { name: 'White', r: 255, g: 255, b: 255, emoji: '⚪' },
+                'black': { name: 'Black', r: 0, g: 0, b: 0, emoji: '⚫' }
             };
             
-            // Selected colors with weight (for white)
-            let selectedItems = []; // { colorId, weight (for white only) }
-            let pendingWhite = null;
+            // Selected colors with count: { colorId, count }
+            let selectedItems = [];
             
             // DOM elements
-            const rc = document.getElementById('resultCircle');
-            const rn = document.getElementById('resultName');
-            const rrgb = document.getElementById('resultRGB');
-            const sc = document.getElementById('selectedColors');
-            const whiteSliderModal = document.getElementById('whiteSliderModal');
-            const whiteSlider = document.getElementById('whiteRatioSlider');
-            const sliderValue = document.getElementById('sliderValue');
+            const colorDisplay = document.getElementById('colorDisplay');
+            const resultName = document.getElementById('resultName');
+            const resultRGB = document.getElementById('resultRGB');
+            const resultFormula = document.getElementById('resultFormula');
+            const selectedContainer = document.getElementById('selectedColors');
             
-            // Update slider value display
-            whiteSlider.oninput = function() {
-                sliderValue.textContent = this.value;
-            };
-            
-            // Show white slider modal
-            function showWhiteModal() {
-                whiteSlider.value = '5';
-                sliderValue.textContent = '5';
-                whiteSliderModal.classList.add('active');
-            }
-            
-            function closeWhiteModal() {
-                whiteSliderModal.classList.remove('active');
-                pendingWhite = null;
-            }
-            
-            // Add white with specific ratio
-            function addWhiteWithRatio(ratio) {
-                const weight = parseInt(ratio);
-                selectedItems.push({ colorId: 'white', weight: weight });
-                update();
-                closeWhiteModal();
-            }
-            
-            // Add regular color (weight = 1)
+            // Add color (increment count)
             function addColor(colorId) {
-                if (colorId === 'white') {
-                    showWhiteModal();
-                    return;
+                const existing = selectedItems.find(item => item.colorId === colorId);
+                
+                if (existing) {
+                    if (existing.count >= 10) return;
+                    existing.count++;
+                } else {
+                    if (selectedItems.length >= 3) return;
+                    selectedItems.push({ colorId: colorId, count: 1 });
                 }
-                
-                // Count non-white colors
-                const nonWhiteCount = selectedItems.filter(item => item.colorId !== 'white').length;
-                if (nonWhiteCount >= 3) return;
-                
-                selectedItems.push({ colorId: colorId, weight: 1 });
                 update();
             }
             
-            // Remove color at index
+            // Remove color or decrement count
             function removeColor(index) {
-                selectedItems.splice(index, 1);
+                const item = selectedItems[index];
+                if (item.count > 1) {
+                    item.count--;
+                } else {
+                    selectedItems.splice(index, 1);
+                }
                 update();
             }
             
-            // Calculate mixed RGB with weights
+            // Calculate weighted RGB mix
             function calculateMixedRGB() {
                 if (selectedItems.length === 0) return null;
                 
@@ -288,11 +242,10 @@
                 for (const item of selectedItems) {
                     const c = colors[item.colorId];
                     if (c) {
-                        const weight = item.weight || 1;
-                        totalR += c.r * weight;
-                        totalG += c.g * weight;
-                        totalB += c.b * weight;
-                        totalWeight += weight;
+                        totalR += c.r * item.count;
+                        totalG += c.g * item.count;
+                        totalB += c.b * item.count;
+                        totalWeight += item.count;
                     }
                 }
                 
@@ -305,16 +258,26 @@
                 // Find closest color name
                 let closest = null;
                 let minDist = Infinity;
-                for (const c of Object.values(colors)) {
+                for (const [key, c] of Object.entries(colors)) {
                     const d = Math.hypot(c.r - avgR, c.g - avgG, c.b - avgB);
                     if (d < minDist) {
                         minDist = d;
-                        closest = c;
+                        closest = { name: c.name, key: key };
                     }
                 }
                 
                 let name = (minDist > 80) ? 'Mixed Color' : closest.name;
                 return { name: name, r: avgR, g: avgG, b: avgB };
+            }
+            
+            // Build formula string
+            function buildFormula() {
+                if (selectedItems.length === 0) return '';
+                const parts = selectedItems.map(item => {
+                    const c = colors[item.colorId];
+                    return `${c.name} x${item.count}`;
+                });
+                return `📐 ${parts.join(' + ')}`;
             }
             
             function rgbToHex(r,g,b) { 
@@ -323,21 +286,19 @@
             
             function update() {
                 // Update selected chips display
-                sc.innerHTML = '';
+                selectedContainer.innerHTML = '';
                 selectedItems.forEach((item, idx) => {
                     const c = colors[item.colorId];
                     const chip = document.createElement('div');
                     chip.className = 'selected-chip';
-                    chip.style.background = rgbToHex(c.r, c.g, c.b);
-                    if (item.colorId === 'white') chip.style.color = '#333';
                     
-                    let weightHtml = '';
-                    if (item.colorId === 'white' && item.weight) {
-                        weightHtml = `<div class="white-badge">x${item.weight}</div>`;
-                    }
-                    
-                    chip.innerHTML = `<span>${c.emoji}</span>${weightHtml}<div class="remove-chip" data-index="${idx}">✕</div>`;
-                    sc.appendChild(chip);
+                    chip.innerHTML = `
+                        <div class="chip-color" style="background: ${rgbToHex(c.r, c.g, c.b)}"></div>
+                        <span class="chip-name">${c.name}</span>
+                        <span class="chip-count">x${item.count}</span>
+                        <div class="remove-chip" data-index="${idx}">✕</div>
+                    `;
+                    selectedContainer.appendChild(chip);
                 });
                 
                 // Add remove event listeners
@@ -348,19 +309,22 @@
                     };
                 });
                 
-                // Update result
+                // Update color display
                 if (selectedItems.length === 0) {
-                    rc.style.background = '#ddd';
-                    rn.textContent = '-';
-                    rrgb.textContent = 'RGB: -';
+                    colorDisplay.style.background = '#ddd';
+                    resultName.textContent = '-';
+                    resultRGB.textContent = 'RGB: -';
+                    resultFormula.textContent = '';
                     return;
                 }
                 
                 const mixed = calculateMixedRGB();
                 if (mixed) {
-                    rc.style.background = rgbToHex(mixed.r, mixed.g, mixed.b);
-                    rn.textContent = mixed.name;
-                    rrgb.textContent = `RGB: ${mixed.r}, ${mixed.g}, ${mixed.b}`;
+                    const hexColor = rgbToHex(mixed.r, mixed.g, mixed.b);
+                    colorDisplay.style.background = hexColor;
+                    resultName.textContent = mixed.name;
+                    resultRGB.textContent = `RGB: ${mixed.r}, ${mixed.g}, ${mixed.b}`;
+                    resultFormula.textContent = buildFormula();
                 }
             }
             
@@ -371,22 +335,6 @@
                     addColor(colorId);
                 };
             });
-            
-            // Modal buttons
-            document.getElementById('confirmWhiteBtn').onclick = () => {
-                const ratio = whiteSlider.value;
-                addWhiteWithRatio(ratio);
-            };
-            document.getElementById('cancelWhiteBtn').onclick = () => {
-                closeWhiteModal();
-            };
-            
-            // Close modal when clicking outside
-            whiteSliderModal.onclick = (e) => {
-                if (e.target === whiteSliderModal) {
-                    closeWhiteModal();
-                }
-            };
             
             // Clear all
             document.getElementById('clearBtn').onclick = () => {
