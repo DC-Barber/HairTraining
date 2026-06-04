@@ -147,7 +147,9 @@
         
         /* Delete Button Style */
         .delete-key {
-            background: #c62828 !important;
+           background: rgba(255, 255, 255, 0.15)!important;
+backdrop-filter: blur(15px)!important;
+border: 1px solid rgba(255, 255, 255, 0.2)!important;
         }
         .delete-key:active {
             transform: translateY(2px);
@@ -217,12 +219,17 @@
                 <div class="color-key" data-color="white" style="background: #ffffff; color:#333;"><span>⚪</span><span class="key-label">WHITE</span></div>
                 <div class="color-key" data-color="black" style="background: #000000;"><span>⚫</span><span class="key-label">BLACK</span></div>
                 <div class="color-key" data-color="grey" style="background: #808080;"><span>◻️</span><span class="key-label">GREY</span></div>
-                <div class="color-key delete-key" id="deleteAllBtn" style="background: #c62828;"><span>🗑️</span><span class="key-label">CLEAR</span></div>
+                <div> ______________ </br>
+                      ______________
+                </div>
+          
+                <div class="color-key delete-key" id="deleteAllBtn" style="background: #c62828;"><span> ⌫ </span><span class="key-label">CLEAR</span></div>
+                
             </div>
         </div>
         
         <div class="info-text">
-            💡 Max 2 base colors + unlimited White/Black/Grey | Tap 🗑️ to clear all
+            💡 Max 2 base colors + unlimited White/Black/Grey | Tap ⌫ to clear all
         </div>
     </div>
 
