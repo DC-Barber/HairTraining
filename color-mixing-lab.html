@@ -91,6 +91,25 @@
             font-style: italic;
         }
         
+        /* Color Counter */
+        .color-counter {
+            background: #f0e7dc;
+            border-radius: 30px;
+            padding: 6px 12px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #1e3a5f;
+        }
+        .color-counter span {
+            background: #1e3a5f;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 30px;
+            margin: 0 2px;
+        }
+        
         .selected-colors { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; min-height: 50px; }
         .selected-chip { 
             background: white;
@@ -173,6 +192,11 @@
             <div class="result-formula" id="resultFormula"></div>
         </div>
         
+        <!-- ========== COLOR COUNTER (ပေါင်းထားတဲ့ အရောင်အရေအတွက်) ========== -->
+        <div class="color-counter" id="colorCounter">
+            📦 Total Colors: <span id="totalCount">0</span>
+        </div>
+        
         <div class="selected-colors" id="selectedColors"></div>
         
         <div class="color-keyboard">
@@ -215,10 +239,6 @@
     <script>
         (function() {
             // ========== COLOR DEFINITIONS ==========
-            // Primary Colors (3)
-            // Secondary Colors (3)  
-            // Tertiary Colors (6)
-            // Total: 12 Colors
             const colors = {
                 // PRIMARY (3)
                 'red': { name: 'Red', category: 'primary', temp: 'warm', r: 255, g: 0, b: 0, hex: '#ff0000' },
@@ -244,9 +264,7 @@
                 'grey': { name: 'Grey', category: 'modifier', temp: 'neutral', r: 128, g: 128, b: 128, hex: '#808080' }
             };
             
-            // Mixing rules for base color combinations
-            // Primary + Primary = Secondary
-            // Primary + Secondary = Tertiary
+            // Mixing rules
             const mixRules = {
                 'red+yellow': { name: 'Orange', category: 'secondary', r: 255, g: 128, b: 0, temp: 'warm' },
                 'yellow+red': { name: 'Orange', category: 'secondary', r: 255, g: 128, b: 0, temp: 'warm' },
@@ -279,6 +297,7 @@
             const resultRGB = document.getElementById('resultRGB');
             const resultFormula = document.getElementById('resultFormula');
             const selectedContainer = document.getElementById('selectedColors');
+            const totalCountSpan = document.getElementById('totalCount');
             
             function addColor(colorId) {
                 const color = colors[colorId];
@@ -350,7 +369,6 @@
                 const baseColors = selectedItems.filter(item => colors[item.colorId].category !== 'modifier');
                 const modifiers = selectedItems.filter(item => colors[item.colorId].category === 'modifier');
                 
-                // Only modifiers (no base colors)
                 if (baseColors.length === 0) {
                     let r = 128, g = 128, b = 128;
                     let totalWeight = 1;
@@ -364,23 +382,18 @@
                     return { name: 'Mixed Color', category: 'mixed', temp: 'neutral', r: Math.round(r), g: Math.round(g), b: Math.round(b) };
                 }
                 
-                // Single base color
                 if (baseColors.length === 1) {
                     const baseColor = colors[baseColors[0].colorId];
                     const result = applyModifiers(baseColor.r, baseColor.g, baseColor.b, baseColors[0].count, modifiers);
-                    
                     let name = baseColor.name;
                     let category = baseColor.category;
-                    
                     if (modifiers.length > 0) {
                         name = `Modified ${baseColor.name}`;
                         category = 'mixed';
                     }
-                    
                     return { name, category, temp: baseColor.temp, r: result.r, g: result.g, b: result.b };
                 }
                 
-                // Two base colors - use mix rules
                 if (baseColors.length === 2) {
                     const c1 = baseColors[0];
                     const c2 = baseColors[1];
@@ -405,9 +418,8 @@
                     let g = rule.g;
                     let b = rule.b;
                     let totalWeight = 1;
-                    
-                    // Apply ratio effect
                     let ratioText = '';
+                    
                     if (count1 > count2) {
                         ratioText = `${color1.name} > ${rule.name}`;
                         const shift = Math.min(0.3, (count1 - count2) / (count1 + count2) * 0.5);
@@ -454,6 +466,14 @@
             }
             
             function update() {
+                // ========== Update Color Counter (စုစုပေါင်းအရောင်အရေအတွက်) ==========
+                let totalColors = 0;
+                for (const item of selectedItems) {
+                    totalColors += item.count;
+                }
+                totalCountSpan.textContent = totalColors;
+                
+                // Update selected chips display
                 selectedContainer.innerHTML = '';
                 selectedItems.forEach((item, idx) => {
                     const c = colors[item.colorId];
