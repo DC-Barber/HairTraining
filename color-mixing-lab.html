@@ -6,11 +6,16 @@
     <title>Color Theory Lab - 12 Colors</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background: #f9f6f2;
             padding: 12px;
-            height: 100vh;
+            min-height: 100%;
             overflow-y: auto;
         }
         .lab-container {
@@ -19,6 +24,8 @@
             border-radius: 20px;
             padding: 14px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            height: auto;
+            min-height: calc(100% - 0px);
         }
         .lab-header { text-align: center; margin-bottom: 14px; }
         .lab-header h1 { color: #1e3a5f; font-size: 1rem; }
@@ -27,12 +34,12 @@
         .color-display {
             background: #ddd;
             border-radius: 16px;
-            padding: 25px 20px;
+            padding: 20px 15px;
             margin-bottom: 14px;
             text-align: center;
             transition: background 0.2s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            min-height: 130px;
+            min-height: 110px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -40,14 +47,14 @@
             border: 3px solid white;
         }
         .result-name { 
-            font-size: 1rem; 
+            font-size: 0.95rem; 
             font-weight: bold; 
             color: white;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
             margin-bottom: 4px;
         }
         .result-ratio {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-family: monospace;
             background: rgba(0,0,0,0.5);
             padding: 2px 8px;
@@ -57,7 +64,7 @@
             color: white;
         }
         .result-category {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: bold;
             padding: 2px 10px;
             border-radius: 20px;
@@ -69,7 +76,7 @@
         .result-category.tertiary { background: #d35400; color: white; }
         .result-category.mixed { background: #7f8c8d; color: white; }
         .result-temp {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: bold;
             padding: 2px 10px;
             border-radius: 20px;
@@ -79,100 +86,92 @@
         .result-temp.warm { background: #e67e22; color: white; }
         .result-temp.cool { background: #3498db; color: white; }
         .result-rgb { 
-            font-size: 0.6rem; 
+            font-size: 0.55rem; 
             color: rgba(255,255,255,0.85);
             text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
             font-family: monospace;
         }
         .result-formula { 
-            font-size: 0.55rem; 
+            font-size: 0.5rem; 
             color: rgba(255,255,255,0.8);
             margin-top: 6px;
             font-style: italic;
         }
         
-        /* Color Counter */
-        .color-counter {
-            background: #f0e7dc;
-            border-radius: 30px;
-            padding: 6px 12px;
-            margin-bottom: 12px;
-            text-align: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: #1e3a5f;
-        }
-        .color-counter span {
-            background: #1e3a5f;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 30px;
-            margin: 0 2px;
-        }
-        
-        .selected-colors { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; min-height: 50px; }
+        .selected-colors { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 12px; min-height: 45px; }
         .selected-chip { 
             background: white;
             border-radius: 30px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 5px 12px 5px 8px;
+            gap: 5px;
+            padding: 4px 10px 4px 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             position: relative;
-            font-size: 14px;
+            font-size: 13px;
             border: 1px solid #e0d6cc;
         }
         .chip-color {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: inline-block;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-        .chip-name { font-size: 11px; font-weight: bold; color: #1e3a5f; }
+        .chip-name { font-size: 10px; font-weight: bold; color: #1e3a5f; }
         .chip-count { 
             background: #1e3a5f; 
             color: white; 
             font-size: 9px; 
-            padding: 2px 6px; 
+            padding: 2px 5px; 
             border-radius: 20px;
             font-weight: bold;
         }
         .remove-chip { 
-            width: 18px; height: 18px; background: #c62828; color: white; 
+            width: 16px; height: 16px; background: #c62828; color: white; 
             border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; 
-            font-size: 10px; cursor: pointer; margin-left: 4px;
+            font-size: 9px; cursor: pointer; margin-left: 3px;
         }
         
+        /* Color Keyboard - 6, 6, 4 Layout */
         .color-keyboard { background: #2c3e50; border-radius: 16px; padding: 10px; }
         .keyboard-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
         .keyboard-row:last-child { margin-bottom: 0; }
         .color-key { 
-            min-width: 60px; height: 60px; border-radius: 12px; display: flex; flex-direction: column; 
+            min-width: 55px; height: 55px; border-radius: 12px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; cursor: pointer; transition: all 0.05s linear; 
-            box-shadow: 0 2px 0 rgba(0,0,0,0.3); font-size: 16px; position: relative;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.3); font-size: 15px; position: relative;
         }
         .color-key:active { transform: translateY(2px); box-shadow: none; }
-        .key-label { font-size: 9px; margin-top: 2px; font-weight: normal; }
+        .key-label { font-size: 8px; margin-top: 2px; font-weight: normal; }
+        
+        /* Delete Button Style */
+        .delete-key {
+            background: #c62828 !important;
+        }
+        .delete-key:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
         
         .info-text {
-            font-size: 10px;
+            font-size: 9px;
             color: #7c6e5d;
             text-align: center;
-            margin: 10px 0;
-            padding: 6px;
+            margin: 8px 0;
+            padding: 5px;
             background: #f9f6f2;
             border-radius: 12px;
         }
         
-        .clear-btn { width: 100%; padding: 8px; background: #b87333; color: white; border: none; border-radius: 40px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 0.8rem; }
-        
         @media (max-width: 550px) { 
-            .color-key { min-width: 52px; height: 52px; font-size: 14px; } 
-            .key-label { font-size: 8px; }
-            .color-display { padding: 18px 15px; min-height: 110px; }
+            .color-key { min-width: 48px; height: 48px; font-size: 13px; } 
+            .key-label { font-size: 7px; }
+            .color-display { padding: 15px 12px; min-height: 100px; }
             .result-name { font-size: 0.85rem; }
+        }
+        @media (max-width: 450px) {
+            .color-key { min-width: 44px; height: 44px; font-size: 12px; }
         }
     </style>
 </head>
@@ -192,27 +191,19 @@
             <div class="result-formula" id="resultFormula"></div>
         </div>
         
-        <!-- ========== COLOR COUNTER (ပေါင်းထားတဲ့ အရောင်အရေအတွက်) ========== -->
-        <div class="color-counter" id="colorCounter">
-            📦 Total Colors: <span id="totalCount">0</span>
-        </div>
-        
         <div class="selected-colors" id="selectedColors"></div>
         
         <div class="color-keyboard">
-            <!-- Primary Colors Row -->
+            <!-- Row 1: Primary + Secondary (6 Colors) -->
             <div class="keyboard-row">
                 <div class="color-key" data-color="red" style="background: #ff0000;"><span>🔴</span><span class="key-label">RED</span></div>
                 <div class="color-key" data-color="yellow" style="background: #ffff00; color:#333;"><span>🟡</span><span class="key-label">YELLOW</span></div>
                 <div class="color-key" data-color="blue" style="background: #0000ff;"><span>🔵</span><span class="key-label">BLUE</span></div>
-            </div>
-            <!-- Secondary Colors Row -->
-            <div class="keyboard-row">
                 <div class="color-key" data-color="orange" style="background: #ff8000;"><span>🟠</span><span class="key-label">ORANGE</span></div>
                 <div class="color-key" data-color="green" style="background: #008000;"><span>🟢</span><span class="key-label">GREEN</span></div>
                 <div class="color-key" data-color="violet" style="background: #800080;"><span>🟣</span><span class="key-label">VIOLET</span></div>
             </div>
-            <!-- Tertiary Colors Row -->
+            <!-- Row 2: Tertiary Colors (6 Colors) -->
             <div class="keyboard-row">
                 <div class="color-key" data-color="yellow-orange" style="background: #ffc000;"><span>🟡🟠</span><span class="key-label">Y-ORANGE</span></div>
                 <div class="color-key" data-color="red-orange" style="background: #ff4000;"><span>🔴🟠</span><span class="key-label">R-ORANGE</span></div>
@@ -221,19 +212,18 @@
                 <div class="color-key" data-color="blue-green" style="background: #00c080;"><span>🔵🟢</span><span class="key-label">B-GREEN</span></div>
                 <div class="color-key" data-color="yellow-green" style="background: #80ff00;"><span>🟡🟢</span><span class="key-label">Y-GREEN</span></div>
             </div>
-            <!-- Modifiers Row -->
+            <!-- Row 3: White, Black, Grey, Delete Button (4 Items) -->
             <div class="keyboard-row">
                 <div class="color-key" data-color="white" style="background: #ffffff; color:#333;"><span>⚪</span><span class="key-label">WHITE</span></div>
                 <div class="color-key" data-color="black" style="background: #000000;"><span>⚫</span><span class="key-label">BLACK</span></div>
                 <div class="color-key" data-color="grey" style="background: #808080;"><span>◻️</span><span class="key-label">GREY</span></div>
+                <div class="color-key delete-key" id="deleteAllBtn" style="background: #c62828;"><span>🗑️</span><span class="key-label">CLEAR</span></div>
             </div>
         </div>
         
         <div class="info-text">
-            💡 Max 2 base colors + unlimited White/Black/Grey | Ratio affects the result
+            💡 Max 2 base colors + unlimited White/Black/Grey | Tap 🗑️ to clear all
         </div>
-        
-        <button class="clear-btn" id="clearBtn">🗑️ CLEAR ALL</button>
     </div>
 
     <script>
@@ -297,7 +287,6 @@
             const resultRGB = document.getElementById('resultRGB');
             const resultFormula = document.getElementById('resultFormula');
             const selectedContainer = document.getElementById('selectedColors');
-            const totalCountSpan = document.getElementById('totalCount');
             
             function addColor(colorId) {
                 const color = colors[colorId];
@@ -329,6 +318,11 @@
                 update();
             }
             
+            function clearAll() {
+                selectedItems = [];
+                update();
+            }
+            
             function applyModifiers(baseR, baseG, baseB, baseWeight, modifiers) {
                 let r = baseR;
                 let g = baseG;
@@ -349,17 +343,16 @@
             
             function getCategoryText(category) {
                 switch(category) {
-                    case 'primary': return '🎨 Primary Color (အခြေခံအရောင်)';
-                    case 'secondary': return '🌈 Secondary Color (ဒုတိယအဆင့်အရောင်)';
-                    case 'tertiary': return '🎨 Tertiary Color (တတိယအဆင့်အရောင်)';
-                    case 'modifier': return '⚙️ Modifier (အရောင်ပြောင်းစက်)';
+                    case 'primary': return '🎨 Primary Color';
+                    case 'secondary': return '🌈 Secondary Color';
+                    case 'tertiary': return '🎨 Tertiary Color';
                     default: return '🎨 Mixed Color';
                 }
             }
             
             function getTempText(temp) {
-                if (temp === 'warm') return '🔥 Warm Tone (အပူရောင်)';
-                if (temp === 'cool') return '❄️ Cool Tone (အအေးရောင်)';
+                if (temp === 'warm') return '🔥 Warm Tone';
+                if (temp === 'cool') return '❄️ Cool Tone';
                 return '⚪ Neutral Tone';
             }
             
@@ -374,10 +367,10 @@
                     let totalWeight = 1;
                     for (const mod of modifiers) {
                         const modColor = colors[mod.colorId];
-                        r = (r * totalWeight + modColor.r * mod.count) / (totalWeight + mod.count);
-                        g = (g * totalWeight + modColor.g * mod.count) / (totalWeight + mod.count);
-                        b = (b * totalWeight + modColor.b * mod.count) / (totalWeight + mod.count);
-                        totalWeight += mod.count;
+                        r = (r * totalWeight + modColor.r * modWeight) / (totalWeight + modWeight);
+                        g = (g * totalWeight + modColor.g * modWeight) / (totalWeight + modWeight);
+                        b = (b * totalWeight + modColor.b * modWeight) / (totalWeight + modWeight);
+                        totalWeight += modWeight;
                     }
                     return { name: 'Mixed Color', category: 'mixed', temp: 'neutral', r: Math.round(r), g: Math.round(g), b: Math.round(b) };
                 }
@@ -466,14 +459,6 @@
             }
             
             function update() {
-                // ========== Update Color Counter (စုစုပေါင်းအရောင်အရေအတွက်) ==========
-                let totalColors = 0;
-                for (const item of selectedItems) {
-                    totalColors += item.count;
-                }
-                totalCountSpan.textContent = totalColors;
-                
-                // Update selected chips display
                 selectedContainer.innerHTML = '';
                 selectedItems.forEach((item, idx) => {
                     const c = colors[item.colorId];
@@ -525,16 +510,19 @@
                 }
             }
             
+            // Event listeners for color keys
             document.querySelectorAll('.color-key').forEach(btn => {
-                btn.onclick = () => {
-                    const colorId = btn.getAttribute('data-color');
-                    addColor(colorId);
-                };
+                const colorId = btn.getAttribute('data-color');
+                if (colorId) {
+                    btn.onclick = () => {
+                        addColor(colorId);
+                    };
+                }
             });
             
-            document.getElementById('clearBtn').onclick = () => {
-                selectedItems = [];
-                update();
+            // Delete All button
+            document.getElementById('deleteAllBtn').onclick = () => {
+                clearAll();
             };
             
             update();
