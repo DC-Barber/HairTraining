@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Color Theory Lab - Corrected</title>
+    <title>Color Theory Lab - 12 Colors</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
@@ -67,9 +67,7 @@
         .result-category.primary { background: #2c3e50; color: white; }
         .result-category.secondary { background: #8e44ad; color: white; }
         .result-category.tertiary { background: #d35400; color: white; }
-        .result-category.tint { background: #f8a5c2; color: #333; }
-        .result-category.shade { background: #1a252f; color: white; }
-        .result-category.tone { background: #95a5a6; color: white; }
+        .result-category.mixed { background: #7f8c8d; color: white; }
         .result-temp {
             font-size: 0.6rem;
             font-weight: bold;
@@ -163,7 +161,7 @@
     <div class="lab-container">
         <div class="lab-header">
             <h1>🎨 Color Theory Lab</h1>
-            <p>Subtractive Color Mixing (Paint/Hair Color) | Ratio affects the result</p>
+            <p>Primary(3) · Secondary(3) · Tertiary(6) · Total 12 Colors</p>
         </div>
         
         <div class="color-display" id="colorDisplay">
@@ -178,16 +176,19 @@
         <div class="selected-colors" id="selectedColors"></div>
         
         <div class="color-keyboard">
+            <!-- Primary Colors Row -->
             <div class="keyboard-row">
                 <div class="color-key" data-color="red" style="background: #ff0000;"><span>🔴</span><span class="key-label">RED</span></div>
                 <div class="color-key" data-color="yellow" style="background: #ffff00; color:#333;"><span>🟡</span><span class="key-label">YELLOW</span></div>
                 <div class="color-key" data-color="blue" style="background: #0000ff;"><span>🔵</span><span class="key-label">BLUE</span></div>
             </div>
+            <!-- Secondary Colors Row -->
             <div class="keyboard-row">
                 <div class="color-key" data-color="orange" style="background: #ff8000;"><span>🟠</span><span class="key-label">ORANGE</span></div>
                 <div class="color-key" data-color="green" style="background: #008000;"><span>🟢</span><span class="key-label">GREEN</span></div>
                 <div class="color-key" data-color="violet" style="background: #800080;"><span>🟣</span><span class="key-label">VIOLET</span></div>
             </div>
+            <!-- Tertiary Colors Row -->
             <div class="keyboard-row">
                 <div class="color-key" data-color="yellow-orange" style="background: #ffc000;"><span>🟡🟠</span><span class="key-label">Y-ORANGE</span></div>
                 <div class="color-key" data-color="red-orange" style="background: #ff4000;"><span>🔴🟠</span><span class="key-label">R-ORANGE</span></div>
@@ -196,6 +197,7 @@
                 <div class="color-key" data-color="blue-green" style="background: #00c080;"><span>🔵🟢</span><span class="key-label">B-GREEN</span></div>
                 <div class="color-key" data-color="yellow-green" style="background: #80ff00;"><span>🟡🟢</span><span class="key-label">Y-GREEN</span></div>
             </div>
+            <!-- Modifiers Row -->
             <div class="keyboard-row">
                 <div class="color-key" data-color="white" style="background: #ffffff; color:#333;"><span>⚪</span><span class="key-label">WHITE</span></div>
                 <div class="color-key" data-color="black" style="background: #000000;"><span>⚫</span><span class="key-label">BLACK</span></div>
@@ -204,7 +206,7 @@
         </div>
         
         <div class="info-text">
-            💡 Max 2 base colors | White/Black/Grey can be added anytime | Ratio: (x2 = more of that color)
+            💡 Max 2 base colors + unlimited White/Black/Grey | Ratio affects the result
         </div>
         
         <button class="clear-btn" id="clearBtn">🗑️ CLEAR ALL</button>
@@ -212,49 +214,59 @@
 
     <script>
         (function() {
-            // ========== COLOR DEFINITIONS WITH DISPLAY RGB ==========
+            // ========== COLOR DEFINITIONS ==========
+            // Primary Colors (3)
+            // Secondary Colors (3)  
+            // Tertiary Colors (6)
+            // Total: 12 Colors
             const colors = {
-                'red': { name: 'Red', displayR: 255, displayG: 0, displayB: 0, hex: '#ff0000', temp: 'warm' },
-                'yellow': { name: 'Yellow', displayR: 255, displayG: 255, displayB: 0, hex: '#ffff00', temp: 'warm' },
-                'blue': { name: 'Blue', displayR: 0, displayG: 0, displayB: 255, hex: '#0000ff', temp: 'cool' },
-                'orange': { name: 'Orange', displayR: 255, displayG: 128, displayB: 0, hex: '#ff8000', temp: 'warm' },
-                'green': { name: 'Green', displayR: 0, displayG: 128, displayB: 0, hex: '#008000', temp: 'cool' },
-                'violet': { name: 'Violet', displayR: 128, displayG: 0, displayB: 128, hex: '#800080', temp: 'cool' },
-                'yellow-orange': { name: 'Yellow-Orange', displayR: 255, displayG: 192, displayB: 0, hex: '#ffc000', temp: 'warm' },
-                'red-orange': { name: 'Red-Orange', displayR: 255, displayG: 64, displayB: 0, hex: '#ff4000', temp: 'warm' },
-                'red-violet': { name: 'Red-Violet', displayR: 192, displayG: 0, displayB: 64, hex: '#c00040', temp: 'cool' },
-                'blue-violet': { name: 'Blue-Violet', displayR: 64, displayG: 0, displayB: 192, hex: '#4000c0', temp: 'cool' },
-                'blue-green': { name: 'Blue-Green', displayR: 0, displayG: 192, displayB: 128, hex: '#00c080', temp: 'cool' },
-                'yellow-green': { name: 'Yellow-Green', displayR: 128, displayG: 255, displayB: 0, hex: '#80ff00', temp: 'warm' },
-                'white': { name: 'White', displayR: 255, displayG: 255, displayB: 255, hex: '#ffffff', temp: 'neutral', isModifier: true },
-                'black': { name: 'Black', displayR: 0, displayG: 0, displayB: 0, hex: '#000000', temp: 'neutral', isModifier: true },
-                'grey': { name: 'Grey', displayR: 128, displayG: 128, displayB: 128, hex: '#808080', temp: 'neutral', isModifier: true }
+                // PRIMARY (3)
+                'red': { name: 'Red', category: 'primary', temp: 'warm', r: 255, g: 0, b: 0, hex: '#ff0000' },
+                'yellow': { name: 'Yellow', category: 'primary', temp: 'warm', r: 255, g: 255, b: 0, hex: '#ffff00' },
+                'blue': { name: 'Blue', category: 'primary', temp: 'cool', r: 0, g: 0, b: 255, hex: '#0000ff' },
+                
+                // SECONDARY (3)
+                'orange': { name: 'Orange', category: 'secondary', temp: 'warm', r: 255, g: 128, b: 0, hex: '#ff8000' },
+                'green': { name: 'Green', category: 'secondary', temp: 'cool', r: 0, g: 128, b: 0, hex: '#008000' },
+                'violet': { name: 'Violet', category: 'secondary', temp: 'cool', r: 128, g: 0, b: 128, hex: '#800080' },
+                
+                // TERTIARY (6)
+                'yellow-orange': { name: 'Yellow-Orange', category: 'tertiary', temp: 'warm', r: 255, g: 192, b: 0, hex: '#ffc000' },
+                'red-orange': { name: 'Red-Orange', category: 'tertiary', temp: 'warm', r: 255, g: 64, b: 0, hex: '#ff4000' },
+                'red-violet': { name: 'Red-Violet', category: 'tertiary', temp: 'cool', r: 192, g: 0, b: 64, hex: '#c00040' },
+                'blue-violet': { name: 'Blue-Violet', category: 'tertiary', temp: 'cool', r: 64, g: 0, b: 192, hex: '#4000c0' },
+                'blue-green': { name: 'Blue-Green', category: 'tertiary', temp: 'cool', r: 0, g: 192, b: 128, hex: '#00c080' },
+                'yellow-green': { name: 'Yellow-Green', category: 'tertiary', temp: 'warm', r: 128, g: 255, b: 0, hex: '#80ff00' },
+                
+                // MODIFIERS
+                'white': { name: 'White', category: 'modifier', temp: 'neutral', r: 255, g: 255, b: 255, hex: '#ffffff' },
+                'black': { name: 'Black', category: 'modifier', temp: 'neutral', r: 0, g: 0, b: 0, hex: '#000000' },
+                'grey': { name: 'Grey', category: 'modifier', temp: 'neutral', r: 128, g: 128, b: 128, hex: '#808080' }
             };
             
-            // Color mixing rules (subtractive / paint mixing)
-            // These are the correct color theory results
+            // Mixing rules for base color combinations
+            // Primary + Primary = Secondary
+            // Primary + Secondary = Tertiary
             const mixRules = {
-                // Primary + Primary = Secondary
-                'red+yellow': { name: 'Orange', type: 'secondary', displayR: 255, displayG: 128, displayB: 0, temp: 'warm' },
-                'yellow+red': { name: 'Orange', type: 'secondary', displayR: 255, displayG: 128, displayB: 0, temp: 'warm' },
-                'yellow+blue': { name: 'Green', type: 'secondary', displayR: 0, displayG: 128, displayB: 0, temp: 'cool' },
-                'blue+yellow': { name: 'Green', type: 'secondary', displayR: 0, displayG: 128, displayB: 0, temp: 'cool' },
-                'red+blue': { name: 'Violet', type: 'secondary', displayR: 128, displayG: 0, displayB: 128, temp: 'cool' },
-                'blue+red': { name: 'Violet', type: 'secondary', displayR: 128, displayG: 0, displayB: 128, temp: 'cool' },
+                'red+yellow': { name: 'Orange', category: 'secondary', r: 255, g: 128, b: 0, temp: 'warm' },
+                'yellow+red': { name: 'Orange', category: 'secondary', r: 255, g: 128, b: 0, temp: 'warm' },
+                'yellow+blue': { name: 'Green', category: 'secondary', r: 0, g: 128, b: 0, temp: 'cool' },
+                'blue+yellow': { name: 'Green', category: 'secondary', r: 0, g: 128, b: 0, temp: 'cool' },
+                'red+blue': { name: 'Violet', category: 'secondary', r: 128, g: 0, b: 128, temp: 'cool' },
+                'blue+red': { name: 'Violet', category: 'secondary', r: 128, g: 0, b: 128, temp: 'cool' },
                 
-                // Primary + Secondary = Tertiary
-                'red+orange': { name: 'Red-Orange', type: 'tertiary', displayR: 255, displayG: 64, displayB: 0, temp: 'warm' },
-                'orange+red': { name: 'Red-Orange', type: 'tertiary', displayR: 255, displayG: 64, displayB: 0, temp: 'warm' },
-                'yellow+orange': { name: 'Yellow-Orange', type: 'tertiary', displayR: 255, displayG: 192, displayB: 0, temp: 'warm' },
-                'orange+yellow': { name: 'Yellow-Orange', type: 'tertiary', displayR: 255, displayG: 192, displayB: 0, temp: 'warm' },
-                'yellow+green': { name: 'Yellow-Green', type: 'tertiary', displayR: 128, displayG: 255, displayB: 0, temp: 'warm' },
-                'green+yellow': { name: 'Yellow-Green', type: 'tertiary', displayR: 128, displayG: 255, displayB: 0, temp: 'warm' },
-                'blue+green': { name: 'Blue-Green', type: 'tertiary', displayR: 0, displayG: 192, displayB: 128, temp: 'cool' },
-                'green+blue': { name: 'Blue-Green', type: 'tertiary', displayR: 0, displayG: 192, displayB: 128, temp: 'cool' },
-                'blue+violet': { name: 'Blue-Violet', type: 'tertiary', displayR: 64, displayG: 0, displayB: 192, temp: 'cool' },
-                'violet+blue': { name: 'Blue-Violet', type: 'tertiary', displayR: 64, displayG: 0, displayB: 192, temp: 'cool' },
-                'red+violet': { name: 'Red-Violet', type: 'tertiary', displayR: 192, displayG: 0, displayB: 64, temp: 'cool' },
-                'violet+red': { name: 'Red-Violet', type: 'tertiary', displayR: 192, displayG: 0, displayB: 64, temp: 'cool' }
+                'red+orange': { name: 'Red-Orange', category: 'tertiary', r: 255, g: 64, b: 0, temp: 'warm' },
+                'orange+red': { name: 'Red-Orange', category: 'tertiary', r: 255, g: 64, b: 0, temp: 'warm' },
+                'yellow+orange': { name: 'Yellow-Orange', category: 'tertiary', r: 255, g: 192, b: 0, temp: 'warm' },
+                'orange+yellow': { name: 'Yellow-Orange', category: 'tertiary', r: 255, g: 192, b: 0, temp: 'warm' },
+                'yellow+green': { name: 'Yellow-Green', category: 'tertiary', r: 128, g: 255, b: 0, temp: 'warm' },
+                'green+yellow': { name: 'Yellow-Green', category: 'tertiary', r: 128, g: 255, b: 0, temp: 'warm' },
+                'blue+green': { name: 'Blue-Green', category: 'tertiary', r: 0, g: 192, b: 128, temp: 'cool' },
+                'green+blue': { name: 'Blue-Green', category: 'tertiary', r: 0, g: 192, b: 128, temp: 'cool' },
+                'blue+violet': { name: 'Blue-Violet', category: 'tertiary', r: 64, g: 0, b: 192, temp: 'cool' },
+                'violet+blue': { name: 'Blue-Violet', category: 'tertiary', r: 64, g: 0, b: 192, temp: 'cool' },
+                'red+violet': { name: 'Red-Violet', category: 'tertiary', r: 192, g: 0, b: 64, temp: 'cool' },
+                'violet+red': { name: 'Red-Violet', category: 'tertiary', r: 192, g: 0, b: 64, temp: 'cool' }
             };
             
             let selectedItems = [];
@@ -271,11 +283,10 @@
             function addColor(colorId) {
                 const color = colors[colorId];
                 const existing = selectedItems.find(item => item.colorId === colorId);
-                const baseColors = selectedItems.filter(item => !colors[item.colorId].isModifier);
+                const baseColors = selectedItems.filter(item => colors[item.colorId].category !== 'modifier');
                 const baseCount = baseColors.length;
-                const isModifier = color.isModifier;
+                const isModifier = color.category === 'modifier';
                 
-                // Limit: max 2 base colors
                 if (!isModifier && baseCount >= 2 && !existing) {
                     return;
                 }
@@ -308,20 +319,36 @@
                 for (const mod of modifiers) {
                     const modColor = colors[mod.colorId];
                     const modWeight = mod.count;
-                    r = (r * totalWeight + modColor.displayR * modWeight) / (totalWeight + modWeight);
-                    g = (g * totalWeight + modColor.displayG * modWeight) / (totalWeight + modWeight);
-                    b = (b * totalWeight + modColor.displayB * modWeight) / (totalWeight + modWeight);
+                    r = (r * totalWeight + modColor.r * modWeight) / (totalWeight + modWeight);
+                    g = (g * totalWeight + modColor.g * modWeight) / (totalWeight + modWeight);
+                    b = (b * totalWeight + modColor.b * modWeight) / (totalWeight + modWeight);
                     totalWeight += modWeight;
                 }
                 
                 return { r: Math.round(r), g: Math.round(g), b: Math.round(b) };
             }
             
+            function getCategoryText(category) {
+                switch(category) {
+                    case 'primary': return '🎨 Primary Color (အခြေခံအရောင်)';
+                    case 'secondary': return '🌈 Secondary Color (ဒုတိယအဆင့်အရောင်)';
+                    case 'tertiary': return '🎨 Tertiary Color (တတိယအဆင့်အရောင်)';
+                    case 'modifier': return '⚙️ Modifier (အရောင်ပြောင်းစက်)';
+                    default: return '🎨 Mixed Color';
+                }
+            }
+            
+            function getTempText(temp) {
+                if (temp === 'warm') return '🔥 Warm Tone (အပူရောင်)';
+                if (temp === 'cool') return '❄️ Cool Tone (အအေးရောင်)';
+                return '⚪ Neutral Tone';
+            }
+            
             function getMixResult() {
                 if (selectedItems.length === 0) return null;
                 
-                const baseColors = selectedItems.filter(item => !colors[item.colorId].isModifier);
-                const modifiers = selectedItems.filter(item => colors[item.colorId].isModifier);
+                const baseColors = selectedItems.filter(item => colors[item.colorId].category !== 'modifier');
+                const modifiers = selectedItems.filter(item => colors[item.colorId].category === 'modifier');
                 
                 // Only modifiers (no base colors)
                 if (baseColors.length === 0) {
@@ -329,39 +356,31 @@
                     let totalWeight = 1;
                     for (const mod of modifiers) {
                         const modColor = colors[mod.colorId];
-                        r = (r * totalWeight + modColor.displayR * mod.count) / (totalWeight + mod.count);
-                        g = (g * totalWeight + modColor.displayG * mod.count) / (totalWeight + mod.count);
-                        b = (b * totalWeight + modColor.displayB * mod.count) / (totalWeight + mod.count);
+                        r = (r * totalWeight + modColor.r * mod.count) / (totalWeight + mod.count);
+                        g = (g * totalWeight + modColor.g * mod.count) / (totalWeight + mod.count);
+                        b = (b * totalWeight + modColor.b * mod.count) / (totalWeight + mod.count);
                         totalWeight += mod.count;
                     }
-                    return { name: 'Mixed Tone', type: 'tone', temp: 'neutral', r: Math.round(r), g: Math.round(g), b: Math.round(b) };
+                    return { name: 'Mixed Color', category: 'mixed', temp: 'neutral', r: Math.round(r), g: Math.round(g), b: Math.round(b) };
                 }
                 
                 // Single base color
                 if (baseColors.length === 1) {
                     const baseColor = colors[baseColors[0].colorId];
-                    const result = applyModifiers(baseColor.displayR, baseColor.displayG, baseColor.displayB, baseColors[0].count, modifiers);
+                    const result = applyModifiers(baseColor.r, baseColor.g, baseColor.b, baseColors[0].count, modifiers);
                     
-                    let type = 'primary';
                     let name = baseColor.name;
+                    let category = baseColor.category;
                     
                     if (modifiers.length > 0) {
-                        if (modifiers.some(m => m.colorId === 'white')) {
-                            type = 'tint';
-                            name = `Tint of ${baseColor.name}`;
-                        } else if (modifiers.some(m => m.colorId === 'black')) {
-                            type = 'shade';
-                            name = `Shade of ${baseColor.name}`;
-                        } else if (modifiers.some(m => m.colorId === 'grey')) {
-                            type = 'tone';
-                            name = `Toned ${baseColor.name}`;
-                        }
+                        name = `Modified ${baseColor.name}`;
+                        category = 'mixed';
                     }
                     
-                    return { name, type, temp: baseColor.temp, r: result.r, g: result.g, b: result.b };
+                    return { name, category, temp: baseColor.temp, r: result.r, g: result.g, b: result.b };
                 }
                 
-                // Two base colors - use mix rules (subtractive color theory)
+                // Two base colors - use mix rules
                 if (baseColors.length === 2) {
                     const c1 = baseColors[0];
                     const c2 = baseColors[1];
@@ -370,51 +389,46 @@
                     const count1 = c1.count;
                     const count2 = c2.count;
                     
-                    // Find mix rule
                     const key1 = c1.colorId + '+' + c2.colorId;
                     const key2 = c2.colorId + '+' + c1.colorId;
                     const rule = mixRules[key1] || mixRules[key2];
                     
                     if (!rule) {
-                        // Fallback to average if no rule
-                        const r = (color1.displayR * count1 + color2.displayR * count2) / (count1 + count2);
-                        const g = (color1.displayG * count1 + color2.displayG * count2) / (count1 + count2);
-                        const b = (color1.displayB * count1 + color2.displayB * count2) / (count1 + count2);
+                        const r = (color1.r * count1 + color2.r * count2) / (count1 + count2);
+                        const g = (color1.g * count1 + color2.g * count2) / (count1 + count2);
+                        const b = (color1.b * count1 + color2.b * count2) / (count1 + count2);
                         const result = applyModifiers(r, g, b, count1 + count2, modifiers);
-                        return { name: 'Mixed Color', type: 'mixed', temp: 'neutral', r: result.r, g: result.g, b: result.b };
+                        return { name: 'Mixed Color', category: 'mixed', temp: 'neutral', r: result.r, g: result.g, b: result.b };
                     }
                     
-                    // Start with rule's base RGB
-                    let r = rule.displayR;
-                    let g = rule.displayG;
-                    let b = rule.displayB;
+                    let r = rule.r;
+                    let g = rule.g;
+                    let b = rule.b;
                     let totalWeight = 1;
                     
-                    // Apply ratio effect: if counts are unequal, shift towards the dominant color
+                    // Apply ratio effect
                     let ratioText = '';
                     if (count1 > count2) {
                         ratioText = `${color1.name} > ${rule.name}`;
-                        // Shift RGB towards color1
                         const shift = Math.min(0.3, (count1 - count2) / (count1 + count2) * 0.5);
-                        r = r * (1 - shift) + color1.displayR * shift;
-                        g = g * (1 - shift) + color1.displayG * shift;
-                        b = b * (1 - shift) + color1.displayB * shift;
+                        r = r * (1 - shift) + color1.r * shift;
+                        g = g * (1 - shift) + color1.g * shift;
+                        b = b * (1 - shift) + color1.b * shift;
                     } else if (count2 > count1) {
                         ratioText = `${color2.name} > ${rule.name}`;
                         const shift = Math.min(0.3, (count2 - count1) / (count1 + count2) * 0.5);
-                        r = r * (1 - shift) + color2.displayR * shift;
-                        g = g * (1 - shift) + color2.displayG * shift;
-                        b = b * (1 - shift) + color2.displayB * shift;
+                        r = r * (1 - shift) + color2.r * shift;
+                        g = g * (1 - shift) + color2.g * shift;
+                        b = b * (1 - shift) + color2.b * shift;
                     } else {
                         ratioText = rule.name;
                     }
                     
-                    // Apply modifiers
                     const result = applyModifiers(r, g, b, totalWeight, modifiers);
                     
                     return {
                         name: rule.name,
-                        type: rule.type,
+                        category: rule.category,
                         temp: rule.temp,
                         r: result.r,
                         g: result.g,
@@ -424,18 +438,6 @@
                 }
                 
                 return null;
-            }
-            
-            function getCategoryText(type) {
-                switch(type) {
-                    case 'primary': return '🎨 Primary Color (အခြေခံအရောင်)';
-                    case 'secondary': return '🌈 Secondary Color (ဒုတိယအဆင့်အရောင်)';
-                    case 'tertiary': return '🎨 Tertiary Color (တတိယအဆင့်အရောင်)';
-                    case 'tint': return '✨ Tint (အဖြူထည့်ထားသော)';
-                    case 'shade': return '🌑 Shade (အနက်ထည့်ထားသော)';
-                    case 'tone': return '⚪ Tone (မီးခိုးထည့်ထားသော)';
-                    default: return '🎨 Mixed Color';
-                }
             }
             
             function buildFormula() {
@@ -494,9 +496,9 @@
                     colorDisplay.style.background = hexColor;
                     resultName.textContent = result.name;
                     resultRatio.textContent = result.ratioText ? `⚖️ ${result.ratioText}` : '';
-                    resultCategory.textContent = getCategoryText(result.type);
-                    resultCategory.className = `result-category ${result.type}`;
-                    resultTemp.textContent = result.temp === 'warm' ? '🔥 Warm Tone (အပူရောင်)' : (result.temp === 'cool' ? '❄️ Cool Tone (အအေးရောင်)' : '⚪ Neutral Tone');
+                    resultCategory.textContent = getCategoryText(result.category);
+                    resultCategory.className = `result-category ${result.category === 'primary' ? 'primary' : (result.category === 'secondary' ? 'secondary' : (result.category === 'tertiary' ? 'tertiary' : 'mixed'))}`;
+                    resultTemp.textContent = getTempText(result.temp);
                     resultTemp.className = `result-temp ${result.temp === 'warm' ? 'warm' : (result.temp === 'cool' ? 'cool' : 'neutral')}`;
                     resultRGB.textContent = `RGB: ${result.r}, ${result.g}, ${result.b}`;
                     resultFormula.textContent = buildFormula();
