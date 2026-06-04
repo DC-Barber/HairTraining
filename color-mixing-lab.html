@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Color Mixing Lab</title>
+    <title>Color Theory Lab - Corrected</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
@@ -24,7 +24,6 @@
         .lab-header h1 { color: #1e3a5f; font-size: 1rem; }
         .lab-header p { color: #7c6e5d; font-size: 0.55rem; }
         
-        /* Color Display Box - With White Border */
         .color-display {
             background: #ddd;
             border-radius: 16px;
@@ -33,7 +32,7 @@
             text-align: center;
             transition: background 0.2s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            min-height: 120px;
+            min-height: 130px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -45,21 +44,53 @@
             font-weight: bold; 
             color: white;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
+        .result-ratio {
+            font-size: 0.7rem;
+            font-family: monospace;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 6px;
+            color: white;
+        }
+        .result-category {
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        .result-category.primary { background: #2c3e50; color: white; }
+        .result-category.secondary { background: #8e44ad; color: white; }
+        .result-category.tertiary { background: #d35400; color: white; }
+        .result-category.tint { background: #f8a5c2; color: #333; }
+        .result-category.shade { background: #1a252f; color: white; }
+        .result-category.tone { background: #95a5a6; color: white; }
+        .result-temp {
+            font-size: 0.6rem;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+        .result-temp.warm { background: #e67e22; color: white; }
+        .result-temp.cool { background: #3498db; color: white; }
         .result-rgb { 
-            font-size: 0.7rem; 
-            color: rgba(255,255,255,0.9);
+            font-size: 0.6rem; 
+            color: rgba(255,255,255,0.85);
             text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
             font-family: monospace;
         }
         .result-formula { 
-            font-size: 0.65rem; 
-            color: rgba(255,255,255,0.85);
-            margin-top: 8px;
+            font-size: 0.55rem; 
+            color: rgba(255,255,255,0.8);
+            margin-top: 6px;
             font-style: italic;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
         }
         
         .selected-colors { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; min-height: 50px; }
@@ -101,12 +132,12 @@
         .keyboard-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
         .keyboard-row:last-child { margin-bottom: 0; }
         .color-key { 
-            min-width: 55px; height: 55px; border-radius: 12px; display: flex; flex-direction: column; 
+            min-width: 60px; height: 60px; border-radius: 12px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; cursor: pointer; transition: all 0.05s linear; 
             box-shadow: 0 2px 0 rgba(0,0,0,0.3); font-size: 16px; position: relative;
         }
         .color-key:active { transform: translateY(2px); box-shadow: none; }
-        .key-label { font-size: 8px; margin-top: 2px; font-weight: normal; }
+        .key-label { font-size: 9px; margin-top: 2px; font-weight: normal; }
         
         .info-text {
             font-size: 10px;
@@ -120,27 +151,26 @@
         
         .clear-btn { width: 100%; padding: 8px; background: #b87333; color: white; border: none; border-radius: 40px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 0.8rem; }
         
-        @media (max-width: 500px) { 
-            .color-key { min-width: 48px; height: 48px; font-size: 14px; } 
-            .key-label { font-size: 7px; }
-            .color-display { padding: 18px 15px; min-height: 100px; }
+        @media (max-width: 550px) { 
+            .color-key { min-width: 52px; height: 52px; font-size: 14px; } 
+            .key-label { font-size: 8px; }
+            .color-display { padding: 18px 15px; min-height: 110px; }
             .result-name { font-size: 0.85rem; }
-        }
-        @media (max-width: 420px) { 
-            .color-key { min-width: 42px; height: 42px; font-size: 12px; } 
         }
     </style>
 </head>
 <body>
     <div class="lab-container">
         <div class="lab-header">
-            <h1>🎨 Color Mixing Lab</h1>
-            <p>Tap to add color (max 10x each, max 3 different colors)</p>
+            <h1>🎨 Color Theory Lab</h1>
+            <p>Subtractive Color Mixing (Paint/Hair Color) | Ratio affects the result</p>
         </div>
         
-        <!-- Color Display - Square Box with White Border -->
         <div class="color-display" id="colorDisplay">
             <div class="result-name" id="resultName">-</div>
+            <div class="result-ratio" id="resultRatio"></div>
+            <div class="result-category" id="resultCategory"></div>
+            <div class="result-temp" id="resultTemp"></div>
             <div class="result-rgb" id="resultRGB">RGB: -</div>
             <div class="result-formula" id="resultFormula"></div>
         </div>
@@ -149,29 +179,32 @@
         
         <div class="color-keyboard">
             <div class="keyboard-row">
-                <div class="color-key" data-color="red" style="background: #e74c3c;"><span>🔴</span><span class="key-label">RED</span></div>
-                <div class="color-key" data-color="orange" style="background: #e67e22;"><span>🟠</span><span class="key-label">ORN</span></div>
-                <div class="color-key" data-color="yellow" style="background: #f1c40f; color:#333;"><span>🟡</span><span class="key-label">YEL</span></div>
-                <div class="color-key" data-color="green" style="background: #27ae60;"><span>🟢</span><span class="key-label">GRN</span></div>
-                <div class="color-key" data-color="blue" style="background: #3498db;"><span>🔵</span><span class="key-label">BLU</span></div>
-                <div class="color-key" data-color="violet" style="background: #8e44ad;"><span>🟣</span><span class="key-label">VIO</span></div>
+                <div class="color-key" data-color="red" style="background: #ff0000;"><span>🔴</span><span class="key-label">RED</span></div>
+                <div class="color-key" data-color="yellow" style="background: #ffff00; color:#333;"><span>🟡</span><span class="key-label">YELLOW</span></div>
+                <div class="color-key" data-color="blue" style="background: #0000ff;"><span>🔵</span><span class="key-label">BLUE</span></div>
             </div>
             <div class="keyboard-row">
-                <div class="color-key" data-color="yellow-orange" style="background: #f39c12;"><span>🟡🟠</span><span class="key-label">Y-OR</span></div>
-                <div class="color-key" data-color="red-orange" style="background: #d35400;"><span>🔴🟠</span><span class="key-label">R-OR</span></div>
-                <div class="color-key" data-color="red-violet" style="background: #c0392b;"><span>🔴🟣</span><span class="key-label">R-VI</span></div>
-                <div class="color-key" data-color="blue-violet" style="background: #5b2c6f;"><span>🔵🟣</span><span class="key-label">B-VI</span></div>
-                <div class="color-key" data-color="blue-green" style="background: #1abc9c;"><span>🔵🟢</span><span class="key-label">B-GR</span></div>
-                <div class="color-key" data-color="yellow-green" style="background: #2ecc71;"><span>🟡🟢</span><span class="key-label">Y-GR</span></div>
+                <div class="color-key" data-color="orange" style="background: #ff8000;"><span>🟠</span><span class="key-label">ORANGE</span></div>
+                <div class="color-key" data-color="green" style="background: #008000;"><span>🟢</span><span class="key-label">GREEN</span></div>
+                <div class="color-key" data-color="violet" style="background: #800080;"><span>🟣</span><span class="key-label">VIOLET</span></div>
             </div>
             <div class="keyboard-row">
-                <div class="color-key" data-color="white" style="background: #ecf0f1; color:#333;"><span>⚪</span><span class="key-label">WHT</span></div>
-                <div class="color-key" data-color="black" style="background: #2c3e50;"><span>⚫</span><span class="key-label">BLK</span></div>
+                <div class="color-key" data-color="yellow-orange" style="background: #ffc000;"><span>🟡🟠</span><span class="key-label">Y-ORANGE</span></div>
+                <div class="color-key" data-color="red-orange" style="background: #ff4000;"><span>🔴🟠</span><span class="key-label">R-ORANGE</span></div>
+                <div class="color-key" data-color="red-violet" style="background: #c00040;"><span>🔴🟣</span><span class="key-label">R-VIOLET</span></div>
+                <div class="color-key" data-color="blue-violet" style="background: #4000c0;"><span>🔵🟣</span><span class="key-label">B-VIOLET</span></div>
+                <div class="color-key" data-color="blue-green" style="background: #00c080;"><span>🔵🟢</span><span class="key-label">B-GREEN</span></div>
+                <div class="color-key" data-color="yellow-green" style="background: #80ff00;"><span>🟡🟢</span><span class="key-label">Y-GREEN</span></div>
+            </div>
+            <div class="keyboard-row">
+                <div class="color-key" data-color="white" style="background: #ffffff; color:#333;"><span>⚪</span><span class="key-label">WHITE</span></div>
+                <div class="color-key" data-color="black" style="background: #000000;"><span>⚫</span><span class="key-label">BLACK</span></div>
+                <div class="color-key" data-color="grey" style="background: #808080;"><span>◻️</span><span class="key-label">GREY</span></div>
             </div>
         </div>
         
         <div class="info-text">
-            💡 Tap to add color (max 10x each) | Max 3 different colors
+            💡 Max 2 base colors | White/Black/Grey can be added anytime | Ratio: (x2 = more of that color)
         </div>
         
         <button class="clear-btn" id="clearBtn">🗑️ CLEAR ALL</button>
@@ -179,49 +212,83 @@
 
     <script>
         (function() {
-            // Color database
+            // ========== COLOR DEFINITIONS WITH DISPLAY RGB ==========
             const colors = {
-                'red': { name: 'Red', r: 255, g: 0, b: 0, emoji: '🔴' },
-                'orange': { name: 'Orange', r: 255, g: 128, b: 0, emoji: '🟠' },
-                'yellow': { name: 'Yellow', r: 255, g: 255, b: 0, emoji: '🟡' },
-                'green': { name: 'Green', r: 0, g: 128, b: 0, emoji: '🟢' },
-                'blue': { name: 'Blue', r: 0, g: 0, b: 255, emoji: '🔵' },
-                'violet': { name: 'Violet', r: 128, g: 0, b: 128, emoji: '🟣' },
-                'yellow-orange': { name: 'Yellow-Orange', r: 255, g: 192, b: 0, emoji: '🟡🟠' },
-                'red-orange': { name: 'Red-Orange', r: 255, g: 64, b: 0, emoji: '🔴🟠' },
-                'red-violet': { name: 'Red-Violet', r: 192, g: 0, b: 64, emoji: '🔴🟣' },
-                'blue-violet': { name: 'Blue-Violet', r: 64, g: 0, b: 192, emoji: '🔵🟣' },
-                'blue-green': { name: 'Blue-Green', r: 0, g: 192, b: 128, emoji: '🔵🟢' },
-                'yellow-green': { name: 'Yellow-Green', r: 128, g: 255, b: 0, emoji: '🟡🟢' },
-                'white': { name: 'White', r: 255, g: 255, b: 255, emoji: '⚪' },
-                'black': { name: 'Black', r: 0, g: 0, b: 0, emoji: '⚫' }
+                'red': { name: 'Red', displayR: 255, displayG: 0, displayB: 0, hex: '#ff0000', temp: 'warm' },
+                'yellow': { name: 'Yellow', displayR: 255, displayG: 255, displayB: 0, hex: '#ffff00', temp: 'warm' },
+                'blue': { name: 'Blue', displayR: 0, displayG: 0, displayB: 255, hex: '#0000ff', temp: 'cool' },
+                'orange': { name: 'Orange', displayR: 255, displayG: 128, displayB: 0, hex: '#ff8000', temp: 'warm' },
+                'green': { name: 'Green', displayR: 0, displayG: 128, displayB: 0, hex: '#008000', temp: 'cool' },
+                'violet': { name: 'Violet', displayR: 128, displayG: 0, displayB: 128, hex: '#800080', temp: 'cool' },
+                'yellow-orange': { name: 'Yellow-Orange', displayR: 255, displayG: 192, displayB: 0, hex: '#ffc000', temp: 'warm' },
+                'red-orange': { name: 'Red-Orange', displayR: 255, displayG: 64, displayB: 0, hex: '#ff4000', temp: 'warm' },
+                'red-violet': { name: 'Red-Violet', displayR: 192, displayG: 0, displayB: 64, hex: '#c00040', temp: 'cool' },
+                'blue-violet': { name: 'Blue-Violet', displayR: 64, displayG: 0, displayB: 192, hex: '#4000c0', temp: 'cool' },
+                'blue-green': { name: 'Blue-Green', displayR: 0, displayG: 192, displayB: 128, hex: '#00c080', temp: 'cool' },
+                'yellow-green': { name: 'Yellow-Green', displayR: 128, displayG: 255, displayB: 0, hex: '#80ff00', temp: 'warm' },
+                'white': { name: 'White', displayR: 255, displayG: 255, displayB: 255, hex: '#ffffff', temp: 'neutral', isModifier: true },
+                'black': { name: 'Black', displayR: 0, displayG: 0, displayB: 0, hex: '#000000', temp: 'neutral', isModifier: true },
+                'grey': { name: 'Grey', displayR: 128, displayG: 128, displayB: 128, hex: '#808080', temp: 'neutral', isModifier: true }
             };
             
-            // Selected colors with count: { colorId, count }
+            // Color mixing rules (subtractive / paint mixing)
+            // These are the correct color theory results
+            const mixRules = {
+                // Primary + Primary = Secondary
+                'red+yellow': { name: 'Orange', type: 'secondary', displayR: 255, displayG: 128, displayB: 0, temp: 'warm' },
+                'yellow+red': { name: 'Orange', type: 'secondary', displayR: 255, displayG: 128, displayB: 0, temp: 'warm' },
+                'yellow+blue': { name: 'Green', type: 'secondary', displayR: 0, displayG: 128, displayB: 0, temp: 'cool' },
+                'blue+yellow': { name: 'Green', type: 'secondary', displayR: 0, displayG: 128, displayB: 0, temp: 'cool' },
+                'red+blue': { name: 'Violet', type: 'secondary', displayR: 128, displayG: 0, displayB: 128, temp: 'cool' },
+                'blue+red': { name: 'Violet', type: 'secondary', displayR: 128, displayG: 0, displayB: 128, temp: 'cool' },
+                
+                // Primary + Secondary = Tertiary
+                'red+orange': { name: 'Red-Orange', type: 'tertiary', displayR: 255, displayG: 64, displayB: 0, temp: 'warm' },
+                'orange+red': { name: 'Red-Orange', type: 'tertiary', displayR: 255, displayG: 64, displayB: 0, temp: 'warm' },
+                'yellow+orange': { name: 'Yellow-Orange', type: 'tertiary', displayR: 255, displayG: 192, displayB: 0, temp: 'warm' },
+                'orange+yellow': { name: 'Yellow-Orange', type: 'tertiary', displayR: 255, displayG: 192, displayB: 0, temp: 'warm' },
+                'yellow+green': { name: 'Yellow-Green', type: 'tertiary', displayR: 128, displayG: 255, displayB: 0, temp: 'warm' },
+                'green+yellow': { name: 'Yellow-Green', type: 'tertiary', displayR: 128, displayG: 255, displayB: 0, temp: 'warm' },
+                'blue+green': { name: 'Blue-Green', type: 'tertiary', displayR: 0, displayG: 192, displayB: 128, temp: 'cool' },
+                'green+blue': { name: 'Blue-Green', type: 'tertiary', displayR: 0, displayG: 192, displayB: 128, temp: 'cool' },
+                'blue+violet': { name: 'Blue-Violet', type: 'tertiary', displayR: 64, displayG: 0, displayB: 192, temp: 'cool' },
+                'violet+blue': { name: 'Blue-Violet', type: 'tertiary', displayR: 64, displayG: 0, displayB: 192, temp: 'cool' },
+                'red+violet': { name: 'Red-Violet', type: 'tertiary', displayR: 192, displayG: 0, displayB: 64, temp: 'cool' },
+                'violet+red': { name: 'Red-Violet', type: 'tertiary', displayR: 192, displayG: 0, displayB: 64, temp: 'cool' }
+            };
+            
             let selectedItems = [];
             
-            // DOM elements
             const colorDisplay = document.getElementById('colorDisplay');
             const resultName = document.getElementById('resultName');
+            const resultRatio = document.getElementById('resultRatio');
+            const resultCategory = document.getElementById('resultCategory');
+            const resultTemp = document.getElementById('resultTemp');
             const resultRGB = document.getElementById('resultRGB');
             const resultFormula = document.getElementById('resultFormula');
             const selectedContainer = document.getElementById('selectedColors');
             
-            // Add color (increment count)
             function addColor(colorId) {
+                const color = colors[colorId];
                 const existing = selectedItems.find(item => item.colorId === colorId);
+                const baseColors = selectedItems.filter(item => !colors[item.colorId].isModifier);
+                const baseCount = baseColors.length;
+                const isModifier = color.isModifier;
+                
+                // Limit: max 2 base colors
+                if (!isModifier && baseCount >= 2 && !existing) {
+                    return;
+                }
                 
                 if (existing) {
                     if (existing.count >= 10) return;
                     existing.count++;
                 } else {
-                    if (selectedItems.length >= 3) return;
                     selectedItems.push({ colorId: colorId, count: 1 });
                 }
                 update();
             }
             
-            // Remove color or decrement count
             function removeColor(index) {
                 const item = selectedItems[index];
                 if (item.count > 1) {
@@ -232,45 +299,145 @@
                 update();
             }
             
-            // Calculate weighted RGB mix
-            function calculateMixedRGB() {
-                if (selectedItems.length === 0) return null;
+            function applyModifiers(baseR, baseG, baseB, baseWeight, modifiers) {
+                let r = baseR;
+                let g = baseG;
+                let b = baseB;
+                let totalWeight = baseWeight;
                 
-                let totalR = 0, totalG = 0, totalB = 0;
-                let totalWeight = 0;
-                
-                for (const item of selectedItems) {
-                    const c = colors[item.colorId];
-                    if (c) {
-                        totalR += c.r * item.count;
-                        totalG += c.g * item.count;
-                        totalB += c.b * item.count;
-                        totalWeight += item.count;
-                    }
+                for (const mod of modifiers) {
+                    const modColor = colors[mod.colorId];
+                    const modWeight = mod.count;
+                    r = (r * totalWeight + modColor.displayR * modWeight) / (totalWeight + modWeight);
+                    g = (g * totalWeight + modColor.displayG * modWeight) / (totalWeight + modWeight);
+                    b = (b * totalWeight + modColor.displayB * modWeight) / (totalWeight + modWeight);
+                    totalWeight += modWeight;
                 }
                 
-                if (totalWeight === 0) return null;
-                
-                const avgR = Math.round(totalR / totalWeight);
-                const avgG = Math.round(totalG / totalWeight);
-                const avgB = Math.round(totalB / totalWeight);
-                
-                // Find closest color name
-                let closest = null;
-                let minDist = Infinity;
-                for (const [key, c] of Object.entries(colors)) {
-                    const d = Math.hypot(c.r - avgR, c.g - avgG, c.b - avgB);
-                    if (d < minDist) {
-                        minDist = d;
-                        closest = { name: c.name, key: key };
-                    }
-                }
-                
-                let name = (minDist > 80) ? 'Mixed Color' : closest.name;
-                return { name: name, r: avgR, g: avgG, b: avgB };
+                return { r: Math.round(r), g: Math.round(g), b: Math.round(b) };
             }
             
-            // Build formula string
+            function getMixResult() {
+                if (selectedItems.length === 0) return null;
+                
+                const baseColors = selectedItems.filter(item => !colors[item.colorId].isModifier);
+                const modifiers = selectedItems.filter(item => colors[item.colorId].isModifier);
+                
+                // Only modifiers (no base colors)
+                if (baseColors.length === 0) {
+                    let r = 128, g = 128, b = 128;
+                    let totalWeight = 1;
+                    for (const mod of modifiers) {
+                        const modColor = colors[mod.colorId];
+                        r = (r * totalWeight + modColor.displayR * mod.count) / (totalWeight + mod.count);
+                        g = (g * totalWeight + modColor.displayG * mod.count) / (totalWeight + mod.count);
+                        b = (b * totalWeight + modColor.displayB * mod.count) / (totalWeight + mod.count);
+                        totalWeight += mod.count;
+                    }
+                    return { name: 'Mixed Tone', type: 'tone', temp: 'neutral', r: Math.round(r), g: Math.round(g), b: Math.round(b) };
+                }
+                
+                // Single base color
+                if (baseColors.length === 1) {
+                    const baseColor = colors[baseColors[0].colorId];
+                    const result = applyModifiers(baseColor.displayR, baseColor.displayG, baseColor.displayB, baseColors[0].count, modifiers);
+                    
+                    let type = 'primary';
+                    let name = baseColor.name;
+                    
+                    if (modifiers.length > 0) {
+                        if (modifiers.some(m => m.colorId === 'white')) {
+                            type = 'tint';
+                            name = `Tint of ${baseColor.name}`;
+                        } else if (modifiers.some(m => m.colorId === 'black')) {
+                            type = 'shade';
+                            name = `Shade of ${baseColor.name}`;
+                        } else if (modifiers.some(m => m.colorId === 'grey')) {
+                            type = 'tone';
+                            name = `Toned ${baseColor.name}`;
+                        }
+                    }
+                    
+                    return { name, type, temp: baseColor.temp, r: result.r, g: result.g, b: result.b };
+                }
+                
+                // Two base colors - use mix rules (subtractive color theory)
+                if (baseColors.length === 2) {
+                    const c1 = baseColors[0];
+                    const c2 = baseColors[1];
+                    const color1 = colors[c1.colorId];
+                    const color2 = colors[c2.colorId];
+                    const count1 = c1.count;
+                    const count2 = c2.count;
+                    
+                    // Find mix rule
+                    const key1 = c1.colorId + '+' + c2.colorId;
+                    const key2 = c2.colorId + '+' + c1.colorId;
+                    const rule = mixRules[key1] || mixRules[key2];
+                    
+                    if (!rule) {
+                        // Fallback to average if no rule
+                        const r = (color1.displayR * count1 + color2.displayR * count2) / (count1 + count2);
+                        const g = (color1.displayG * count1 + color2.displayG * count2) / (count1 + count2);
+                        const b = (color1.displayB * count1 + color2.displayB * count2) / (count1 + count2);
+                        const result = applyModifiers(r, g, b, count1 + count2, modifiers);
+                        return { name: 'Mixed Color', type: 'mixed', temp: 'neutral', r: result.r, g: result.g, b: result.b };
+                    }
+                    
+                    // Start with rule's base RGB
+                    let r = rule.displayR;
+                    let g = rule.displayG;
+                    let b = rule.displayB;
+                    let totalWeight = 1;
+                    
+                    // Apply ratio effect: if counts are unequal, shift towards the dominant color
+                    let ratioText = '';
+                    if (count1 > count2) {
+                        ratioText = `${color1.name} > ${rule.name}`;
+                        // Shift RGB towards color1
+                        const shift = Math.min(0.3, (count1 - count2) / (count1 + count2) * 0.5);
+                        r = r * (1 - shift) + color1.displayR * shift;
+                        g = g * (1 - shift) + color1.displayG * shift;
+                        b = b * (1 - shift) + color1.displayB * shift;
+                    } else if (count2 > count1) {
+                        ratioText = `${color2.name} > ${rule.name}`;
+                        const shift = Math.min(0.3, (count2 - count1) / (count1 + count2) * 0.5);
+                        r = r * (1 - shift) + color2.displayR * shift;
+                        g = g * (1 - shift) + color2.displayG * shift;
+                        b = b * (1 - shift) + color2.displayB * shift;
+                    } else {
+                        ratioText = rule.name;
+                    }
+                    
+                    // Apply modifiers
+                    const result = applyModifiers(r, g, b, totalWeight, modifiers);
+                    
+                    return {
+                        name: rule.name,
+                        type: rule.type,
+                        temp: rule.temp,
+                        r: result.r,
+                        g: result.g,
+                        b: result.b,
+                        ratioText: ratioText
+                    };
+                }
+                
+                return null;
+            }
+            
+            function getCategoryText(type) {
+                switch(type) {
+                    case 'primary': return '🎨 Primary Color (အခြေခံအရောင်)';
+                    case 'secondary': return '🌈 Secondary Color (ဒုတိယအဆင့်အရောင်)';
+                    case 'tertiary': return '🎨 Tertiary Color (တတိယအဆင့်အရောင်)';
+                    case 'tint': return '✨ Tint (အဖြူထည့်ထားသော)';
+                    case 'shade': return '🌑 Shade (အနက်ထည့်ထားသော)';
+                    case 'tone': return '⚪ Tone (မီးခိုးထည့်ထားသော)';
+                    default: return '🎨 Mixed Color';
+                }
+            }
+            
             function buildFormula() {
                 if (selectedItems.length === 0) return '';
                 const parts = selectedItems.map(item => {
@@ -281,19 +448,19 @@
             }
             
             function rgbToHex(r,g,b) { 
-                return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join(''); 
+                return '#' + [r,g,b].map(x => Math.min(255, Math.max(0, x)).toString(16).padStart(2,'0')).join(''); 
             }
             
             function update() {
-                // Update selected chips display
                 selectedContainer.innerHTML = '';
                 selectedItems.forEach((item, idx) => {
                     const c = colors[item.colorId];
+                    if (!c) return;
                     const chip = document.createElement('div');
                     chip.className = 'selected-chip';
                     
                     chip.innerHTML = `
-                        <div class="chip-color" style="background: ${rgbToHex(c.r, c.g, c.b)}"></div>
+                        <div class="chip-color" style="background: ${c.hex}"></div>
                         <span class="chip-name">${c.name}</span>
                         <span class="chip-count">x${item.count}</span>
                         <div class="remove-chip" data-index="${idx}">✕</div>
@@ -301,7 +468,6 @@
                     selectedContainer.appendChild(chip);
                 });
                 
-                // Add remove event listeners
                 document.querySelectorAll('.remove-chip').forEach(btn => {
                     btn.onclick = (e) => {
                         e.stopPropagation();
@@ -309,26 +475,34 @@
                     };
                 });
                 
-                // Update color display
                 if (selectedItems.length === 0) {
                     colorDisplay.style.background = '#ddd';
                     resultName.textContent = '-';
+                    resultRatio.textContent = '';
+                    resultCategory.textContent = '';
+                    resultCategory.className = 'result-category';
+                    resultTemp.textContent = '';
+                    resultTemp.className = 'result-temp';
                     resultRGB.textContent = 'RGB: -';
                     resultFormula.textContent = '';
                     return;
                 }
                 
-                const mixed = calculateMixedRGB();
-                if (mixed) {
-                    const hexColor = rgbToHex(mixed.r, mixed.g, mixed.b);
+                const result = getMixResult();
+                if (result) {
+                    const hexColor = rgbToHex(result.r, result.g, result.b);
                     colorDisplay.style.background = hexColor;
-                    resultName.textContent = mixed.name;
-                    resultRGB.textContent = `RGB: ${mixed.r}, ${mixed.g}, ${mixed.b}`;
+                    resultName.textContent = result.name;
+                    resultRatio.textContent = result.ratioText ? `⚖️ ${result.ratioText}` : '';
+                    resultCategory.textContent = getCategoryText(result.type);
+                    resultCategory.className = `result-category ${result.type}`;
+                    resultTemp.textContent = result.temp === 'warm' ? '🔥 Warm Tone (အပူရောင်)' : (result.temp === 'cool' ? '❄️ Cool Tone (အအေးရောင်)' : '⚪ Neutral Tone');
+                    resultTemp.className = `result-temp ${result.temp === 'warm' ? 'warm' : (result.temp === 'cool' ? 'cool' : 'neutral')}`;
+                    resultRGB.textContent = `RGB: ${result.r}, ${result.g}, ${result.b}`;
                     resultFormula.textContent = buildFormula();
                 }
             }
             
-            // Event listeners for color keys
             document.querySelectorAll('.color-key').forEach(btn => {
                 btn.onclick = () => {
                     const colorId = btn.getAttribute('data-color');
@@ -336,7 +510,6 @@
                 };
             });
             
-            // Clear all
             document.getElementById('clearBtn').onclick = () => {
                 selectedItems = [];
                 update();
