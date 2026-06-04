@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Color Mixing Lab</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f9f6f2;
+            padding: 12px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .lab-container {
+            max-width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .lab-header { text-align: center; margin-bottom: 14px; }
+        .lab-header h1 { color: #1e3a5f; font-size: 1rem; }
+        .lab-header p { color: #7c6e5d; font-size: 0.55rem; }
+        .mix-result {
+            background: linear-gradient(135deg, #f0e7dc, #e8ddce);
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        .result-circle { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 6px; transition: background 0.2s; box-shadow: 0 3px 8px rgba(0,0,0,0.15); border: 2px solid white; }
+        .result-name { font-size: 0.8rem; font-weight: bold; color: #1e3a5f; }
+        .result-rgb { font-size: 0.55rem; color: #7c6e5d; margin-top: 2px; font-family: monospace; }
+        .selected-colors { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px; min-height: 36px; }
+        .selected-chip { 
+            width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); position: relative; font-size: 14px; 
+        }
+        .remove-chip { 
+            position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; background: #c62828; color: white; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; 
+            cursor: pointer; border: 1px solid white; 
+        }
+        .white-badge {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+        .color-keyboard { background: #2c3e50; border-radius: 16px; padding: 8px; }
+        .keyboard-row { display: flex; justify-content: center; gap: 5px; margin-bottom: 5px; }
+        .keyboard-row:last-child { margin-bottom: 0; }
+        .color-key { 
+            flex: 1; max-width: 50px; height: 50px; border-radius: 10px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; cursor: pointer; transition: all 0.05s linear; 
+            box-shadow: 0 2px 0 rgba(0,0,0,0.3); font-size: 16px; position: relative;
+        }
+        .color-key:active { transform: translateY(2px); box-shadow: none; }
+        .key-label { font-size: 7px; margin-top: 2px; font-weight: normal; }
+        .clear-btn { width: 100%; padding: 8px; background: #b87333; color: white; border: none; border-radius: 40px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 0.8rem; }
+        
+        /* White Ratio Slider Modal */
+        .slider-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s;
+        }
+        .slider-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .slider-content {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
+            width: 280px;
+            text-align: center;
+        }
+        .slider-content h3 {
+            color: #1e3a5f;
+            margin-bottom: 15px;
+        }
+        .slider-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a5f;
+            margin: 10px 0;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: #e0d6cc;
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: #1e3a5f;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .slider-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-confirm {
+            background: #1e3a5f;
+            color: white;
+        }
+        .btn-cancel {
+            background: #b87333;
+            color: white;
+        }
+        
+        @media (max-width: 450px) { 
+            .color-key { max-width: 44px; height: 44px; font-size: 14px; } 
+        }
+    </style>
+</head>
+<body>
+    <div class="lab-container">
+        <div class="lab-header">
+            <h1>🎨 Color Mixing Lab</h1>
+            <p>Tap to mix (max 3 colors) | White: tap to set ratio (1-10)</p>
+        </div>
+        <div class="mix-result">
+            <div class="result-circle" id="resultCircle" style="background: #ddd;"></div>
+            <div class="result-name" id="resultName">-</div>
+            <div class="result-rgb" id="resultRGB">RGB: -</div>
+            <div class="selected-colors" id="selectedColors"></div>
+        </div>
+        <div class="color-keyboard">
+            <div class="keyboard-row">
+                <div class="color-key" data-color="red" style="background: #e74c3c;"><span>🔴</span><span class="key-label">RED</span></div>
+                <div class="color-key" data-color="orange" style="background: #e67e22;"><span>🟠</span><span class="key-label">ORN</span></div>
+                <div class="color-key" data-color="yellow" style="background: #f1c40f; color:#333;"><span>🟡</span><span class="key-label">YEL</span></div>
+                <div class="color-key" data-color="green" style="background: #27ae60;"><span>🟢</span><span class="key-label">GRN</span></div>
+                <div class="color-key" data-color="blue" style="background: #3498db;"><span>🔵</span><span class="key-label">BLU</span></div>
+                <div class="color-key" data-color="violet" style="background: #8e44ad;"><span>🟣</span><span class="key-label">VIO</span></div>
+            </div>
+            <div class="keyboard-row">
+                <div class="color-key" data-color="yellow-orange" style="background: #f39c12;"><span>🟡🟠</span><span class="key-label">Y-OR</span></div>
+                <div class="color-key" data-color="red-orange" style="background: #d35400;"><span>🔴🟠</span><span class="key-label">R-OR</span></div>
+                <div class="color-key" data-color="red-violet" style="background: #c0392b;"><span>🔴🟣</span><span class="key-label">R-VI</span></div>
+                <div class="color-key" data-color="blue-violet" style="background: #5b2c6f;"><span>🔵🟣</span><span class="key-label">B-VI</span></div>
+                <div class="color-key" data-color="blue-green" style="background: #1abc9c;"><span>🔵🟢</span><span class="key-label">B-GR</span></div>
+                <div class="color-key" data-color="yellow-green" style="background: #2ecc71;"><span>🟡🟢</span><span class="key-label">Y-GR</span></div>
+            </div>
+            <div class="keyboard-row">
+                <div class="color-key" id="whiteKey" data-color="white" style="background: #ecf0f1; color:#333;"><span>⚪</span><span class="key-label">WHT</span></div>
+                <div class="color-key" data-color="black" style="background: #2c3e50;"><span>⚫</span><span class="key-label">BLK</span></div>
+            </div>
+        </div>
+        <button class="clear-btn" id="clearBtn">🗑️ CLEAR ALL</button>
+    </div>
+    
+    <!-- White Ratio Slider Modal -->
+    <div id="whiteSliderModal" class="slider-modal">
+        <div class="slider-content">
+            <h3>⚪ White Amount</h3>
+            <div class="slider-value" id="sliderValue">5</div>
+            <input type="range" id="whiteRatioSlider" min="1" max="10" value="5" step="1">
+            <div style="font-size: 11px; color: #999; margin: 8px 0;">1 = Less White | 10 = More White</div>
+            <div class="slider-buttons">
+                <button class="btn-cancel" id="cancelWhiteBtn">Cancel</button>
+                <button class="btn-confirm" id="confirmWhiteBtn">Add White</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Color database with base RGB values
+            const colors = {
+                'red': { name: 'Red', r: 255, g: 0, b: 0, emoji: '🔴', base: true },
+                'orange': { name: 'Orange', r: 255, g: 128, b: 0, emoji: '🟠', base: true },
+                'yellow': { name: 'Yellow', r: 255, g: 255, b: 0, emoji: '🟡', base: true },
+                'green': { name: 'Green', r: 0, g: 128, b: 0, emoji: '🟢', base: true },
+                'blue': { name: 'Blue', r: 0, g: 0, b: 255, emoji: '🔵', base: true },
+                'violet': { name: 'Violet', r: 128, g: 0, b: 128, emoji: '🟣', base: true },
+                'yellow-orange': { name: 'Yellow-Orange', r: 255, g: 192, b: 0, emoji: '🟡🟠', base: true },
+                'red-orange': { name: 'Red-Orange', r: 255, g: 64, b: 0, emoji: '🔴🟠', base: true },
+                'red-violet': { name: 'Red-Violet', r: 192, g: 0, b: 64, emoji: '🔴🟣', base: true },
+                'blue-violet': { name: 'Blue-Violet', r: 64, g: 0, b: 192, emoji: '🔵🟣', base: true },
+                'blue-green': { name: 'Blue-Green', r: 0, g: 192, b: 128, emoji: '🔵🟢', base: true },
+                'yellow-green': { name: 'Yellow-Green', r: 128, g: 255, b: 0, emoji: '🟡🟢', base: true },
+                'white': { name: 'White', r: 255, g: 255, b: 255, emoji: '⚪', base: false },
+                'black': { name: 'Black', r: 0, g: 0, b: 0, emoji: '⚫', base: true }
+            };
+            
+            // Selected colors with weight (for white)
+            let selectedItems = []; // { colorId, weight (for white only) }
+            let pendingWhite = null;
+            
+            // DOM elements
+            const rc = document.getElementById('resultCircle');
+            const rn = document.getElementById('resultName');
+            const rrgb = document.getElementById('resultRGB');
+            const sc = document.getElementById('selectedColors');
+            const whiteSliderModal = document.getElementById('whiteSliderModal');
+            const whiteSlider = document.getElementById('whiteRatioSlider');
+            const sliderValue = document.getElementById('sliderValue');
+            
+            // Update slider value display
+            whiteSlider.oninput = function() {
+                sliderValue.textContent = this.value;
+            };
+            
+            // Show white slider modal
+            function showWhiteModal() {
+                whiteSlider.value = '5';
+                sliderValue.textContent = '5';
+                whiteSliderModal.classList.add('active');
+            }
+            
+            function closeWhiteModal() {
+                whiteSliderModal.classList.remove('active');
+                pendingWhite = null;
+            }
+            
+            // Add white with specific ratio
+            function addWhiteWithRatio(ratio) {
+                const weight = parseInt(ratio);
+                selectedItems.push({ colorId: 'white', weight: weight });
+                update();
+                closeWhiteModal();
+            }
+            
+            // Add regular color (weight = 1)
+            function addColor(colorId) {
+                if (colorId === 'white') {
+                    showWhiteModal();
+                    return;
+                }
+                
+                // Count non-white colors
+                const nonWhiteCount = selectedItems.filter(item => item.colorId !== 'white').length;
+                if (nonWhiteCount >= 3) return;
+                
+                selectedItems.push({ colorId: colorId, weight: 1 });
+                update();
+            }
+            
+            // Remove color at index
+            function removeColor(index) {
+                selectedItems.splice(index, 1);
+                update();
+            }
+            
+            // Calculate mixed RGB with weights
+            function calculateMixedRGB() {
+                if (selectedItems.length === 0) return null;
+                
+                let totalR = 0, totalG = 0, totalB = 0;
+                let totalWeight = 0;
+                
+                for (const item of selectedItems) {
+                    const c = colors[item.colorId];
+                    if (c) {
+                        const weight = item.weight || 1;
+                        totalR += c.r * weight;
+                        totalG += c.g * weight;
+                        totalB += c.b * weight;
+                        totalWeight += weight;
+                    }
+                }
+                
+                if (totalWeight === 0) return null;
+                
+                const avgR = Math.round(totalR / totalWeight);
+                const avgG = Math.round(totalG / totalWeight);
+                const avgB = Math.round(totalB / totalWeight);
+                
+                // Find closest color name
+                let closest = null;
+                let minDist = Infinity;
+                for (const c of Object.values(colors)) {
+                    const d = Math.hypot(c.r - avgR, c.g - avgG, c.b - avgB);
+                    if (d < minDist) {
+                        minDist = d;
+                        closest = c;
+                    }
+                }
+                
+                let name = (minDist > 80) ? 'Mixed Color' : closest.name;
+                return { name: name, r: avgR, g: avgG, b: avgB };
+            }
+            
+            function rgbToHex(r,g,b) { 
+                return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join(''); 
+            }
+            
+            function update() {
+                // Update selected chips display
+                sc.innerHTML = '';
+                selectedItems.forEach((item, idx) => {
+                    const c = colors[item.colorId];
+                    const chip = document.createElement('div');
+                    chip.className = 'selected-chip';
+                    chip.style.background = rgbToHex(c.r, c.g, c.b);
+                    if (item.colorId === 'white') chip.style.color = '#333';
+                    
+                    let weightHtml = '';
+                    if (item.colorId === 'white' && item.weight) {
+                        weightHtml = `<div class="white-badge">x${item.weight}</div>`;
+                    }
+                    
+                    chip.innerHTML = `<span>${c.emoji}</span>${weightHtml}<div class="remove-chip" data-index="${idx}">✕</div>`;
+                    sc.appendChild(chip);
+                });
+                
+                // Add remove event listeners
+                document.querySelectorAll('.remove-chip').forEach(btn => {
+                    btn.onclick = (e) => {
+                        e.stopPropagation();
+                        removeColor(parseInt(btn.getAttribute('data-index')));
+                    };
+                });
+                
+                // Update result
+                if (selectedItems.length === 0) {
+                    rc.style.background = '#ddd';
+                    rn.textContent = '-';
+                    rrgb.textContent = 'RGB: -';
+                    return;
+                }
+                
+                const mixed = calculateMixedRGB();
+                if (mixed) {
+                    rc.style.background = rgbToHex(mixed.r, mixed.g, mixed.b);
+                    rn.textContent = mixed.name;
+                    rrgb.textContent = `RGB: ${mixed.r}, ${mixed.g}, ${mixed.b}`;
+                }
+            }
+            
+            // Event listeners for color keys
+            document.querySelectorAll('.color-key').forEach(btn => {
+                btn.onclick = () => {
+                    const colorId = btn.getAttribute('data-color');
+                    addColor(colorId);
+                };
+            });
+            
+            // Modal buttons
+            document.getElementById('confirmWhiteBtn').onclick = () => {
+                const ratio = whiteSlider.value;
+                addWhiteWithRatio(ratio);
+            };
+            document.getElementById('cancelWhiteBtn').onclick = () => {
+                closeWhiteModal();
+            };
+            
+            // Close modal when clicking outside
+            whiteSliderModal.onclick = (e) => {
+                if (e.target === whiteSliderModal) {
+                    closeWhiteModal();
+                }
+            };
+            
+            // Clear all
+            document.getElementById('clearBtn').onclick = () => {
+                selectedItems = [];
+                update();
+            };
+            
+            update();
+        })();
+    </script>
+</body>
+</html>

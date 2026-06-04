@@ -1660,15 +1660,9 @@ Highlight ပုံစံ အချောင်းရွေးထုတ်ခြ
     <p><strong>မှတ်ချက်</strong></p>
     <p>ဤဆေးစပ်နည်းသည် Level 8-10 တွင် ကျန်ရှိသော အဝါရောင်ကို ဖျောက်ဖျက်ရန်အတွက်ဖြစ်သည်။ ဆံသားအခြေအနေပေါ်မူတည်၍ အချိန်ကို အနည်းငယ် လျှော့/များ ပြုလုပ်နိုင်ပါသည်။</p>
 </div>`, img: "img/i41.png" },
-    { id: 42, title: "ဆံပင်ပုံစံများ - Diamond Crown", content: `<div style="width:100%; min-height:400px;">
-    <iframe 
-        src="vlibrary/vlibrary.html" 
-        style="width: 100%; height: 450px; border: none; border-radius: 12px;">
-    </iframe>
-    <div style="text-align: center; margin-top: 15px;">
-        <a href="vlibrary/vlibrary.html" target="_blank" style="background: #1e3a5f; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 0.8rem;">🔗 သီးသန့်ဖွင့်ရန်</a>
-    </div>
-</div>`, img: "" }
+
+{ id: 42, title: "Interactive Color & Formula Lab", content: ``, img: "" }
+   
     ];
 
 // DOM
@@ -1685,7 +1679,6 @@ const tocList = document.getElementById('toc-list');
 let currentPage = 1;
 const totalPages = 42;
 
-// Page Header
 function renderAllPages() {
     pagesWrapper.innerHTML = '';
     pagesData.forEach(page => {
@@ -1694,60 +1687,103 @@ function renderAllPages() {
         if (page.id === 1) pageDiv.classList.add('active');
         pageDiv.id = `page-${page.id}`;
         
-        // Image section with better glass button
-        const hasImage = page.img && page.img.trim() !== '';
-        
-        // Button HTML - DARK TEXT
-        const buttonHtml = hasImage ? `
-            <button class="image-toggle-btn" data-id="${page.id}" style="background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #1a1a1a; border: 1px solid rgba(0, 0, 0, 0.15); border-radius: 40px; padding: 5px 14px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.08); letter-spacing: 0.5px;">
-                    🖼️ ${page.img ? 'view_img' : ''}
-                </button>
-        ` : '';
-        
-        const imageHtml = hasImage ? `
-            <div class="image-wrapper" style="margin: 12px 0 16px 0;">
-                <img src="${page.img}" class="page-image" alt="hair diagram" style="width: 100%; border-radius: 16px; cursor: pointer; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" onerror="this.src='https://picsum.photos/id/1015/800/500'">
-            </div>
-        ` : `<div style="margin: 12px 0 16px 0; text-align: center; color: #999; font-size: 12px;">📷 ပုံမရှိပါ</div>`;
-        
-        pageDiv.innerHTML = `
-            <div class="page-header">
-                <span class="page-number">${page.id}</span>
-                <h2>${page.title}</h2>
-            </div>
-            <div style="display: flex; justify-content: flex-start; margin-bottom: 8px;">
-                ${buttonHtml}
-            </div>
-            ${imageHtml}
-            <div class="page-content">${page.content}</div>
-        `;
+        // Special case for page 42 - Custom header with toggle buttons
+        if (page.id === 42) {
+            pageDiv.innerHTML = `
+                <div class="page-header" style="flex-direction: column; align-items: stretch; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="page-number">${page.id}</span>
+                        <h2 style="flex: 1;">${page.title}</h2>
+                    </div>
+                    <div class="lab-toggle-container" style="display: flex; gap: 12px;">
+                        <button id="toggleColorLab" class="lab-toggle-btn active" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #1e3a5f; color: white; cursor: pointer;">🎨 Color Mixing Lab</button>
+                        <button id="toggleFormulaLab" class="lab-toggle-btn" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #e0d6cc; color: #5a4a3a; cursor: pointer;">🧪 Developer Formula Lab</button>
+                    </div>
+                </div>
+                <div id="colorLabContainer" class="lab-iframe-container" style="flex:1; min-height: 400px; margin-top: 10px;">
+                    <iframe class="lab-iframe" src="color-mixing-lab.html" style="width:100%; height:100%; border:none; border-radius:16px;"></iframe>
+                </div>
+                <div id="formulaLabContainer" class="lab-iframe-container" style="flex:1; min-height: 400px; margin-top: 10px; display: none;">
+                    <iframe class="lab-iframe" src="developer-formula-lab.html" style="width:100%; height:100%; border:none; border-radius:16px;"></iframe>
+                </div>
+                <style>
+                    .lab-toggle-btn { transition: all 0.2s; }
+                    .lab-iframe-container { background: #f5f0eb; border-radius: 16px; overflow: hidden; }
+                    @media (max-width: 550px) {
+                        .lab-iframe-container { min-height: 500px; }
+                    }
+                </style>
+            `;
+        } else {
+            // Normal pages
+            const hasImage = page.img && page.img.trim() !== '';
+            const buttonHtml = hasImage ? `<button class="image-toggle-btn" data-id="${page.id}" style="background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(12px); color: #1a1a1a; border: 1px solid rgba(0,0,0,0.15); border-radius: 40px; padding: 5px 14px; font-size: 11px; font-weight: 600; cursor: pointer;">🖼️ view_img</button>` : '';
+            const imageHtml = hasImage ? `<div class="image-wrapper" style="margin: 12px 0 16px 0;"><img src="${page.img}" class="page-image" alt="hair diagram" style="width:100%; border-radius:16px; cursor:pointer; display:none;"></div>` : `<div style="margin:12px 0 16px 0; text-align:center; color:#999; font-size:12px;">📷 ပုံမရှိပါ</div>`;
+            
+            pageDiv.innerHTML = `
+                <div class="page-header">
+                    <span class="page-number">${page.id}</span>
+                    <h2>${page.title}</h2>
+                </div>
+                <div style="display: flex; justify-content: flex-start; margin-bottom: 8px;">
+                    ${buttonHtml}
+                </div>
+                ${imageHtml}
+                <div class="page-content">${page.content}</div>
+            `;
+        }
         pagesWrapper.appendChild(pageDiv);
     });
     
-    // Image toggle button event listeners
+    // Image toggle button event listeners (for normal pages)
     document.querySelectorAll('.image-toggle-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             const pageDiv = this.closest('.page');
             const wrapper = pageDiv.querySelector('.image-wrapper');
             const img = wrapper ? wrapper.querySelector('.page-image') : null;
-            
             if (img) {
                 const isHidden = img.style.display === 'none';
                 if (isHidden) {
                     img.style.display = 'block';
                     this.innerHTML = '🖼️ hide_img';
-                    this.style.background = 'rgba(255, 255, 255, 0.4)';
-                    this.style.color = '#1a1a1a';
                 } else {
                     img.style.display = 'none';
                     this.innerHTML = '🖼️ view_img';
-                    this.style.background = 'rgba(255, 255, 255, 0.25)';
-                    this.style.color = '#1a1a1a';
                 }
             }
         });
     });
+    
+    // Page 42 toggle button event listeners
+    const colorBtn = document.getElementById('toggleColorLab');
+    const formulaBtn = document.getElementById('toggleFormulaLab');
+    const colorContainer = document.getElementById('colorLabContainer');
+    const formulaContainer = document.getElementById('formulaLabContainer');
+    
+    if (colorBtn && formulaBtn) {
+        colorBtn.onclick = () => {
+            colorBtn.classList.add('active');
+            formulaBtn.classList.remove('active');
+            colorBtn.style.background = '#1e3a5f';
+            colorBtn.style.color = 'white';
+            formulaBtn.style.background = '#e0d6cc';
+            formulaBtn.style.color = '#5a4a3a';
+            if (colorContainer) colorContainer.style.display = 'block';
+            if (formulaContainer) formulaContainer.style.display = 'none';
+        };
+        
+        formulaBtn.onclick = () => {
+            formulaBtn.classList.add('active');
+            colorBtn.classList.remove('active');
+            formulaBtn.style.background = '#1e3a5f';
+            formulaBtn.style.color = 'white';
+            colorBtn.style.background = '#e0d6cc';
+            colorBtn.style.color = '#5a4a3a';
+            if (formulaContainer) formulaContainer.style.display = 'block';
+            if (colorContainer) colorContainer.style.display = 'none';
+        };
+    }
 }
 // Image modal for fullscreen view (optional - ထည့်ချင်ရင်)
 function initImageModal() {
