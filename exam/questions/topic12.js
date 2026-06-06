@@ -2,7 +2,7 @@
 
 window.topic12 = [
     {
-        text: "Body Highlight ဆိုတာဘာလဲ။",
+        text: "baby Highlight ဆိုတာဘာလဲ။",
         options: [
             "ဆံပင်တစ်ခုလုံးဆိုးခြင်း",
             "ဆံပင်ကို 4 ပိုင်းခွဲပြီး တစ်ချက်ခြား ရွေးထုတ်ခြင်း",
@@ -11,7 +11,7 @@ window.topic12 = [
         correct: 1
     },
     {
-        text: "Body Highlight အတွက် Highlight ချောင်းအရွယ်အစားက ဘယ်လောက်လဲ။",
+        text: "baby Highlight အတွက် Highlight ချောင်းအရွယ်အစားက ဘယ်လောက်လဲ။",
         options: [
             "1 cm",
             "2 cm",
@@ -74,7 +74,7 @@ window.topic12 = [
         correct: 1
     },
     {
-        text: "Body Highlight က ဘယ်သူတွေအတွက် အထူးသင့်တော်သလဲ။",
+        text: "baby Highlight က ဘယ်သူတွေအတွက် အထူးသင့်တော်သလဲ။",
         options: [
             "ဆံပင်ကောက်သူများ",
             "ဆံပင်ဖြူပေါက်တဲ့သူများ",
