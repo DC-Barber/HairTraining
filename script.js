@@ -1360,11 +1360,11 @@ Bleach-Powder က ကာလာလေးတွေနဲ့ လာလေ့ရှ�
 </div>`, img: "img/i36.png" },
     { id: 37, title: "Highlight ဆိုးခြင်း (Highlighting Methods)", content: `<p><strong>Highlight ဆိုးခြင်း (Highlighting Methods)</strong></p>
 <p>Highlight ဆိုးခြင်း ပုံစံတွေ များစွာရှိပါတယ်။ ၎င်းတို့ထဲမှ ဆိုးရအလွယ်ကူဆုံးနဲ့ လူကြိုက်အများဆုံး ဆိုးနည်း သုံးမျိုးရှိပါတယ်။</p>
-<p><strong>Body Highlight , Normal Highlight , Big Highlight</strong></p>
+<p><strong>baby Highlight , Normal Highlight , Big Highlight</strong></p>
 
-<p><strong>Body Highlight</strong></p>
+<p><strong>baby Highlight</strong></p>
 <p>ဆံပင်ကို စိတ်စည် (၄) ပိုင်းခွဲကာ တစ်စိတ်ချင်းစီတိုင်းကို ရေပြင်ညီအလွှာစည်း <strong>1.5 cm</strong> လောက် လွှာပြီး Highlight အတွက် ဆံပင်ကို တစ်ချက်ခြား၊ တစ်ချက်ခြား ရွေးထုတ်ရခြင်းပါ။</p>
-<p>Body Highlight ဖြစ်တဲ့အတွက် Highlight ချောင်းတွေလည်း ကောက်တဲ့အခါ <strong>2 cm</strong> လောက်သာ အရွယ်အစားယူပေးရပါမယ်။</p>
+<p>baby Highlight ဖြစ်တဲ့အတွက် Highlight ချောင်းတွေလည်း ကောက်တဲ့အခါ <strong>2 cm</strong> လောက်သာ အရွယ်အစားယူပေးရပါမယ်။</p>
 <p>၎င်းဒီဇိုင်းက <strong>ဆံပင်ဖြူပေါက်တဲ့သူတွေ</strong>နဲ့ သင့်တော်ပြီး အရမ်းကြီး ဒီဇိုင်းဆန်းသွားတာမျိုး မဟုတ်ပါဘူး။</p>
 
 <p><strong>ဆီ (Oil-Based) နှင့် Cream (Cream-Based) နှိုင်းယှဉ်ချက်</strong></p>
