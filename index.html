@@ -106,25 +106,8 @@
         </div>
     </div>
 </div>
-  <!-- Simple Visitor Counter - No Setup Required -->
-<div style="position: fixed; bottom: 15px; left: 15px; background: rgba(0,0,0,0.6); color: white; padding: 5px 12px; border-radius: 20px; font-size: 13px; z-index: 9999; font-family: sans-serif;">
-    📊 လာရောက်လည်ပတ်မှု: <span id="simple-count">0</span>
-</div>
+  
 
-<script>
-(async function() {
-    const siteId = 'dcbarber_website';
-    try {
-        const response = await fetch(`https://api.counterapi.dev/v1/${siteId}/total/hit`);
-        const data = await response.json();
-        document.getElementById('simple-count').innerText = data.count;
-        console.log('Counter working! Total views:', data.count);
-    } catch(e) {
-        console.error('Counter error:', e);
-        document.getElementById('simple-count').innerText = '?';
-    }
-})();
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
 <script src="script.js"></script>
