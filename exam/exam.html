@@ -5,50 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Hair Training Exam</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- ========== GUEST GUARD ========== -->
-    <script>
-        (function() {
-            let isGuest = false;
-            
-            if (localStorage.getItem('guest_mode_active') === 'true') {
-                isGuest = true;
-            }
-            
-            try {
-                const userData = localStorage.getItem('userData');
-                if (userData) {
-                    const data = JSON.parse(userData);
-                    if (data.username && data.username.toLowerCase().startsWith('guest')) {
-                        isGuest = true;
-                    }
-                }
-            } catch(e) {}
-            
-            try {
-                if (typeof CONFIG !== 'undefined' && CONFIG.USER_DATA_KEY) {
-                    const userData = localStorage.getItem(CONFIG.USER_DATA_KEY);
-                    if (userData) {
-                        const data = JSON.parse(userData);
-                        if (data.username && data.username.toLowerCase().startsWith('guest')) {
-                            isGuest = true;
-                        }
-                    }
-                }
-            } catch(e) {}
-            
-            if (isGuest) {
-                window.location.replace('/');
-                alert('Guest users cannot access the exam. Please register and login.');
-            }
-        })();
-    </script>
-    <!-- ========== =========== ========== -->
 </head>
 <body>
 <div class="exam-wrapper">
     <div class="exam-container">
-        <!-- ========== OVERLAPPING PROFILE IMAGE (တစ်ဝက် Card ထဲ၊ တစ်ဝက် Card အပြင်) ========== -->
+        <!-- ========== OVERLAPPING PROFILE IMAGE ========== -->
         <div class="exam-image-wrapper">
             <div class="exam-profile-image">
                 <div class="image-circle">
@@ -60,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <!-- =========================================================== -->
+        <!-- =============================================== -->
         
         <div class="exam-header">
             <h1>📝 Hair Training Exam</h1>
