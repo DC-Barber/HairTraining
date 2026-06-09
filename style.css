@@ -167,7 +167,7 @@ body {
     }
     
     .profile-text {
-        display: none; /* Hide text on very small screens */
+        display: none;
     }
     
     .header-right {
@@ -432,7 +432,7 @@ body {
     position: fixed;
     bottom: 85px;
     right: 20px;
-    width: 280px;
+    width: 300px;
     background: #fffef7;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
@@ -459,36 +459,62 @@ body {
     }
 }
 
+/* Menu Header - Profile Picture Style Buttons */
 .menu-header {
     background: #1e3a5f;
-    padding: 14px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    font-weight: 600;
+    padding: 16px 12px;
     position: sticky;
     top: 0;
 }
 
-#close-menu {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
+/* Menu Tabs Container - Justify fix (ညီညာစွာ နေရာချရန်) */
+#menu-tabs {
     display: flex;
+    gap: 16px;
+    justify-content: space-evenly;
     align-items: center;
-    justify-content: center;
+}
+
+/* Menu Tab Buttons - No text, only image */
+.menu-tab-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
     border-radius: 50%;
 }
 
-#close-menu:active {
-    background: rgba(255, 255, 255, 0.2);
+/* Profile Picture Style Images */
+.tab-profile-img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease;
+    display: block;
 }
 
+/* Active state - highlight border */
+.menu-tab-btn.active .tab-profile-img {
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px #ffd700, 0 0 0 4px rgba(255, 215, 0, 0.3);
+    transform: scale(1.05);
+}
+
+/* Hover effect */
+.menu-tab-btn:hover .tab-profile-img {
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    transform: scale(1.02);
+}
+
+/* Active state for button background */
+.menu-tab-btn.active {
+    background: transparent;
+}
+
+/* ========== TITLE LIST (မူလအတိုင်း) ========== */
 #toc-list {
     list-style: none;
     margin: 0;
@@ -502,6 +528,7 @@ body {
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s;
+    color: #1e2a32;
 }
 
 #toc-list li:hover {
@@ -512,7 +539,7 @@ body {
     background: #e8ddce;
 }
 
-/* Responsive */
+/* Responsive for small screens */
 @media (max-width: 550px) {
     .fab {
         width: 48px;
@@ -525,8 +552,17 @@ body {
     .fab-menu {
         bottom: 75px;
         right: 15px;
-        width: 260px;
+        width: 280px;
         max-height: 55vh;
+    }
+    
+    .tab-profile-img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    #menu-tabs {
+        gap: 12px;
     }
 }
 
@@ -542,11 +578,26 @@ body {
     .fab-menu {
         bottom: 70px;
         right: 12px;
-        width: 240px;
+        width: 260px;
         max-height: 50vh;
+    }
+    
+    .tab-profile-img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    #menu-tabs {
+        gap: 8px;
     }
 }
 
+@media (max-width: 320px) {
+    .tab-profile-img {
+        width: 35px;
+        height: 35px;
+    }
+}
 /* ========== PROFILE OVERLAY ========== */
 #profile-overlay {
     display: none;
@@ -834,9 +885,10 @@ body {
     .fab-menu {
         bottom: 100px;
         right: 24px;
-        width: 320px;
+        width: 340px;
     }
 }
+
 /* ========== CONTACT ICONS - HORIZONTAL ========== */
 .contact-icons {
     display: flex;

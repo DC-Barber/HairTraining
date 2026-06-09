@@ -1,6 +1,9 @@
-// script.js - Professional Hair Training Manual (42 Pages)
+// script.js - Professional Hair Training Manual (Main)
+// ဤဖိုင်သည် ပင်မ script.js ဖြစ်ပြီး FAB Menu Tab များအတွက် လုပ်ဆောင်ချက် အပြည့်အစုံ ပါဝင်သည်
 
-const pagesData = [
+// ==================== MAIN PAGE DATA (COLOR THEORY - 42 pages) ====================
+
+const mainPagesData = [
     { id: 1, title: "ဆံပင်တစ်ပင်ချင်းစီ၏ အစိတ်အပိုင်းများနှင့် ဖွဲ့စည်းပုံအမျိုးအစားများ", content: `<hr style="margin: 16px 0; border-color: #f0e2d0;"><p><strong>✧ ဆံပင်တစ်ပင်ချင်းစီ၏ အစိတ်အပိုင်းများနှင့် ဖွဲ့စည်းပုံအမျိုးအစားများ</strong></p><p>ဆံပင်တစ်ပင်ချင်းစီ၏ အလွှာအလိုက် အဓိက (၃) လွှာ ရှိပါသည်။</p><p><strong>ဆံပင်၏ အလွှာများ</strong><br>၁။ Cuticle (အကြေးခွံအလွှာ) - အပြင်ဘက်ဆုံးအလွှာ (ကာကွယ်ပေးသော အလွှာ)။<br>၂။ Cortex (အလယ်သားအလွှာ) - ဆံပင်၏ ၇၅% မှ ၈၀% အထိ ပါဝင်သည်။<br>၃။ Medulla (ဗဟိုဆံသားအလွှာ) - ဆံပင်၏ အတွင်းဆုံးဗဟိုချက် ဖြစ်သည်။</p><p><strong>ဆံပင်အမျိုးအစားနှင့် အလွှာ:</strong><br>ဆံပင်သား အထူ → ၃ လွှာ<br>ဆံပင်သား အလတ် → ၂ လွှာ မှ ၃ လွှာ<br>ဆံပင်သား အပါး → ၂ လွှာ</p>`, img: "img/i1.png" },
     { id: 2, title: "(၁) Cuticle အလွှာ၏ အလုပ်လုပ်ပုံ", content: `<p><strong>(၁) Cuticle အလွှာ၏ အလုပ်လုပ်ပုံ</strong></p>
 <p>Cuticle အလွှာဆိုတာ ဆံပင်တစ်ချောင်းရဲ့ ပထမဆုံး တွေ့ရတဲ့ အလွှာ ဖြစ်ပြီး ငါးအကြေးခွံလေးတွေလို အထပ်ထပ်နဲ့ အုပ်ထားကာ တံခါးတစ်ချပ်လို ဖွင့်ခြင်းနှင့် ပိတ်ခြင်း အလုပ်ကို အဓိက လုပ်ဆောင်လေ့ရှိပါတယ်။</p>
@@ -1665,60 +1668,80 @@ Highlight ပုံစံ အချောင်းရွေးထုတ်ခြ
    
     ];
 
-// DOM
-const pagesWrapper = document.getElementById('pages-wrapper');
-const headerPageNum = document.getElementById('header-page-num');
-const centerCounter = document.getElementById('center-counter');
-const prevBtn = document.getElementById('prev-arrow');
-const nextBtn = document.getElementById('next-arrow');
-const fabBtn = document.getElementById('fab-btn');
-const fabMenu = document.getElementById('fab-menu');
-const closeMenu = document.getElementById('close-menu');
-const tocList = document.getElementById('toc-list');
 
+// Global variables
+let currentPagesData = mainPagesData;
+let currentTotalPages = 42;
 let currentPage = 1;
-const totalPages = 42;
 
+// ==================== RENDER FUNCTION ====================
 function renderAllPages() {
+    const pagesWrapper = document.getElementById('pages-wrapper');
+    if (!pagesWrapper) return;
+    
     pagesWrapper.innerHTML = '';
-    pagesData.forEach(page => {
+    currentPagesData.forEach(page => {
         const pageDiv = document.createElement('div');
         pageDiv.className = 'page';
-        if (page.id === 1) pageDiv.classList.add('active');
+        if (page.id === currentPage) pageDiv.classList.add('active');
         pageDiv.id = `page-${page.id}`;
         
-        // Special case for page 42 - Full height iframe
-if (page.id === 42) {
-    // Calculate available height
-    const viewportHeight = window.innerHeight;
-    const headerHeight = document.querySelector('.clean-header')?.offsetHeight || 70;
-    const navHeight = 70;
-    const availableHeight = viewportHeight - headerHeight - navHeight - 50;
-    
-    pageDiv.innerHTML = `
-        <div class="page-header" style="flex-direction: column; align-items: stretch; gap: 12px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="page-number">${page.id}</span>
-                <h2 style="flex: 1;">${page.title}</h2>
-            </div>
-            <div class="lab-toggle-container" style="display: flex; gap: 12px;">
-                <button id="toggleColorLab" class="lab-toggle-btn active" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #1e3a5f; color: white; cursor: pointer;">🎨 Color Mixing Lab</button>
-                <button id="toggleFormulaLab" class="lab-toggle-btn" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #e0d6cc; color: #5a4a3a; cursor: pointer;">🧪 Developer Formula Lab</button>
-            </div>
-        </div>
-        <div id="colorLabContainer" class="lab-iframe-container" style="flex: 1; margin-top: 10px; display: block;">
-            <iframe class="lab-iframe" src="color-mixing-lab.html" style="width:100%; height:${availableHeight}px; border:none; border-radius:16px;"></iframe>
-        </div>
-        <div id="formulaLabContainer" class="lab-iframe-container" style="flex: 1; margin-top: 10px; display: none;">
-            <iframe class="lab-iframe" src="developer-formula-lab.html" style="width:100%; height:${availableHeight}px; border:none; border-radius:16px;"></iframe>
-        </div>
-        <style>
-            .lab-toggle-btn { transition: all 0.2s; }
-            .lab-iframe-container { background: #f5f0eb; border-radius: 16px; overflow: hidden; }
-        </style>
-    `;
-} else {
-            // Normal pages
+        // Special case for page 42
+        if (page.id === 42 && page.title === "Interactive Color & Formula Lab") {
+            const viewportHeight = window.innerHeight;
+            const headerHeight = document.querySelector('.clean-header')?.offsetHeight || 70;
+            const navHeight = 70;
+            const availableHeight = viewportHeight - headerHeight - navHeight - 50;
+            
+            pageDiv.innerHTML = `
+                <div class="page-header" style="flex-direction: column; align-items: stretch; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="page-number">${page.id}</span>
+                        <h2 style="flex: 1;">${page.title}</h2>
+                    </div>
+                    <div class="lab-toggle-container" style="display: flex; gap: 12px;">
+                        <button id="toggleColorLab" class="lab-toggle-btn active" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #1e3a5f; color: white; cursor: pointer;">🎨 Color Mixing Lab</button>
+                        <button id="toggleFormulaLab" class="lab-toggle-btn" style="flex:1; padding: 10px; border: none; border-radius: 40px; font-weight: bold; background: #e0d6cc; color: #5a4a3a; cursor: pointer;">🧪 Developer Formula Lab</button>
+                    </div>
+                </div>
+                <div id="colorLabContainer" class="lab-iframe-container" style="flex: 1; margin-top: 10px; display: block;">
+                    <iframe class="lab-iframe" src="color-mixing-lab.html" style="width:100%; height:${availableHeight}px; border:none; border-radius:16px;"></iframe>
+                </div>
+                <div id="formulaLabContainer" class="lab-iframe-container" style="flex: 1; margin-top: 10px; display: none;">
+                    <iframe class="lab-iframe" src="developer-formula-lab.html" style="width:100%; height:${availableHeight}px; border:none; border-radius:16px;"></iframe>
+                </div>
+            `;
+            
+            // Add lab toggle event listeners
+            setTimeout(() => {
+                const colorBtn = document.getElementById('toggleColorLab');
+                const formulaBtn = document.getElementById('toggleFormulaLab');
+                const colorContainer = document.getElementById('colorLabContainer');
+                const formulaContainer = document.getElementById('formulaLabContainer');
+                if (colorBtn && formulaBtn) {
+                    colorBtn.onclick = () => {
+                        colorBtn.classList.add('active');
+                        formulaBtn.classList.remove('active');
+                        colorBtn.style.background = '#1e3a5f';
+                        colorBtn.style.color = 'white';
+                        formulaBtn.style.background = '#e0d6cc';
+                        formulaBtn.style.color = '#5a4a3a';
+                        if (colorContainer) colorContainer.style.display = 'block';
+                        if (formulaContainer) formulaContainer.style.display = 'none';
+                    };
+                    formulaBtn.onclick = () => {
+                        formulaBtn.classList.add('active');
+                        colorBtn.classList.remove('active');
+                        formulaBtn.style.background = '#1e3a5f';
+                        formulaBtn.style.color = 'white';
+                        colorBtn.style.background = '#e0d6cc';
+                        colorBtn.style.color = '#5a4a3a';
+                        if (formulaContainer) formulaContainer.style.display = 'block';
+                        if (colorContainer) colorContainer.style.display = 'none';
+                    };
+                }
+            }, 50);
+        } else {
             const hasImage = page.img && page.img.trim() !== '';
             const buttonHtml = hasImage ? `<button class="image-toggle-btn" data-id="${page.id}" style="background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(12px); color: #1a1a1a; border: 1px solid rgba(0,0,0,0.15); border-radius: 40px; padding: 5px 14px; font-size: 11px; font-weight: 600; cursor: pointer;">🖼️ view_img</button>` : '';
             const imageHtml = hasImage ? `<div class="image-wrapper" style="margin: 12px 0 16px 0;"><img src="${page.img}" class="page-image" alt="hair diagram" style="width:100%; border-radius:16px; cursor:pointer; display:none;"></div>` : `<div style="margin:12px 0 16px 0; text-align:center; color:#999; font-size:12px;">📷 ပုံမရှိပါ</div>`;
@@ -1738,7 +1761,7 @@ if (page.id === 42) {
         pagesWrapper.appendChild(pageDiv);
     });
     
-    // Image toggle button event listeners (for normal pages)
+    // Image toggle button event listeners
     document.querySelectorAll('.image-toggle-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -1757,38 +1780,194 @@ if (page.id === 42) {
             }
         });
     });
-    
-    // Page 42 toggle button event listeners
-    const colorBtn = document.getElementById('toggleColorLab');
-    const formulaBtn = document.getElementById('toggleFormulaLab');
-    const colorContainer = document.getElementById('colorLabContainer');
-    const formulaContainer = document.getElementById('formulaLabContainer');
-    
-    if (colorBtn && formulaBtn) {
-        colorBtn.onclick = () => {
-            colorBtn.classList.add('active');
-            formulaBtn.classList.remove('active');
-            colorBtn.style.background = '#1e3a5f';
-            colorBtn.style.color = 'white';
-            formulaBtn.style.background = '#e0d6cc';
-            formulaBtn.style.color = '#5a4a3a';
-            if (colorContainer) colorContainer.style.display = 'block';
-            if (formulaContainer) formulaContainer.style.display = 'none';
-        };
-        
-        formulaBtn.onclick = () => {
-            formulaBtn.classList.add('active');
-            colorBtn.classList.remove('active');
-            formulaBtn.style.background = '#1e3a5f';
-            formulaBtn.style.color = 'white';
-            colorBtn.style.background = '#e0d6cc';
-            colorBtn.style.color = '#5a4a3a';
-            if (formulaContainer) formulaContainer.style.display = 'block';
-            if (colorContainer) colorContainer.style.display = 'none';
-        };
-    }
 }
-// Image modal for fullscreen view (optional - ထည့်ချင်ရင်)
+
+function updatePageUI(pageNum) {
+    const allPages = document.querySelectorAll('.page');
+    allPages.forEach(p => p.classList.remove('active'));
+    const targetPage = document.getElementById(`page-${pageNum}`);
+    if (targetPage) targetPage.classList.add('active');
+    currentPage = pageNum;
+    
+    const headerPageNum = document.getElementById('header-page-num');
+    const centerCounter = document.getElementById('center-counter');
+    if (headerPageNum) headerPageNum.innerText = `${pageNum} / ${currentTotalPages}`;
+    if (centerCounter) centerCounter.innerText = `${pageNum} / ${currentTotalPages}`;
+}
+
+function buildTOC() {
+    const tocList = document.getElementById('toc-list');
+    if (!tocList) return;
+    tocList.innerHTML = '';
+    currentPagesData.forEach(p => {
+        const li = document.createElement('li');
+        li.textContent = `${p.id} - ${p.title.length > 28 ? p.title.slice(0, 26) + '...' : p.title}`;
+        li.addEventListener('click', () => {
+            updatePageUI(p.id);
+            const fabMenu = document.getElementById('fab-menu');
+            if (fabMenu) fabMenu.classList.remove('active');
+            const fabIcon = document.getElementById('fab-icon');
+            if (fabIcon) fabIcon.className = 'fas fa-bars';
+        });
+        tocList.appendChild(li);
+    });
+}
+
+// ==================== SWITCH FUNCTIONS FOR SCRIPTS ====================
+function switchToMainData() {
+    if (currentPagesData === mainPagesData) return;
+    
+    console.log("Switching to MAIN data (Color Theory)");
+    currentPagesData = mainPagesData;
+    currentTotalPages = 42;
+    currentPage = 1;
+    
+    renderAllPages();
+    buildTOC();
+    updatePageUI(1);
+}
+
+function switchToPermData() {
+    if (typeof permPagesData === 'undefined') {
+        console.log("Perm data not loaded yet, waiting...");
+        if (typeof loadPermData === 'function') loadPermData();
+        else console.error("permPagesData is not defined! Make sure script-1.js is loaded.");
+        return;
+    }
+    
+    console.log("Switching to PERM data");
+    currentPagesData = permPagesData;
+    currentTotalPages = permPagesData.length;
+    currentPage = 1;
+    
+    renderAllPages();
+    buildTOC();
+    updatePageUI(1);
+}
+
+function switchToCutData() {
+    if (typeof cuttingPagesData === 'undefined') {
+        console.log("Cut data not loaded yet, waiting...");
+        if (typeof loadCutData === 'function') loadCutData();
+        else console.error("cuttingPagesData is not defined! Make sure script-2.js is loaded.");
+        return;
+    }
+    
+    console.log("Switching to CUT data");
+    currentPagesData = cuttingPagesData;
+    currentTotalPages = cuttingPagesData.length;
+    currentPage = 1;
+    
+    renderAllPages();
+    buildTOC();
+    updatePageUI(1);
+}
+
+// Make switch functions available globally
+window.switchToMainData = switchToMainData;
+window.switchToPermData = switchToPermData;
+window.switchToCutData = switchToCutData;
+
+// ==================== MENU TABS INITIALIZATION ====================
+function initMenuTabs() {
+    const menuTabs = document.querySelectorAll('.menu-tab-btn');
+    
+    menuTabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const scriptType = this.getAttribute('data-script');
+            
+            // Update active state
+            menuTabs.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Switch data based on button clicked
+            if (scriptType === 'perm') {
+                switchToPermData();
+            } else if (scriptType === 'cut') {
+                switchToCutData();
+            } else {
+                switchToMainData();
+            }
+            
+            // Close menu after selection
+            const fabMenu = document.getElementById('fab-menu');
+            const fabIcon = document.getElementById('fab-icon');
+            if (fabMenu) fabMenu.classList.remove('active');
+            if (fabIcon) fabIcon.className = 'fas fa-bars';
+        });
+    });
+}
+
+function bindEvents() {
+    const prevBtn = document.getElementById('prev-arrow');
+    const nextBtn = document.getElementById('next-arrow');
+    const fabBtn = document.getElementById('fab-btn');
+    const fabMenu = document.getElementById('fab-menu');
+    const fabIcon = document.getElementById('fab-icon');
+    
+    // Previous button
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) updatePageUI(currentPage - 1);
+        });
+    }
+    
+    // Next button
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < currentTotalPages) updatePageUI(currentPage + 1);
+        });
+    }
+    
+    // FAB button - toggle menu and icon
+    if (fabBtn) {
+        fabBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (fabMenu) {
+                fabMenu.classList.toggle('active');
+                if (fabMenu.classList.contains('active')) {
+                    if (fabIcon) fabIcon.className = 'fas fa-times';
+                } else {
+                    if (fabIcon) fabIcon.className = 'fas fa-bars';
+                }
+            }
+        });
+    }
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (fabMenu && fabBtn && !fabMenu.contains(e.target) && !fabBtn.contains(e.target)) {
+            fabMenu.classList.remove('active');
+            const fabIconOutside = document.getElementById('fab-icon');
+            if (fabIconOutside) fabIconOutside.className = 'fas fa-bars';
+        }
+    });
+}
+
+function initSwipe() {
+    const bookContainer = document.querySelector('.book-container');
+    if (!bookContainer) return;
+    let touchStartX = 0;
+    bookContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    bookContainer.addEventListener('touchend', (e) => {
+        const diff = e.changedTouches[0].screenX - touchStartX;
+        if (diff < -60 && currentPage < currentTotalPages) updatePageUI(currentPage + 1);
+        if (diff > 60 && currentPage > 1) updatePageUI(currentPage - 1);
+    });
+}
+
+function initKeyboard() {
+    document.addEventListener('keydown', (e) => {
+        const prevBtn = document.getElementById('prev-arrow');
+        const nextBtn = document.getElementById('next-arrow');
+        if (e.key === 'ArrowLeft' && prevBtn) prevBtn.click();
+        if (e.key === 'ArrowRight' && nextBtn) nextBtn.click();
+    });
+}
+
 function initImageModal() {
     if (!document.getElementById('image-modal-overlay')) {
         const modalDiv = document.createElement('div');
@@ -1821,84 +2000,16 @@ function initImageModal() {
     });
 }
 
-// Page UI
-function updatePageUI(pageNum) {
-    const allPages = document.querySelectorAll('.page');
-    allPages.forEach(p => p.classList.remove('active'));
-    const targetPage = document.getElementById(`page-${pageNum}`);
-    if (targetPage) targetPage.classList.add('active');
-    currentPage = pageNum;
-    centerCounter.innerText = `${pageNum} / ${totalPages}`;
-    headerPageNum.innerText = `${pageNum} / ${totalPages}`;
-}
-
-// Build
-function buildTOC() {
-    tocList.innerHTML = '';
-    pagesData.forEach(p => {
-        const li = document.createElement('li');
-        li.textContent = `${p.id} - ${p.title.length > 28 ? p.title.slice(0, 26) + '...' : p.title}`;
-        li.addEventListener('click', () => {
-            updatePageUI(p.id);
-            fabMenu.classList.remove('active');
-        });
-        tocList.appendChild(li);
-    });
-}
-
-// touchStartX
-let touchStartX = 0;
-const bookContainer = document.querySelector('.book-container');
-function initSwipe() {
-    bookContainer.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-    bookContainer.addEventListener('touchend', (e) => {
-        const diff = e.changedTouches[0].screenX - touchStartX;
-        if (diff < -60 && currentPage < totalPages) updatePageUI(currentPage + 1);
-        if (diff > 60 && currentPage > 1) updatePageUI(currentPage - 1);
-    });
-}
-
-// Keyboard
-function initKeyboard() {
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') prevBtn.click();
-        if (e.key === 'ArrowRight') nextBtn.click();
-    });
-}
-
-// Events
-function bindEvents() {
-    prevBtn.addEventListener('click', () => {
-        if (currentPage > 1) updatePageUI(currentPage - 1);
-    });
-    nextBtn.addEventListener('click', () => {
-        if (currentPage < totalPages) updatePageUI(currentPage + 1);
-    });
-    fabBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        fabMenu.classList.toggle('active');
-    });
-    closeMenu.addEventListener('click', () => {
-        fabMenu.classList.remove('active');
-    });
-    document.addEventListener('click', (e) => {
-        if (!fabMenu.contains(e.target) && !fabBtn.contains(e.target)) {
-            fabMenu.classList.remove('active');
-        }
-    });
-}
-
-// ***
-function init() {
+// ==================== INITIALIZATION ====================
+document.addEventListener('DOMContentLoaded', function() {
     renderAllPages();
     buildTOC();
     bindEvents();
+    initMenuTabs();
     initSwipe();
     initKeyboard();
-    initImageModal(); 
+    initImageModal();
     updatePageUI(1);
-}
-
-init();
+    
+    console.log("Main script initialized with " + currentTotalPages + " pages");
+});
