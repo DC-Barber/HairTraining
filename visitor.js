@@ -1,156 +1,250 @@
-
-
-// visitor.js - Visitor Counter with Google Sheets Database (No UI Display)
-// ဤဖိုင်သည် Google Sheets ကို database အဖြစ်သုံးပြီး UI တွင်မပြဘဲ background မှာ visitor count ကို update လုပ်မည်
+// visitor.js - Google Sheets Database with Profile Border Color Feedback
+// ဤဖိုင်သည် Google Sheets ကို database အဖြစ်သုံးပြီး profile icon border တွင် အရောင်ပြောင်းပေးမည်
 
 // ==================== CONFIGURATION ====================
-// သင်၏ Google Apps Script Web App URL ကို ထည့်ပါ
-// Deploy ပြီးရရှိသော URL ပုံစံ: https://script.google.com/macros/s/YOUR_ID/exec
 const VISITOR_API_URL = 'https://script.google.com/macros/s/AKfycbwq4Ky2KARUw00aRdyssgPtLvUXs-gTM2exbZNbxlsgTRLNoO1TVQr9A8VYh3KV2nAb1Q/exec';
 
-// Storage keys
-const STORAGE_KEYS = {
-    SESSION_COUNTED: 'visitor_counted_sheet',
-    TODAY_COUNT: 'visitor_today_sheet',
-    TOTAL_COUNT: 'visitor_total_sheet',
-    LAST_UPDATE: 'visitor_last_update'
-};
-
-// ==================== CORE FUNCTIONS ====================
-
-// Get today's date in YYYY-MM-DD format
-function getTodayDate() {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
+// ==================== DOM ELEMENTS ====================
+function getProfileIcon() {
+    return document.querySelector('.profile-icon');
 }
 
-// Update visitor count in Google Sheets (silent mode - no UI)
-async function updateVisitorCount() {
-    try {
-        // Check if already counted in this session
-        const sessionCounted = sessionStorage.getItem(STORAGE_KEYS.SESSION_COUNTED);
-        
-        if (!sessionCounted) {
-            // Call Google Sheets API to update count
-            const response = await fetch(`${VISITOR_API_URL}?action=updateCount`, {
-                method: 'GET',
-                mode: 'cors'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Mark this session as counted
-                    sessionStorage.setItem(STORAGE_KEYS.SESSION_COUNTED, 'true');
-                    
-                    // Store in localStorage for reference (not displayed)
-                    localStorage.setItem(STORAGE_KEYS.TODAY_COUNT, data.today);
-                    localStorage.setItem(STORAGE_KEYS.TOTAL_COUNT, data.total);
-                    localStorage.setItem(STORAGE_KEYS.LAST_UPDATE, new Date().toISOString());
-                    
-                    console.log('[Visitor] Count updated:', data.today, '/', data.total);
-                }
-            } else {
-                console.warn('[Visitor] API response not OK:', response.status);
-                // Fallback to localStorage only
-                updateLocalFallback();
-            }
-        } else {
-            // Get latest count without updating
-            await getLatestCount();
-        }
-    } catch (error) {
-        console.error('[Visitor] Update failed:', error);
-        // Silent fail - fallback to localStorage
-        updateLocalFallback();
+// ==================== UPDATE PROFILE BORDER COLOR ====================
+function setProfileBorderColor(status) {
+    const profileIcon = getProfileIcon();
+    if (!profileIcon) return;
+    
+    // Remove existing status classes
+    profileIcon.classList.remove('border-success', 'border-error', 'border-pending');
+    
+    if (status === 'success') {
+        // Data received from Google Sheets - Green border
+        profileIcon.classList.add('border-success');
+        profileIcon.style.border = '3px solid #2ecc71';
+        profileIcon.style.boxShadow = '0 0 0 2px rgba(46, 204, 113, 0.3)';
+    } else if (status === 'error') {
+        // No data from Google Sheets - Red border
+        profileIcon.classList.add('border-error');
+        profileIcon.style.border = '3px solid #e74c3c';
+        profileIcon.style.boxShadow = '0 0 0 2px rgba(231, 76, 60, 0.3)';
+    } else if (status === 'pending') {
+        // Checking/waiting - Yellow/Orange border
+        profileIcon.classList.add('border-pending');
+        profileIcon.style.border = '3px solid #f39c12';
+        profileIcon.style.boxShadow = '0 0 0 2px rgba(243, 156, 18, 0.3)';
     }
 }
 
-// Get latest count without incrementing
-async function getLatestCount() {
+// ==================== ADD INDICATOR DOT ON PROFILE ====================
+function addStatusDot(status) {
+    // Remove existing dot if any
+    const existingDot = document.querySelector('.profile-status-dot');
+    if (existingDot) existingDot.remove();
+    
+    const profileWrapper = document.getElementById('profile-icon-wrapper');
+    if (!profileWrapper) return;
+    
+    const dot = document.createElement('div');
+    dot.className = `profile-status-dot status-${status}`;
+    dot.style.cssText = `
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid white;
+        transition: all 0.3s ease;
+    `;
+    
+    if (status === 'success') {
+        dot.style.backgroundColor = '#2ecc71';
+        dot.style.boxShadow = '0 0 5px #2ecc71';
+    } else if (status === 'error') {
+        dot.style.backgroundColor = '#e74c3c';
+        dot.style.boxShadow = '0 0 5px #e74c3c';
+    } else if (status === 'pending') {
+        dot.style.backgroundColor = '#f39c12';
+        dot.style.boxShadow = '0 0 5px #f39c12';
+        // Blinking animation for pending
+        dot.style.animation = 'blink 1s infinite';
+    }
+    
+    profileWrapper.style.position = 'relative';
+    profileWrapper.appendChild(dot);
+}
+
+// Add CSS animation for blinking
+function addBlinkAnimation() {
+    if (!document.getElementById('blink-animation')) {
+        const style = document.createElement('style');
+        style.id = 'blink-animation';
+        style.textContent = `
+            @keyframes blink {
+                0% { opacity: 1; }
+                50% { opacity: 0.4; }
+                100% { opacity: 1; }
+            }
+            .profile-status-dot {
+                transition: all 0.3s ease;
+            }
+            .border-success {
+                transition: all 0.3s ease;
+            }
+            .border-error {
+                transition: all 0.3s ease;
+            }
+            .border-pending {
+                transition: all 0.3s ease;
+                animation: borderPulse 1s infinite;
+            }
+            @keyframes borderPulse {
+                0% { border-color: #f39c12; box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.3); }
+                50% { border-color: #e67e22; box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.5); }
+                100% { border-color: #f39c12; box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.3); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// ==================== API CALL FUNCTION ====================
+async function callAPI(action) {
     try {
-        const response = await fetch(`${VISITOR_API_URL}?action=getCount`, {
+        const response = await fetch(`${VISITOR_API_URL}?action=${action}`, {
             method: 'GET',
-            mode: 'cors'
+            mode: 'cors',
+            cache: 'no-cache'
         });
         
         if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                localStorage.setItem(STORAGE_KEYS.TODAY_COUNT, data.today);
-                localStorage.setItem(STORAGE_KEYS.TOTAL_COUNT, data.total);
-                localStorage.setItem(STORAGE_KEYS.LAST_UPDATE, new Date().toISOString());
+            return await response.json();
+        } else {
+            console.warn(`API returned ${response.status}`);
+            return null;
+        }
+    } catch (error) {
+        console.error('API call failed:', error);
+        return null;
+    }
+}
+
+// ==================== UPDATE VISITOR COUNT ====================
+async function updateVisitorCount() {
+    // Set pending state - checking connection
+    setProfileBorderColor('pending');
+    addStatusDot('pending');
+    
+    try {
+        // First, test if API is reachable
+        const testResult = await callAPI('test');
+        
+        if (!testResult || !testResult.success) {
+            // API not reachable - Red border
+            console.log('[Visitor] API not reachable');
+            setProfileBorderColor('error');
+            addStatusDot('error');
+            return;
+        }
+        
+        console.log('[Visitor] API reachable, updating count...');
+        
+        const sessionCounted = sessionStorage.getItem('visitor_counted_sheet');
+        
+        if (!sessionCounted) {
+            const data = await callAPI('updateCount');
+            
+            if (data && data.success) {
+                sessionStorage.setItem('visitor_counted_sheet', 'true');
+                localStorage.setItem('visitor_today_sheet', data.today);
+                localStorage.setItem('visitor_total_sheet', data.total);
+                localStorage.setItem('visitor_last_update', new Date().toISOString());
+                localStorage.setItem('visitor_data_received', 'true');
+                
+                console.log('[Visitor] Count updated - Today:', data.today, 'Total:', data.total);
+                
+                // Success - Green border
+                setProfileBorderColor('success');
+                addStatusDot('success');
+            } else {
+                console.log('[Visitor] Update failed');
+                setProfileBorderColor('error');
+                addStatusDot('error');
+            }
+        } else {
+            // Already counted this session, just get latest
+            const data = await callAPI('getCount');
+            
+            if (data && data.success) {
+                localStorage.setItem('visitor_today_sheet', data.today);
+                localStorage.setItem('visitor_total_sheet', data.total);
+                localStorage.setItem('visitor_data_received', 'true');
+                
+                console.log('[Visitor] Count retrieved - Today:', data.today, 'Total:', data.total);
+                
+                // Success - Green border
+                setProfileBorderColor('success');
+                addStatusDot('success');
+            } else {
+                setProfileBorderColor('error');
+                addStatusDot('error');
             }
         }
     } catch (error) {
-        console.warn('[Visitor] Get count failed:', error);
+        console.error('[Visitor] Error:', error);
+        setProfileBorderColor('error');
+        addStatusDot('error');
     }
 }
 
-// Fallback to localStorage only (when API fails)
-function updateLocalFallback() {
-    const today = getTodayDate();
-    const lastDate = localStorage.getItem('visitor_last_date_fallback');
-    let todayCount = parseInt(localStorage.getItem('visitor_today_fallback')) || 0;
-    let totalCount = parseInt(localStorage.getItem('visitor_total_fallback')) || 0;
-    
-    const sessionCounted = sessionStorage.getItem('visitor_counted_fallback');
-    
-    if (!sessionCounted) {
-        if (lastDate !== today) {
-            todayCount = 0;
-            localStorage.setItem('visitor_last_date_fallback', today);
-        }
-        
-        todayCount++;
-        totalCount++;
-        
-        localStorage.setItem('visitor_today_fallback', todayCount);
-        localStorage.setItem('visitor_total_fallback', totalCount);
-        sessionStorage.setItem('visitor_counted_fallback', 'true');
-        
-        console.log('[Visitor] Fallback count updated:', todayCount, '/', totalCount);
-    }
-}
-
-// Get current visitor counts (returns object, not displayed)
+// ==================== GET CURRENT COUNTS (for debugging) ====================
 function getCurrentCounts() {
     return {
-        today: parseInt(localStorage.getItem(STORAGE_KEYS.TODAY_COUNT)) || 0,
-        total: parseInt(localStorage.getItem(STORAGE_KEYS.TOTAL_COUNT)) || 0,
-        lastUpdate: localStorage.getItem(STORAGE_KEYS.LAST_UPDATE) || null
+        today: localStorage.getItem('visitor_today_sheet') || '0',
+        total: localStorage.getItem('visitor_total_sheet') || '0',
+        dataReceived: localStorage.getItem('visitor_data_received') === 'true',
+        lastUpdate: localStorage.getItem('visitor_last_update') || null
     };
 }
 
-// Reset session (for testing purposes)
-function resetSessionCount() {
-    sessionStorage.removeItem(STORAGE_KEYS.SESSION_COUNTED);
-    sessionStorage.removeItem('visitor_counted_fallback');
-    console.log('[Visitor] Session reset');
+// ==================== CHECK IF DATA WAS RECEIVED EVER ====================
+function checkDataReceived() {
+    const dataReceived = localStorage.getItem('visitor_data_received') === 'true';
+    if (dataReceived) {
+        setProfileBorderColor('success');
+        addStatusDot('success');
+    } else {
+        setProfileBorderColor('pending');
+        addStatusDot('pending');
+    }
 }
 
-// ==================== AUTO INITIALIZATION ====================
-// Run when page loads (silent mode - no UI display)
+// ==================== INITIALIZATION ====================
+addBlinkAnimation();
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Small delay to not interfere with page loading
+    // Check if data was ever received
+    checkDataReceived();
+    
+    // Update visitor count after 1 second
     setTimeout(function() {
         updateVisitorCount();
     }, 1000);
+    
+    // Re-check when page becomes visible again
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            setTimeout(updateVisitorCount, 500);
+        }
+    });
 });
 
-// Optional: Update on page visibility change (when tab becomes active again)
-document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) {
-        // Page became visible again - get latest count without incrementing
-        setTimeout(getLatestCount, 500);
-    }
-});
-
-// ==================== EXPORTS (for debugging - optional) ====================
-// Make functions available globally for debugging (remove in production if needed)
+// ==================== DEBUG FUNCTIONS (Console only) ====================
 window.VisitorCounter = {
     update: updateVisitorCount,
     getCounts: getCurrentCounts,
-    resetSession: resetSessionCount
+    checkAPI: async () => await callAPI('test'),
+    getSheetData: async () => await callAPI('getCount')
 };
+
+console.log('[Visitor] Script loaded. Use VisitorCounter.getCounts() to check status');

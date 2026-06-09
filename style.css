@@ -133,7 +133,32 @@ body {
     object-fit: cover;
     border-radius: 50%;
 }
+/* ========== PROFILE BORDER STATUS ========== */
+.profile-icon {
+    transition: all 0.3s ease;
+    position: relative;
+}
 
+/* Status dot animation */
+.profile-status-dot {
+    transition: all 0.3s ease;
+}
+
+/* Optional: Tooltip for status */
+.profile-icon:hover::after {
+    content: attr(data-status);
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+    z-index: 100;
+}
 /* ========== VERY SMALL DEVICES (<= 380px) ========== */
 @media (max-width: 380px) {
     .clean-header {
