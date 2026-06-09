@@ -2,7 +2,7 @@
 // ဤဖိုင်သည် Google Sheets ကို database အဖြစ်သုံးပြီး profile icon border တွင် အရောင်ပြောင်းပေးမည်
 
 // ==================== CONFIGURATION ====================
-const VISITOR_API_URL = 'https://script.google.com/macros/s/AKfycbyEwKlCeU-aTjJpOdofK1Sa6RDcBuIhzJfvnYTje9V5NzE06q-7KCX2c-JayhVNgwDp/exec';
+const VISITOR_API_URL = 'https://script.google.com/macros/s/AKfycbznX2d8RCl06LhAoaxhxgBhX7gZAslda9-ekm0oy-e5h4Tjt2DtaUHUA1MLBmfJ72s/exec';
 
 // ==================== DOM ELEMENTS ====================
 function getProfileIcon() {
