@@ -222,7 +222,11 @@ function checkDataReceived() {
 // ==================== INITIALIZATION ====================
 addBlinkAnimation();
 
+// At the end of visitor.js, update the initialization
 document.addEventListener('DOMContentLoaded', function() {
+    // Load saved total immediately (shows cached value)
+    loadSavedTotal();
+    
     // Check if data was ever received
     checkDataReceived();
     
@@ -246,5 +250,100 @@ window.VisitorCounter = {
     checkAPI: async () => await callAPI('test'),
     getSheetData: async () => await callAPI('getCount')
 };
+// visitor.js - Add this number formatting function
 
+// Format number to K, M, B (1k, 1.2k, 1.5M, 2.3B)
+function formatNumber(num) {
+    if (num === undefined || num === null) return '0';
+    
+    const number = parseInt(num);
+    if (isNaN(number)) return '0';
+    
+    if (number >= 1000000000) {
+        return (number / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+    }
+    if (number >= 1000000) {
+        return (number / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    }
+    if (number >= 1000) {
+        return (number / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    }
+    return number.toString();
+}
+
+// Update visitor badge display
+function updateVisitorBadge(totalViews) {
+    const totalViewsSpan = document.getElementById('total-views');
+    if (totalViewsSpan) {
+        totalViewsSpan.textContent = formatNumber(totalViews);
+    }
+}
+
+// Modify your existing updateVisitorCount function
+async function updateVisitorCount() {
+    setProfileBorderColor('pending');
+    addStatusDot('pending');
+    
+    try {
+        const testResult = await callAPI('test');
+        
+        if (!testResult || !testResult.success) {
+            setProfileBorderColor('error');
+            addStatusDot('error');
+            return;
+        }
+        
+        const sessionCounted = sessionStorage.getItem('visitor_counted_sheet');
+        
+        if (!sessionCounted) {
+            const data = await callAPI('updateCount');
+            
+            if (data && data.success) {
+                sessionStorage.setItem('visitor_counted_sheet', 'true');
+                localStorage.setItem('visitor_today_sheet', data.today);
+                localStorage.setItem('visitor_total_sheet', data.total);
+                localStorage.setItem('visitor_last_update', new Date().toISOString());
+                localStorage.setItem('visitor_data_received', 'true');
+                
+                // Update badge with formatted number
+                updateVisitorBadge(data.total);
+                
+                setProfileBorderColor('success');
+                addStatusDot('success');
+            } else {
+                setProfileBorderColor('error');
+                addStatusDot('error');
+            }
+        } else {
+            const data = await callAPI('getCount');
+            
+            if (data && data.success) {
+                localStorage.setItem('visitor_today_sheet', data.today);
+                localStorage.setItem('visitor_total_sheet', data.total);
+                localStorage.setItem('visitor_data_received', 'true');
+                
+                // Update badge with formatted number
+                updateVisitorBadge(data.total);
+                
+                setProfileBorderColor('success');
+                addStatusDot('success');
+            } else {
+                setProfileBorderColor('error');
+                addStatusDot('error');
+            }
+        }
+    } catch (error) {
+        console.error('[Visitor] Error:', error);
+        setProfileBorderColor('error');
+        addStatusDot('error');
+    }
+}
+
+// Load saved total on page load (before API call)
+function loadSavedTotal() {
+    const savedTotal = localStorage.getItem('visitor_total_sheet');
+    if (savedTotal) {
+        updateVisitorBadge(savedTotal);
+    }
+}
 console.log('[Visitor] Script loaded. Use VisitorCounter.getCounts() to check status');
