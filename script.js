@@ -5,20 +5,55 @@
 
 const mainPagesData = [
     { id: 1, title: "ဆံပင်တစ်ပင်ချင်းစီ၏ အစိတ်အပိုင်းများနှင့် ဖွဲ့စည်းပုံအမျိုးအစားများ", content: `<hr style="margin: 16px 0; border-color: #f0e2d0;"><p><strong>✧ ဆံပင်တစ်ပင်ချင်းစီ၏ အစိတ်အပိုင်းများနှင့် ဖွဲ့စည်းပုံအမျိုးအစားများ</strong></p><p>ဆံပင်တစ်ပင်ချင်းစီ၏ အလွှာအလိုက် အဓိက (၃) လွှာ ရှိပါသည်။</p><p><strong>ဆံပင်၏ အလွှာများ</strong><br>၁။ Cuticle (အကြေးခွံအလွှာ) - အပြင်ဘက်ဆုံးအလွှာ (ကာကွယ်ပေးသော အလွှာ)။<br>၂။ Cortex (အလယ်သားအလွှာ) - ဆံပင်၏ ၇၅% မှ ၈၀% အထိ ပါဝင်သည်။<br>၃။ Medulla (ဗဟိုဆံသားအလွှာ) - ဆံပင်၏ အတွင်းဆုံးဗဟိုချက် ဖြစ်သည်။</p><p><strong>ဆံပင်အမျိုးအစားနှင့် အလွှာ:</strong><br>ဆံပင်သား အထူ → ၃ လွှာ<br>ဆံပင်သား အလတ် → ၂ လွှာ မှ ၃ လွှာ<br>ဆံပင်သား အပါး → ၂ လွှာ</p>`, img: "img/i1.png" },
-    { id: 2, title: "(၁) Cuticle အလွှာ၏ အလုပ်လုပ်ပုံ", content: `<p><strong>(၁) Cuticle အလွှာ၏ အလုပ်လုပ်ပုံ</strong></p>
-<p>Cuticle အလွှာဆိုတာ ဆံပင်တစ်ချောင်းရဲ့ ပထမဆုံး တွေ့ရတဲ့ အလွှာ ဖြစ်ပြီး ငါးအကြေးခွံလေးတွေလို အထပ်ထပ်နဲ့ အုပ်ထားကာ တံခါးတစ်ချပ်လို ဖွင့်ခြင်းနှင့် ပိတ်ခြင်း အလုပ်ကို အဓိက လုပ်ဆောင်လေ့ရှိပါတယ်။</p>
-<p>၎င်းအကြေးခွံလေးတွေရဲ့ အရေအတွက်ဟာ ဆံလုံးအရည်အသွေးနဲ့ အရွယ်အစားပေါ်မှာ မူတည်ပြီး ကွာခြားနိုင်ပါတယ်။</p>
-<p><strong>ဆံသားအမျိုးအစားအလိုက် Cuticle အလွှာအရေအတွက်</strong><br>
-• ဆံလုံးအရည်အသွေးကြီးမားသော ဆံသား (ထူထဲသောဆံပင်) → အလွှာ (၁၈) လွှာအထိ ဖုံးအုပ်ထားနိုင်<br>
-• ဆံလုံးဆိုဒ် အလိုက် → ၁၂၊ ၁၃၊ ၁၄၊ ၁၅ စသည်ဖြင့် ကွဲပြားနိုင်<br>
-• ကလေးဆံပင်ကဲ့သို့ အရည်အသွေးနု၊ ဆံလုံးသေးငယ်သော ဆံသား → အလွှာ (၄) လွှာအထိသာ ပါဝင်နိုင်</p>
-<p><strong>Cuticle အလွှာဖွင့်ခြင်းနှင့် ပိတ်ခြင်း</strong><br>
-Cuticle အလွှာများ ၁၀၀% ပွင့်ရန်အတွက် ရေ (သို့မဟုတ်) Shampoo ကြမ်းဖြင့် ဖွင့်ပေးနိုင်ပါတယ်။ ကောက်ခြင်း၊ ဖြောင့်ခြင်း၊ ဆေးဆိုးခြင်း မပြုလုပ်မီ ခေါင်းအကြမ်းလျှော်ပေးရခြင်း၏ အဓိကအကြောင်းရင်းမှာ Cuticle အကြေးခွံလေးများ ၁၀၀% ပွင့်သွားစေရန်အတွက် ဖြစ်ပါတယ်။</p>
-<p>Cuticle အလွှာများ ပြန်လည်ပိတ်စေရန် -<br>
-• ဖယောင်းသားပါဝင်သော ပေါင်းဆေးသုံးကာ ပိတ်ပေးခြင်း → Cuticle ကို ၈၅% သာ ပိတ်နိုင်စွမ်းရှိ<br>
-• အပူပေးကာ ပိတ်ပေးခြင်း → ၁၀၀% ပြန်လည်ပိတ်နိုင်</p>
-<p><strong>အရေးကြီးသော မှတ်ချက်</strong><br>
-Cuticle အလွှာသည် ဆံပင်၏ ကျန်းမာရေးအတွက် အဓိကသော့ချက်ဖြစ်သည်။ အကြေးခွံများ စနစ်တကျပိတ်နေပါက ဆံသားအတွင်းရှိ အစိုဓာတ်နှင့် အာဟာရများ ထိန်းသိမ်းနိုင်ပြီး ပြောင်လက်တောက်ပစေပါသည်။</p>`, img: "img/i2.png" },  
+        { id: 2, title: "(၁) Cuticle အလွှာ၏ အလုပ်လုပ်ပုံ", content: `
+        <p><strong>(၁) Cuticle အလွှာ၏ အလုပ်လုပ်ပုံ</strong></p>
+        <p>Cuticle အလွှာဆိုတာ ဆံပင်တစ်ချောင်းရဲ့ ပထမဆုံး တွေ့ရတဲ့ အလွှာ ဖြစ်ပြီး ငါးအကြေးခွံလေးတွေလို အထပ်ထပ်နဲ့ အုပ်ထားကာ တံခါးတစ်ချပ်လို ဖွင့်ခြင်းနှင့် ပိတ်ခြင်း အလုပ်ကို အဓိက လုပ်ဆောင်လေ့ရှိပါတယ်။</p>
+        <p>၎င်းအကြေးခွံလေးတွေရဲ့ အရေအတွက်ဟာ ဆံလုံးအရည်အသွေးနဲ့ အရွယ်အစားပေါ်မှာ မူတည်ပြီး ကွာခြားနိုင်ပါတယ်။</p>
+        <p><strong>ဆံသားအမျိုးအစားအလိုက် Cuticle အလွှာအရေအတွက်</strong><br>
+        • ဆံလုံးအရည်အသွေးကြီးမားသော ဆံသား (ထူထဲသောဆံပင်) → အလွှာ (၁၈) လွှာအထိ ဖုံးအုပ်ထားနိုင်<br>
+        • ဆံလုံးဆိုဒ် အလိုက် → ၁၂၊ ၁၃၊ ၁၄၊ ၁၅ စသည်ဖြင့် ကွဲပြားနိုင်<br>
+        • ကလေးဆံပင်ကဲ့သို့ အရည်အသွေးနု၊ ဆံလုံးသေးငယ်သော ဆံသား → အလွှာ (၄) လွှာအထိသာ ပါဝင်နိုင်</p>
+        <p><strong>Cuticle အလွှာဖွင့်ခြင်းနှင့် ပိတ်ခြင်း</strong><br>
+        Cuticle အလွှာများ ၁၀၀% ပွင့်ရန်အတွက် ရေ (သို့မဟုတ်) Alkaline (အယ်ကာလိုင်းဓာတ်) ပါဝင်သော Shampoo အကြမ်းများဖြင့် ဖွင့်ပေးနိုင်ပါတယ်။ ကောက်ခြင်း၊ ဖြောင့်ခြင်း၊ ဆေးဆိုးခြင်း မပြုလုပ်မီ ခေါင်းအကြမ်းလျှော်ပေးရခြင်းနှင့် အပူ (Steam/Heat) ပေးရခြင်း၏ အဓိကအကြောင်းရင်းမှာ Cuticle အကြေးခွံလေးများ ပွပွင့်သွားစေရန်အတွက် ဖြစ်ပါတယ်။</p>
+        <p><strong>Cuticle အလွှာများ ပြန်လည်ကျုံ့ပိတ်စေရန် -</strong><br>
+        • pH အားဖြင့် အက်ဆစ်ဓာတ် (pH 3.5 - 4.5) ရှိသော Acidic Conditioner (သို့မဟုတ်) Treatment များ အသုံးပြုခြင်း → Cuticle အကြေးခွံများကို အမြန်ဆုံး ကျုံ့သွားစေပြီး ပိတ်နိုင်စွမ်းရှိသည်။<br>
+        • ရေအေးဖြင့် နောက်ဆုံးဆေးချပေးခြင်း → ဆံသားကို ကျုံ့စေပြီး Cuticle အကြေးခွံများ စနစ်တကျ ပြန်လည်ပိတ်သွားစေရန် အထောက်အကူပြုသည်။<br>
+        • <strong>အရေးကြီးသော သတိပေးချက်:</strong> အပူ (Heat/Steam) သည် Cuticle ကို ပွပွင့်စေပြီး၊ အအေး (Cold) နှင့် အက်ဆစ်ဓာတ် (Acid) ကသာ Cuticle ကို ကျုံ့ပိတ်စေပါသည်။</p>
+
+        <p><strong>✧ Cuticle အလွှာ ဖွင့်/ပိတ် သက်ရောက်မှု အနှစ်ချုပ်ဇယား</strong></p>
+        <table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.85rem;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 30%;">သက်ရောက်မှု (Factor)</th>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 30%;">Cuticle အပေါ် ဖြစ်စဉ်</th>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 40%;">ရည်ရွယ်ချက် / အကျိုးကျေးဇူး</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">Alkaline (အယ်ကာလိုင်း / pH မြင့်)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; color: #c0392b; font-weight: bold;">ပွင့်စေသည် (Opens)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px;">ကောက်၊ ဖြောင့်၊ ဆိုးဆေး ဓာတုဗေဒပစ္စည်းများ အလွယ်တကူ ဝင်ရောက်နိုင်ရန်။</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">အပူ (Heat / Steam)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; color: #c0392b; font-weight: bold;">ပွပွင့်စေသည် (Swells/Opens)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px;">ဆံသားအကြေးခွံများ ဟပေးပြီး ပေါင်းတင်ဆေးနှင့် ကုသမှုများ စိမ့်ဝင်မှု ပိုကောင်းရန်။</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">Acid (အက်ဆစ် / pH နိမ့်)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; color: #27ae60; font-weight: bold;">ကျုံ့ပိတ်စေသည် (Closes)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px;">ဆေးရည်နှင့် အရောင်များကို ဆံသားအတွင်း ခိုင်မြဲစေပြီး ပျက်စီးမှုမှ ကာကွယ်ရန်။</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">အအေး (Cold Water)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; color: #27ae60; font-weight: bold;">ပြန်ပိတ်စေသည် (Closes)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px;">နောက်ဆုံးရေဆေးချစဉ် ဆံသားချောမွေ့ပြီး တောက်ပပြောင်လက်လာစေရန်။</td>
+                </tr>
+            </tbody>
+        </table>
+    `, img: "img/i2.png" },
+    
     { id: 3, title: "(၂) Cortex အလွှာ၏ အလုပ်လုပ်ပုံနှင့် ဖွဲ့စည်းပုံ", content: `<p><strong>(၂) Cortex အလွှာ၏ အလုပ်လုပ်ပုံနှင့် ဖွဲ့စည်းပုံ</strong></p>
 <p>Cortex ဆိုတဲ့ ဒုတိယမြောက် အလွှာဟာ ဆေးဆိုးခြင်းမှာ အရေးကြီးဆုံး အလွှာဖြစ်ပါတယ်။ ၎င်းရဲ့ ပုံသဏ္ဍန်က (အခေါက်လို) ပုံစံမျိုး ရှိပြီး ဆံပင် သုံးလွှာထဲမှာ အများဆုံး နေရာယူထားလေ့ရှိပါတယ်။</p>
 <p>Cortex အလွှာဟာ ဆံသားတစ်ချောင်းလုံးရဲ့ ဒုတိယအလွှာဖြစ်ပြီး ဆံသားရဲ့ အလယ်ဗဟိုမှာ တည်ရှိပါတယ်။ (အမွှေးအမျှင်) ပုံစံမျိုးရှိပြီး ဆံပင်တစ်ချောင်းလုံးမှာ အကြီးဆုံးနှင့် အရေးအကြီးဆုံးသော အစိတ်အပိုင်းတစ်ခု ဖြစ်ပါတယ်။</p>
@@ -42,21 +77,50 @@ Cuticle အလွှာသည် ဆံပင်၏ ကျန်းမာရေ�
 ကာလာဆိုးဆေးများ၊ ပုံသွင်းခြင်း၊ ပေါင်းတင်ခြင်း၊ ကောက်ခြင်း၊ ဖြောင့်ခြင်း စသည့် ဓာတုဗေဒနည်းပညာများအားလုံးကို အောင်မြင်စေရန် Cortex အလွှာမှသာ လုပ်ဆောင်ပေးနိုင်ပါတယ်။</p>
 <p><strong>အရေးကြီးသော မှတ်ချက်</strong><br>
 ဆံပင်တစ်ချောင်းရဲ့ Cortex အလွှာ အားနည်းနေမယ်ဆိုရင် ဆံပင်၏ သန်စွမ်းမှု ပျက်စီးစေရုံတင်မကဘဲ ၎င်းအလွှာအတွင်းမှာရှိတဲ့ ဆေးရောင်များ၊ ကောက်သားများ၊ ဖြောင့်သားများကို အမြဲတမ်းတည်မြဲနေစေနိုင်မှာ မဟုတ်ပါ။</p>`, img: "img/i3.png" },
-    { id: 4, title: "(၃) Medulla အလွှာ၏ အလုပ်လုပ်ပုံနှင့် သဘောတရားများ", content: `<p><strong>(၃) Medulla အလွှာ၏ အလုပ်လုပ်ပုံနှင့် သဘောတရားများ</strong></p>
-<p>Medulla ဆိုတဲ့ တတိယအလွှာကတော့ အောက်ဆုံးအလွှာဖြစ်ပြီး အမာကြောဆုံးနှင့် အတောင့်တင်းဆုံး အလွှာ ဖြစ်ပါတယ်။ ဆံပင်တစ်ချောင်းရဲ့ ရုန်းကန်သတ္တိနဲ့ လိုအပ်တဲ့ အဆီအနှစ်တွေကို ထုတ်လုပ်ပေးတဲ့ အလွှာလည်း ဖြစ်ပါတယ်။</p>
-<p>တစ်ဆင့်တိုးဝင်လာတဲ့ Chemical နဲ့ အပူကို ထိတွေ့တဲ့အခါ ပျက်စီးမှုကို ဖြစ်ပေါ်စေနိုင်ပါတယ်။ ၎င်းရဲ့ ဖွဲ့စည်းပုံ ပုံသဏ္ဍန်ကတော့ သစ်ပင်တစ်ပင်ရဲ့ ပင်စည်အနှစ်နဲ့ သဏ္ဍန်တူပါတယ်။ ၎င်းအလွှာရဲ့ အဓိက အလုပ်လုပ်ပုံက ပျော့ပျောင်းခြင်း၊ မာကြောခြင်းကို ပြသလုပ်ဆောင်လေ့ရှိပါတယ်။</p>
-<p><strong>Medulla အလွှာ၏ ဝိသေသလက္ခဏာများ</strong><br>
-<strong>တည်ရှိမှု:</strong> ဆံပင်၏ အလယ်ဗဟိုတွင် တည်ရှိသော်လည်း ဆံပင်တိုင်းတွင် ဤအလွှာ ပါဝင်ချင်မှ ပါဝင်ပါသည်။<br>
-<strong>ဆံသားအမျိုးအစားပေါ် မူတည်ခြင်း:</strong><br>
-• ဆံသား အလွန်ထူသောသူများတွင် Medulla အလွှာကို တွေ့ရှိရတတ်သည်။<br>
-• ဆံသား အလတ်စားရှိသူများတွင် အဆက်မပြတ် (သို့မဟုတ်) တစ်ခါတစ်ရံမှသာ တွေ့ရတတ်သည်။<br>
-• ဆံသား အလွန်ပါးသောသူများနှင့် ကလေးငယ်များ၏ ဆံပင်တွင် Medulla အလွှာ လုံးဝ (လုံးဝ) မပါရှိပါ။<br>
-<strong>လုပ်ဆောင်ချက်:</strong> ဤအလွှာသည် ဆံသား၏ ပုံသဏ္ဍာန်နှင့် ခိုင်မာမှုအတွက် အထောက်အကူပေးသော်လည်း ဓာတုဗေဒလုပ်ငန်းစဉ်များ (ဖြောင့်၊ ကောက်၊ ဆိုး) တွင် တိုက်ရိုက်သက်ရောက်မှု အားနည်းပါသည်။</p>
-<p><strong>ဓာတုဗေဒဆိုင်ရာ ဆက်စပ်မှု</strong><br>
-Chemical (ဓာတုဗေဒဆေးများ) နှင့် လုပ်ဆောင်ရာတွင် Medulla အလွှာသည် အခြားအလွှာများကဲ့သို့ သိသာထင်ရှားသော အပြောင်းအလဲများ မရှိသော်လည်း၊ ဆံပင်၏ ပုံသဏ္ဍာန်ခိုင်မာစေရန် အစိတ်အပိုင်းတစ်ခုအနေဖြင့် ပါဝင်ပတ်သက်နေပါသည်။</p>
-<p>၎င်းအလွှာသည် ဆံပင်အရှည် ကြီးထွားနှုန်းနှင့် ဆံသား၏ ထုထည်ကို အဓိက သတ်မှတ်ပေးသော နေရာလည်း ဖြစ်ပါသည်။</p>
-<p><strong>အရေးကြီးသော မှတ်ချက်</strong><br>
-Medulla အလွှာသည် ဆံသားအမျိုးအစားပေါ် မူတည်၍ ပါဝင်မှု ကွဲပြားနိုင်သောကြောင့်၊ ဆံသားပါးသောသူများအတွက် ဓာတုဗေဒလုပ်ငန်းစဉ်များ ပြုလုပ်ရာတွင် ပိုမိုဂရုစိုက်ရန် လိုအပ်ပါသည်။</p>`, img: "img/i4.jpeg" },  
+        { id: 4, title: "(၃) Medulla အလွှာ၏ အလုပ်လုပ်ပုံနှင့် သဘောတရားများ", content: `
+        <p><strong>(၃) Medulla အလွှာ၏ အလုပ်လုပ်ပုံနှင့် သဘောတရားများ</strong></p>
+        <p>Medulla ဆိုတဲ့ တတိယအလွှာကတော့ အောက်ဆုံးအလွှာဖြစ်ပြီး အမာကြောဆုံးနှင့် အတောင့်တင်းဆုံး အလွှာ ဖြစ်ပါတယ်။ ဆံပင်တစ်ချောင်းရဲ့ ရုန်းကန်သတ္တိနဲ့ လိုအပ်တဲ့ အဆီအနှစ်တွေကို ထုတ်လုပ်ပေးတဲ့ အလွှာလည်း ဖြစ်ပါတယ်။</p>
+        <p>တစ်ဆင့်တိုးဝင်လာတဲ့ Chemical နဲ့ အပူကို ထိတွေ့တဲ့အခါ ပျက်စီးမှုကို ဖြစ်ပေါ်စေနိုင်ပါတယ်။ ၎င်းရဲ့ ဖွဲ့စည်းပုံ ပုံသဏ္ဍန်ကတော့ သစ်ပင်တစ်ပင်ရဲ့ ပင်စည်အနှစ်နဲ့ သဏ္ဍန်တူပါတယ်။ ၎င်းအလွှာရဲ့ အဓိက အလုပ်လုပ်ပုံက ပျော့ပျောင်းခြင်း၊ မာကြောခြင်းကို ပြသလုပ်ဆောင်လေ့ရှိပါတယ်။</p>
+        <p><strong>Medulla အလွှာ၏ ဝိသေသလက္ခဏာများ</strong><br>
+        <strong>တည်ရှိမှု:</strong> ဆံပင်၏ အလယ်ဗဟိုတွင် တည်ရှိသော်လည်း ဆံပင်တိုင်းတွင် ဤအလွှာ ပါဝင်ချင်မှ ပါဝင်ပါသည်။<br>
+        <strong>ဆံသားအမျိုးအစားပေါ် မူတည်ခြင်း:</strong><br>
+        • ဆံသား အလွန်ထူသောသူများတွင် Medulla အလွှာကို တွေ့ရှိရတတ်သည်။<br>
+        • ဆံသား အလတ်စားရှိသူများတွင် အဆက်မပြတ် (သို့မဟုတ်) တစ်ခါတစ်ရံမှသာ တွေ့ရတတ်သည်။<br>
+        • ဆံသား အလွန်ပါးသောသူများနှင့် ကလေးငယ်များ၏ ဆံပင်တွင် Medulla အလွှာ လုံးဝ (လုံးဝ) မပါရှိပါ။<br>
+        <strong>လုပ်ဆောင်ချက်:</strong> ဤအလွှာသည် ဆံသား၏ ပုံသဏ္ဍာန်နှင့် ကြံ့ခိုင်မှုကို အနည်းငယ် အထောက်အကူပြုသော်လည်း ဓာတုဗေဒလုပ်ငန်းစဉ်များ (ဖြောင့်၊ ကောက်၊ ဆိုး) တွင် တိုက်ရိုက်သက်ရောက်မှု အားနည်းပါသည်။ ဆံပင်ကြီးထွားနှုန်း (Growth Rate) နှင့် ဆံသားသိပ်သည်းထုထည် (Density/Volume) တို့သည် ဦးရေပြားအောက်ရှိ ဆံပင်မြစ်ပွားဆဲလ် **Hair Follicle (Dermal Papilla)** အပေါ်တွင်သာ လုံးဝမူတည်ပြီး Medulla နှင့် သက်ဆိုင်မှု မရှိပါ။</p>
+        <p><strong>ဓာတုဗေဒဆိုင်ရာ ဆက်စပ်မှု</strong><br>
+        Chemical (ဓာတုဗေဒဆေးများ) နှင့် လုပ်ဆောင်ရာတွင် Medulla အလွှာသည် အခြားအလွှာများကဲ့သို့ သိသာထင်ရှားသော အပြောင်းအလဲများ မရှိသော်လည်း၊ ဆံပင်၏ ပုံသဏ္ဍာန်ခိုင်မာစေရန် အစိတ်အပိုင်းတစ်ခုအနေဖြင့် ပါဝင်ပတ်သက်နေပါသည်။</p>
+
+        <p><strong>✧ ဆံသားအမျိုးအစားအလိုက် Medulla နှင့် ကြီးထွားမှု နှိုင်းယှဉ်ချက်ဇယား</strong></p>
+        <table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.85rem;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 30%;">ဆံသားအမျိုးအစား</th>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 30%;">Medulla ပါဝင်မှုနှုန်း</th>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 40%;">ကြီးထွားမှုနှင့် ထုထည် ထိန်းချုပ်ရာနေရာ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">ဆံသားထူသူများ (Coarse Hair)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; text-align: center; color: #2980b9; font-weight: bold;">၁၀၀% အပြည့်အဝ ပါဝင်သည်</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px;" rowspan="3">
+                        • <strong>Hair Follicle (ဆံပင်မြစ်အိမ်)</strong> မှသာ ဆံပင်ရှည်နှုန်းကို သတ်မှတ်သည်။<br>
+                        • ဓာတုလုပ်ငန်းစဉ်များတွင် Medulla သည် တိုက်ရိုက်ပါဝင်မှု မရှိပါ။
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">ဆံသားအလတ်စား (Medium Hair)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; text-align: center; color: #e67e22;">တစ်ခါတစ်ရံ သို့မဟုတ် ပြတ်တောင်းပြတ်တောင်း ပါဝင်သည်</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">ဆံသားပါးသူများ / ကလေးများ (Fine Hair)</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; text-align: center; color: #c0392b; font-weight: bold;">လုံးဝ (လုံးဝ) မပါဝင်ပါ</td>
+                </tr>
+            </tbody>
+        </table>
+    `, img: "img/i4.jpeg" },
+    
     { id: 5, title: "အခြေခံ ကာလာများအကြောင်း (Primary Color)", content: `<p><strong>အခြေခံ ကာလာများအကြောင်း (Primary Color)</strong></p>
 <p>ကာလာတွေထဲမှာ မူလအခြေခံအရောင် (၃) ရောင်သာ ရှိပါတယ်။ ထိုအရောင်တွေကတော့ <strong>အနီ (Red)၊ အဝါ (Yellow)၊ အပြာ (Blue)</strong> ရောင်တွေ ဖြစ်ကြပါတယ်။</p>
 <p>ကမ္ဘာပေါ်မှာ အရောင်ပေါင်း ၁.၆ ဘီလီယံ (1.6 Billion) အထိ ရှိပြီး ၎င်းအရောင်တွေအားလုံးဟာ အခြေခံအရောင် (၃) ရောင်ထဲကပဲ ဆင့်ပွားခွဲထွက်သွားကြခြင်း ဖြစ်ပါတယ်။</p>
@@ -973,66 +1037,79 @@ Medulla အလွှာသည် ဆံသားအမျိုးအစား�
 </table>
 
 <p><strong>မှတ်ချက် -</strong> အဖြူဖုံးဆိုးခြင်းသည် အတွေ့အကြုံများစွာ လိုအပ်သော လုပ်ငန်းစဉ်ဖြစ်ပြီး ဧည့်သည်များအား ရလဒ်အတိအကျကို ကြိုတင်ရှင်းပြရန် အရေးကြီးပါသည်။</p>`, img: "img/i30.png" },
-    { id: 31, title: "ဦးရေ အရင်းတောက် ပြန်မှိန်ခြင်း (Hot Roots Correction)", content: `<p><strong>ဦးရေ အရင်းတောက် ပြန်မှိန်ခြင်း (Hot Roots Correction)</strong></p>
-<p>ချုပ်ဆေးမြင့်တွေသုံးပြီး One-Color ဆိုးတဲ့အခါ ဖြစ်တတ်လေ့ရှိပါတယ်။ အကြောင်းအမျိုးမျိုးကြောင့် ဦးရေ ကွက်ပြီး ဆံပင် အရင်းတွေက လိုအပ်တာထက် ပိုလင်းသွားရင် ပြန်မှိန်နည်း သုံးမျိုးရှိပါတယ်။</p>
+        { id: 31, title: "ဦးရေ အရင်းတောက် ပြန်မှိန်ခြင်း (Hot Roots Correction)", content: `
+        <p><strong>ဦးရေ အရင်းတောက် ပြန်မှိန်ခြင်း (Hot Roots Correction)</strong></p>
+        <p>ချုပ်ဆေးမြင့်တွေသုံးပြီး One-Color ဆိုးတဲ့အခါ ဖြစ်တတ်လေ့ရှိပါတယ်။ အကြောင်းအမျိုးမျိုးကြောင့် ဦးရေ ကွက်ပြီး ဆံပင် အရင်းတွေက လိုအပ်တာထက် ပိုလင်းသွားရင် ပြန်မှိန်နည်း သုံးမျိုးရှိပါတယ်။</p>
+        <p><strong>၁။ (0) အလင်း Cream သီးသန့်ဖြင့် မှိန်ခြင်း</strong></p>
+        <p>4.0 ၊ 5.0 ၊ 6.0 စတဲ့ ကာလာမပါတဲ့ အလင်း Cream သီးသန့်နဲ့ အရင် တောက်နေ၊ ကွက်နေတဲ့ နေရာတွေကို ဆိုးပေးခြင်းဖြင့် ပြန်မှိန်ခြင်းပါ။ လက်မြန်မှ အဆင်ပြေပါမည်။</p>
+        <p><strong>အားသာချက်:</strong> တစ်ခေါင်းလုံး Level ပြန်မှိန်တဲ့အခါတွေမှာ အားသာချက်ရှိပါတယ်။<br>
+        <strong>အားနည်းချက်:</strong> ကာလာကို မှောင်တဲ့ဘက်ကို လိုအပ်တာထက်ပို ရောက်သွားနိုင်ပါသည်။</p>
+        <img src="img/i31_2.png" class="page-image" alt="blue color characteristics" style="margin: 12px 0; border-radius: 12px;" onerror="this.src='[https://picsum.photos/id/180/800/500](https://picsum.photos/id/180/800/500)'">
+        <p><strong>၂။ Level နှစ်ဆင့်နှိမ့် ဆိုးပေးခြင်း</strong></p>
+        <p>ဆိုးလိုက်တဲ့ Main Color ထက် အလင်း Level နှစ်ဆင့်နှိမ့်တဲ့ အမျိုးတူ Color ကို တောက်နေ၊ လင်းနေတဲ့ နေရာတွေကို ဆိုးပေးရခြင်းပါ။ လွယ်ကူပြီး Safe အဖြစ်ဆုံး ဆိုးနည်းလေးပါ။</p>
+        <p><strong>ဥပမာ -</strong> 8/43 ဆိုးတဲ့ ကာလာက လိုအပ်တာထက် ပိုလင်းသွားတဲ့ အရင်းနေရာတွေကို သူ့ထက် နှစ်ဆင့်နှိမ့်တဲ့ အမျိုးအစားတူ ကာလာဖြစ်တဲ့ <strong>6/43</strong> ကို ဆိုးပေးခြင်းပါ။</p>
+        <img src="img/i31_3.png" class="page-image" alt="blue color characteristics" style="margin: 12px 0; border-radius: 12px;" onerror="this.src='[https://picsum.photos/id/180/800/500](https://picsum.photos/id/180/800/500)'">
+        <p><strong>၃။ ထိပ်တိုက်ကာလာဖြင့် ပြန်မှိန်ခြင်း (Complementary Color Method)</strong></p>
+        <p>ဆိုလိုက်တဲ့ ကာလာဆေးလက်ကျန်ခွက်ထဲသို့ ဆိုထားတဲ့ကာလာရဲ့ ထိပ်တိုက်ကာလာ (ဆန့်ကျင်ဘက်အရောင်) ကို (5g သို့မဟုတ် 10g) ထည့်ပြီး ပြန်မှိန်ပေးရခြင်းပါ။</p>
+        <div style="background: #f5f0eb; padding: 15px; border-radius: 8px; margin: 16px 0;">
+            <p><strong>ဥပမာ - 7/33 (အဝါရောင်) ဆိုးထားပါက</strong></p>
+            <p>အရင်းတွေ လိုအပ်တာထက် ပိုတောက်နေရင် ဆေးလက်ကျန်ခွက်ထဲသို့ <strong>7/66 သို့မဟုတ် 0/66 (ခရမ်းရောင်)</strong> ကို (5g) သို့မဟုတ် (10g) ထည့်ပေးလိုက်ခြင်းဖြင့် တောက်နေတဲ့ဆံသားအရင်းပိုင်းတွေကို ဆိုးပေးပါက အရောင်ပြန်မှိန်သွားစေပါတယ်။</p>
+        </div>
+        <div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin: 16px 0;">
+            <p><strong>ပြင်းအားအလိုက် ထည့်သွင်းပမာဏ သတ်မှတ်ခြင်း</strong></p>
+            <p>• <strong>ခရမ်းရောင် (Violet)</strong> သည် Main Color ဖြစ်တဲ့ အဝါရောင်ထက် ပြင်းအားများသောအရောင်ဖြစ်တဲ့အတွက် ရောစပ်ဆကို <strong>(10g) မထည့်ပဲ (5g) လောက်သာ</strong> ထည့်ပေးရမယ်လို့ မှတ်ယူနိုင်ပါတယ်။</p>
+            <p>• အကယ်၍ Main Color က သတ်မည့်ကာလာထက် အရောင်ပြင်းအားများနေခဲ့ရင် ထိပ်တိုက်ကာလာကို <strong>(10g) လောက်</strong> ထည့်ပေးရမည်။</p>
+        </div>
+        <p><strong>No Yellow ပြုလုပ်နည်း (အဝါရောင်ဖျောက်နည်း) - ဘေးကင်းသောနည်းလမ်း</strong><br>
+        • <strong>0/66 (ခရမ်းရောင်) အနည်းငယ် + 1.9% (သို့) 3% (10 Vol) Developer အပျော့စား + Shampoo</strong> ရောစပ်၍ ဆေးကြောပေးခြင်း။<br>
+        • <strong>သတိပေးချက်:</strong> ဦးရေပြားလောင်ကျွမ်းခြင်းနှင့် ဆံပင်အရင်းများ ကွက်ပွင့်ထွက်ခြင်း (Base Break) မဖြစ်စေရန်အတွက် Toner Wash ပြုလုပ်ရာတွင် 9% (30 Vol) ကဲ့သို့ ပြင်းအားမြင့်ချုပ်ဆေးများကို လုံးဝ (လုံးဝ) မသုံးရပါ။</p>
 
-<p><strong>၁။ (0) အလင်း Cream သီးသန့်ဖြင့် မှိန်ခြင်း</strong></p>
-<p>4.0 ၊ 5.0 ၊ 6.0 စတဲ့ ကာလာမပါတဲ့ အလင်း Cream သီးသန့်နဲ့ အရင် တောက်နေ၊ ကွက်နေတဲ့ နေရာတွေကို ဆိုးပေးခြင်းဖြင့် ပြန်မှိန်ခြင်းပါ။ လက်မြန်မှ အဆင်ပြေပါမည်။</p>
-<p><strong>အားသာချက်:</strong> တစ်ခေါင်းလုံး Level ပြန်မှိန်တဲ့အခါတွေမှာ အားသာချက်ရှိပါတယ်။<br>
-<strong>အားနည်းချက်:</strong> ကာလာကို မှောင်တဲ့ဘက်ကို လိုအပ်တာထက်ပို ရောက်သွားနိုင်ပါသည်။</p>
-<img src="img/i31_2.png" class="page-image" alt="blue color characteristics" style="margin: 12px 0; border-radius: 12px;" onerror="this.src='https://picsum.photos/id/180/800/500'">
-
-<p><strong>၂။ Level နှစ်ဆင့်နှိမ့် ဆိုးပေးခြင်း</strong></p>
-<p>ဆိုးလိုက်တဲ့ Main Color ထက် အလင်း Level နှစ်ဆင့်နှိမ့်တဲ့ အမျိုးတူ Color ကို တောက်နေ၊ လင်းနေတဲ့ နေရာတွေကို ဆိုးပေးရခြင်းပါ။ လွယ်ကူပြီး Safe အဖြစ်ဆုံး ဆိုးနည်းလေးပါ။</p>
-<p><strong>ဥပမာ -</strong> 8/43 ဆိုးတဲ့ ကာလာက လိုအပ်တာထက် ပိုလင်းသွားတဲ့ အရင်းနေရာတွေကို သူ့ထက် နှစ်ဆင့်နှိမ့်တဲ့ အမျိုးအစားတူ ကာလာဖြစ်တဲ့ <strong>6/43</strong> ကို ဆိုးပေးခြင်းပါ။</p>
-<img src="img/i31_3.png" class="page-image" alt="blue color characteristics" style="margin: 12px 0; border-radius: 12px;" onerror="this.src='https://picsum.photos/id/180/800/500'">
-
-<p><strong>၃။ ထိပ်တိုက်ကာလာဖြင့် ပြန်မှိန်ခြင်း (Complementary Color Method)</strong></p>
-<p>ဆိုလိုက်တဲ့ ကာလာဆေးလက်ကျန်ခွက်ထဲသို့ ဆိုထားတဲ့ကာလာရဲ့ ထိပ်တိုက်ကာလာ (ဆန့်ကျင်ဘက်အရောင်) ကို (5g သို့မဟုတ် 10g) ထည့်ပြီး ပြန်မှိန်ပေးရခြင်းပါ။</p>
-
-<div style="background: #f5f0eb; padding: 15px; border-radius: 8px; margin: 16px 0;">
-    <p><strong>ဥပမာ - 7/33 (အဝါရောင်) ဆိုးထားပါက</strong></p>
-    <p>အရင်းတွေ လိုအပ်တာထက် ပိုတောက်နေရင် ဆေးလက်ကျန်ခွက်ထဲသို့ <strong>7/66 သို့မဟုတ် 0/66 (ခရမ်းရောင်)</strong> ကို (5g) သို့မဟုတ် (10g) ထည့်ပေးလိုက်ခြင်းဖြင့် တောက်နေတဲ့ဆံသားအရင်းပိုင်းတွေကို ဆိုးပေးပါက အရောင်ပြန်မှိန်သွားစေပါတယ်။</p>
-</div>
-
-<div style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin: 16px 0;">
-    <p><strong>ပြင်းအားအလိုက် ထည့်သွင်းပမာဏ သတ်မှတ်ခြင်း</strong></p>
-    <p>• <strong>ခရမ်းရောင် (Violet)</strong> သည် Main Color ဖြစ်တဲ့ အဝါရောင်ထက် ပြင်းအားများသောအရောင်ဖြစ်တဲ့အတွက် ရောစပ်ဆကို <strong>(10g) မထည့်ပဲ (5g) လောက်သာ</strong> ထည့်ပေးရမယ်လို့ မှတ်ယူနိုင်ပါတယ်။</p>
-    <p>• အကယ်၍ Main Color က သတ်မည့်ကာလာထက် အရောင်ပြင်းအားများနေခဲ့ရင် ထိပ်တိုက်ကာလာကို <strong>(10g) လောက်</strong> ထည့်ပေးရမည်။</p>
-</div>
-
-<p><strong>No Yellow ပြုလုပ်နည်း (အဝါရောင်ဖျောက်နည်း)</strong><br>
-• <strong>0.66 (ခရမ်းရောင်) + 9% Shampoo</strong> ဖြင့် ရောစပ်၍ ဆေးကြောပေးခြင်း<br>
-• သို့မဟုတ် <strong>ခရမ်းရောင် + 9% Shampoo</strong> ဖြင့် ဆေးကြောပေးခြင်း</p>
-
-<table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;">
-    <thead>
-        <tr><th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">နည်းလမ်း</th>
-         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">အသုံးပြုပုံ</th>
-         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">ထည့်သွင်းပမာဏ</th>
-         <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center;">မှတ်ချက်</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">အလင်း Cream သီးသန့်</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">4.0 / 5.0 / 6.0</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">1:1</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">တစ်ခေါင်းလုံးပြန်မှိန်ရန်</td>
-        </tr>
-        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">Level နှစ်ဆင့်နှိမ့်ဆိုး</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">Main Color ထက် 2 Level နိမ့်သောအရောင်</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">1:1</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">Safe အဖြစ်ဆုံး</td>
-        </tr>
-        <tr><td style="border: 1px solid #d4c5b0; padding: 8px;">ထိပ်တိုက်ကာလာ</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">ဆန့်ကျင်ဘက်အရောင်ထည့်ခြင်း</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">5g-10g</td>
-         <td style="border: 1px solid #d4c5b0; padding: 8px;">ပြင်းအားလိုက် ချိန်ညှိရန်</td>
-        </tr>
-    </tbody>
-</table>
-
-<p><strong>မှတ်ချက် -</strong> ပြန်မှိန်ဆေးဆိုးသည့်အခါ ချုပ်ဆေး 3% (10 VOL) သို့မဟုတ် 6% (20 VOL) ကိုသာ အသုံးပြုပါ။ ဆေးထားချိန် (၁၀-၁၅) မိနစ်ခန့်သာ ထားပါ။</p>`, img: "img/i31_1.png" },
+        <p><strong>✧ အရင်းတောက် (Hot Roots) ဖြေရှင်းနည်းစနစ်များ အနှစ်ချုပ်ဇယား</strong></p>
+        <table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 0.85rem;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 25%;">မှိန်နည်းစနစ်</th>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 35%;">အလုပ်လုပ်ပုံ / ရောစပ်နည်း</th>
+                    <th style="border: 1px solid #d4c5b0; padding: 8px; background: #f0e7dc; text-align: center; width: 40%;">အားသာချက် / အားနည်းချက်</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">(0) အလင်း Cream သီးသန့်</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px;">4.0, 5.0, 6.0 စသည့် ကာလာမပါသော သဘာဝအရောင်တင်ဆေးဖြင့်ဆိုးခြင်း။</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-size: 0.8rem;">
+                        <span style="color:#27ae60; font-weight:bold;">• အားသာချက်:</span> တစ်ခေါင်းလုံး အဆင့်ညီပြန်မှိန်ရန် သင့်တော်သည်။<br>
+                        <span style="color:#c0392b; font-weight:bold;">• အားနည်းချက်:</span> အရောင်မှောင်ဘက်သို့ လိုအပ်ထက် ပိုရောက်သွားနိုင်သည်။
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">Level နှစ်ဆင့်နှိမ့်ဆိုးခြင်း</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px;">Main Color ထက် အလင်း Level ၂ ဆင့်နှိမ့်သော အမျိုးတူအရောင်ဖြင့်ဆိုးခြင်း (ဥပမာ- 8/43 အတွက် 6/43 သုံးခြင်း)။</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-size: 0.8rem;">
+                        <span style="color:#27ae60; font-weight:bold;">• အားသာချက်:</span> အလွယ်ကူဆုံးနှင့် အလုံခြုံဆုံး နည်းစနစ်ဖြစ်သည်။<br>
+                        <span style="color:#c0392b; font-weight:bold;">• အားနည်းချက်:</span> အမျိုးတူဆေးရည် ရှိနေရန် လိုအပ်သည်။
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold;">ထိပ်တိုက်ကာလာစနစ်</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px;">ဆေးလက်ကျန်ခွက်ထဲသို့ ဆန့်ကျင်ဘက်အရောင် (Complementary Color) 5g သို့မဟုတ် 10g ထည့်စပ်ခြင်း။</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-size: 0.8rem;">
+                        <span style="color:#27ae60; font-weight:bold;">• အားသာချက်:</span> အရင်းတောက်ခြင်းကို အမြန်ဆုံး သတ်ပေးနိုင်သည်။<br>
+                        <span style="color:#c0392b; font-weight:bold;">• အားနည်းချက်:</span> အရောင်ပြင်းအား တွက်ချက်မှု တိကျရန် လိုအပ်သည်။
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; font-weight: bold; background: #fdf2e9;">Safe Toner Wash</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; background: #fdf2e9;">0/66 (ခရမ်းရောင်) + 1.9% / 3% Developer အပျော့စား + Shampoo ရောစပ်ဆေးကြောခြင်း။</td>
+                    <td style="border: 1px solid #d4c5b0; padding: 8px; background: #fdf2e9; font-size: 0.8rem;">
+                        <span style="color:#27ae60; font-weight:bold;">• အားသာချက်:</span> ဦးရေပြားမလောင်ဘဲ အဝါရောင်ကို သဘာဝကျကျ အမြန်ဖျောက်ပေးနိုင်သည်။<br>
+                        <span style="color:#c0392b; font-weight:bold;">• သတိပေးချက်:</span> 9% ပြင်းအားမြင့် ချုပ်ဆေးများကို လုံးဝ (လုံးဝ) မသုံးရပါ။
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    `, img: "img/i31_1.png" },
+    
     { id: 32, title: "Bleach-Powder ချွတ်ဆေးမှုန့် အလုပ်လုပ်ပုံ", content: `<p><strong>Bleach-Powder ချွတ်ဆေးမှုန့် အလုပ်လုပ်ပုံ</strong></p>
 <p>Bleach-Powder ကို <strong>အမိုးနီးယား (Ammonia)</strong> များစွာဖြင့် အဓိက ပေါင်းစပ်ထုတ်လုပ်ထားပါတယ်။ ဆေး Brand နဲ့ Company တွေ တစ်ခုနဲ့တစ်ခု မတူညီတဲ့ ပေါ်မူတည်ပြီး အမိုးနီးယားပါဝင်မှုမှာလည်း အနည်းအများ ကွာလေ့ရှိပါတယ်။</p>
 
