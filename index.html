@@ -36,6 +36,7 @@
             justify-content: center;
             z-index: 99999;
             padding: 20px;
+            cursor: pointer;
         }
 
         /* ===== IMAGE (50% size) ===== */
@@ -50,8 +51,8 @@
             display: block;
             filter: contrast(1.1) brightness(0.9);
             animation: glitch-img 0.3s infinite alternate;
+            pointer-events: none;
         }
-
         @keyframes glitch-img {
             0% { transform: skew(0deg); opacity: 1; }
             25% { transform: skew(1deg); opacity: 0.9; }
@@ -68,8 +69,8 @@
             margin-bottom: 10px;
             letter-spacing: 4px;
             animation: blink 1s infinite;
+            pointer-events: none;
         }
-
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.2; }
@@ -91,39 +92,23 @@
             text-align: left;
             box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
             font-family: 'Courier New', monospace;
+            pointer-events: none;
         }
         #terminal .line {
             opacity: 0;
             animation: fadeIn 0.2s forwards;
             margin-bottom: 2px;
         }
-        #terminal .line.error {
-            color: #ff4444;
-        }
-        #terminal .line.success {
-            color: #44ff44;
-        }
-        #terminal .line.warning {
-            color: #ffaa00;
-        }
+        #terminal .line.error { color: #ff4444; }
+        #terminal .line.success { color: #44ff44; }
+        #terminal .line.warning { color: #ffaa00; }
+        @keyframes fadeIn { to { opacity: 1; } }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+        #terminal::-webkit-scrollbar { width: 4px; }
+        #terminal::-webkit-scrollbar-track { background: #000; }
+        #terminal::-webkit-scrollbar-thumb { background: #00ff41; border-radius: 4px; }
 
-        /* ===== SCROLLBAR STYLING ===== */
-        #terminal::-webkit-scrollbar {
-            width: 4px;
-        }
-        #terminal::-webkit-scrollbar-track {
-            background: #000;
-        }
-        #terminal::-webkit-scrollbar-thumb {
-            background: #00ff41;
-            border-radius: 4px;
-        }
-
-        /* ===== RESTORE BUTTON ===== */
+        /* ===== RESTORE BUTTON (Now just a music trigger) ===== */
         .restore-btn {
             margin-top: 15px;
             padding: 12px 35px;
@@ -139,17 +124,27 @@
             letter-spacing: 2px;
             font-family: 'Courier New', monospace;
             box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            position: relative;
+            z-index: 10;
         }
         .restore-btn:hover {
             background: #00ff41;
             color: #000;
             box-shadow: 0 0 40px #00ff41;
         }
-        .restore-btn:active {
-            transform: scale(0.95);
+        .restore-btn:active { transform: scale(0.95); }
+
+        /* ===== CLICK HINT ===== */
+        .click-hint {
+            color: #00ff41;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            opacity: 0.5;
+            margin-top: 10px;
+            animation: blink 2s infinite;
+            pointer-events: none;
         }
 
-        /* ===== SCANLINE EFFECT ===== */
+        /* ===== SCANLINE & FLICKER EFFECTS ===== */
         .scanlines {
             position: fixed;
             top: 0;
@@ -157,27 +152,21 @@
             width: 100%;
             height: 100%;
             background: repeating-linear-gradient(0deg,
-                rgba(0, 0, 0, 0) 0px,
-                rgba(0, 0, 0, 0) 2px,
-                rgba(0, 0, 0, 0.15) 2px,
-                rgba(0, 0, 0, 0.15) 4px);
+                rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
+                rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
             pointer-events: none;
             z-index: 100000;
             animation: scanlines 0.1s infinite linear;
         }
-        @keyframes scanlines {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(4px); }
-        }
+        @keyframes scanlines { 0% { transform: translateY(0); } 100% { transform: translateY(4px); } }
 
-        /* ===== FLICKER ===== */
         .flicker {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0,0,0,0.9);
             pointer-events: none;
             z-index: 100001;
             animation: flicker 0.15s infinite;
@@ -196,35 +185,57 @@
 </head>
 <body>
 
-    <!-- ===== PRANK OVERLAY ===== -->
+    <!-- ===== PRANK OVERLAY (Click anywhere to play music) ===== -->
     <div class="prank-container" id="prankOverlay">
-        
-        <!-- Scanlines & Flicker Effects -->
         <div class="scanlines"></div>
         <div class="flicker"></div>
 
-        <!-- Image (50% size) -->
         <img src="123.jpeg" alt="Hacker Image" class="prank-image">
-
-        <!-- Hacker Title -->
         <div class="hacker-title">⚠️ SYSTEM COMPROMISED ⚠️</div>
-
-        <!-- Terminal Command Lines -->
         <div id="terminal"></div>
 
-        <!-- Restore Button -->
-        <button class="restore-btn" id="restoreBtn">🔓 RESTORE SYSTEM</button>
+        <!-- Music Play Button (Does NOT reload page) -->
+        <button class="restore-btn" id="playBtn">RELOAD PAGE</button>
+        <div class="click-hint">🖱️ Click anywhere or press the button to start music</div>
     </div>
 
     <!-- ===== AUTO-PLAY MUSIC ===== -->
-    <audio id="bg-music" autoplay loop>
+    <audio id="bg-music" loop>
         <source src="music.mp3" type="audio/mpeg">
         Your browser does not support audio.
     </audio>
 
     <script>
         // ================================================================
-        // 1. TERMINAL COMMAND LINES (Hacker Lines)
+        // 1. MUSIC PLAY ON ANY CLICK (screen + button)
+        // ================================================================
+        let musicStarted = false;
+        const audio = document.getElementById('bg-music');
+
+        function playMusic() {
+            if (!musicStarted) {
+                audio.play().then(() => {
+                    musicStarted = true;
+                    console.log('🎵 Music started!');
+                    // Optionally change button text
+                    document.getElementById('playBtn').textContent = '🔊 MUSIC PLAYING';
+                }).catch(err => {
+                    console.log('⚠️ Autoplay blocked, retry on next click.');
+                });
+            }
+        }
+
+        // Click anywhere on screen
+        document.addEventListener('click', playMusic);
+
+        // Click on the button specifically (stops event from bubbling? No need, but we can add)
+        document.getElementById('playBtn').addEventListener('click', function(e) {
+            e.stopPropagation(); // prevent double trigger (but it's fine)
+            playMusic();
+        });
+
+        // ================================================================
+        // 2. TERMINAL COMMAND LINES
         // ================================================================
         (function terminalCommands() {
             const terminal = document.getElementById('terminal');
@@ -246,9 +257,7 @@
             let index = 0;
 
             function addLine() {
-                if (index >= commands.length) {
-                    index = 0; // loop back
-                }
+                if (index >= commands.length) index = 0;
                 const cmd = commands[index];
                 const line = document.createElement('div');
                 line.className = 'line' + (cmd.type ? ' ' + cmd.type : '');
@@ -256,47 +265,18 @@
                 terminal.appendChild(line);
                 terminal.scrollTop = terminal.scrollHeight;
                 index++;
-
                 const delay = Math.random() * 1200 + 400;
                 setTimeout(addLine, delay);
             }
-
-            // Start after 1.5 seconds
             setTimeout(addLine, 1500);
         })();
 
         // ================================================================
-        // 2. RESTORE BUTTON
-        // ================================================================
-        document.getElementById('restoreBtn').addEventListener('click', function() {
-            // Stop music
-            const audio = document.getElementById('bg-music');
-            if (audio) {
-                audio.pause();
-                audio.currentTime = 0;
-            }
-            // Reload to original page (index.html)
-            window.location.href = 'index.html';
-        });
-
-        // ================================================================
-        // 3. AUTO-PLAY MUSIC (bypass browser block on first click)
-        // ================================================================
-        document.addEventListener('click', function firstClick() {
-            const audio = document.getElementById('bg-music');
-            if (audio && audio.paused) {
-                audio.play().catch(() => {});
-            }
-            document.removeEventListener('click', firstClick);
-        }, { once: true });
-
-        // ================================================================
-        // 4. PREVENT RIGHT-CLICK (for fun)
+        // 3. PREVENT RIGHT-CLICK (for fun)
         // ================================================================
         document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-        console.log('🔥 Hacker Prank Activated! Click "RESTORE SYSTEM" to exit.');
+        console.log('🔥 Hacker Prank Activated! Click ANYWHERE or press the button to start music.');
     </script>
-
 </body>
 </html>
