@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<base href="./">
+  <meta property="og:title" content="DC Barber Hair Training Manual">
+  <meta property="og:description" content="ဆံသ ပညာလေ့လာနေသူများအတွက် အခမဲ့ အွန်လိုင်းစာမျက်နှာ။">
+  <meta property="og:image" content="https://dcbarber.shop/img/preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://dcbarber.shop">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DC Barber Hair Training">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DC Barber Hair Training Manual">
+  <meta name="twitter:description" content="ဆံသ ပညာလေ့လာနေသူများအတွက် အခမဲ့ အွန်လိုင်းစာမျက်နှာ။">
+  <meta name="twitter:image" content="https://dcbarber.shop/img/preview.png">
+  
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Professional Hair Training Manual</title>
+<link rel="stylesheet" href="style.css">
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<div class="clean-header">
+    <div class="title-section">
+        <h1>ဆံသား လေ့ကျင့်ရေး လမ်းညွှန်</h1>
+        <div class="eng-sub">Professional Hair Training Manual</div>
+    </div>
+    <div class="header-right">
+        <div class="page-indicator-compact" id="header-page-num">1 / 42</div>
+        <div id="profile-container" style="display: flex; flex-direction: column; align-items: center; gap: 3px;">
+            <div id="profile-icon-wrapper" style="position: relative;">
+                <div id="profile-icon-btn" class="profile-icon">
+                    <img src="img/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                </div>
+            </div>
+            <div id="profile-text" class="profile-text"> MENU </div>
+        </div>
+    </div>
+</div>
+<div class="book-container">
+    <div id="pages-wrapper"></div>
+</div>
+
+<div class="nav-simple">
+    <button class="arrow-btn" id="prev-arrow">←</button>
+    <div class="counter-simple" id="center-counter">1 / 42</div>
+    <button class="arrow-btn" id="next-arrow">→</button>
+</div>
+
+<button class="fab" id="fab-btn">
+    <i class="fas fa-bars" id="fab-icon"></i>
+</button>
+<div class="fab-menu" id="fab-menu">
+    <div class="menu-header">
+        <div class="menu-tabs" id="menu-tabs">
+            <button class="menu-tab-btn active" data-script="main">
+                <img src="img/color.png" alt="Color" class="tab-profile-img" >
+            </button>
+            <button class="menu-tab-btn" data-script="perm">
+                <img src="img/perm.jpg" alt="Perm" class="tab-profile-img" >
+            </button>
+            <button class="menu-tab-btn" data-script="cut">
+                <img src="img/cut.jpg" alt="Haircut" class="tab-profile-img" >
+            </button>
+        </div>
+    </div>
+    <ul id="toc-list"></ul>
+</div>
+
+<div id="profile-overlay" style="display: none;">
+    <div class="profile-modal">
+        <button id="close-profile" class="close-profile-btn">✕</button>
+        
+        <!-- Profile Image -->
+        <div style="width: 100px; height: 100px; margin: 0 auto 15px auto;">
+            <img id="profile-img" 
+                 src="img/logo.png" 
+                 style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #1e3a5f;">
+        </div>
+        
+        <h3 id="p-fullname" class="profile-name">DIAMOND_CROWN_BARBER</h3>
+        <p class="profile-username">@<span id="p-username">စိန်သရဖူ_ဆံသ</span></p>
+        <hr class="profile-divider">
+        
+        <!-- Contact Icons - Horizontal -->
+        <div class="contact-icons">
+            <button class="contact-icon-btn" id="contact-phone" onclick="window.location.href='tel:+959790997882'">
+                <i class="fas fa-phone-alt"></i>
+            </button>
+        <button class="contact-icon-btn" id="contact-telegram" onclick="window.open('https://t.me/BroHtet_official', '_blank')">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.02-.14-.05-.2-.07-.06-.18-.04-.25-.02-.1.02-1.7 1.08-4.8 3.17-.45.31-.86.46-1.23.45-.4-.01-1.18-.23-1.76-.42-.71-.23-1.27-.35-1.22-.74.03-.2.3-.41.83-.63 3.29-1.44 5.49-2.39 6.6-2.85 3.14-1.31 3.79-1.54 4.22-1.54.09 0 .3.02.43.13.12.1.15.24.16.38.01.14-.01.3-.03.48z"/>
+    </svg>
+</button>
+            <button class="contact-icon-btn" id="contact-email" onclick="window.location.href='mailto:dcbarber.training@gmail.com'">
+                <i class="fas fa-envelope"></i>
+            </button>
+        </div>
+        
+        <button onclick="openExam()" style="background: #8e44ad; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 12px;">
+            📝 EXAM
+        </button>
+        <button id="barber-network-btn" onclick="window.open('https://dc-barber.github.io/MENUBOOK/', '_blank')" style="background: #2980b9; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 12px;">
+            DC BARBER
+        </button>
+       <div class="visitor-badge" id="visitor-badge">
+        <i class="fas fa-eye"></i>
+        <span id="total-views">0</span>
+        <span>views</span>
+       </div>
+        
+    </div>
+</div>
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+<script src="script.js"></script>
+<script src="script-1.js"></script>
+<script src="script-2.js"></script>
+<script src="noss.js"></script>
+<script src="config.js"></script>
+<script src="api-service.js"></script>
+<script src="main-auth.js"></script>
+<script src="visitor.js"></script>
+</body>
+</html>
