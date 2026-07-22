@@ -4,7 +4,177 @@
 // ==================== MAIN PAGE DATA (COLOR THEORY - 42 pages) ====================
 
 const mainPagesData = [
-    { id: 1, title: "ဆံပင်တစ်ပင်ချင်းစီ၏ အစိတ်အပိုင်းများနှင့် ဖွဲ့စည်းပုံအမျိုးအစားများ", content: `<hr style="margin: 16px 0; border-color: #f0e2d0;"><p><strong>✧ ဆံပင်တစ်ပင်ချင်းစီ၏ အစိတ်အပိုင်းများနှင့် ဖွဲ့စည်းပုံအမျိုးအစားများ</strong></p><p>ဆံပင်တစ်ပင်ချင်းစီ၏ အလွှာအလိုက် အဓိက (၃) လွှာ ရှိပါသည်။</p><p><strong>ဆံပင်၏ အလွှာများ</strong><br>၁။ Cuticle (အကြေးခွံအလွှာ) - အပြင်ဘက်ဆုံးအလွှာ (ကာကွယ်ပေးသော အလွှာ)။<br>၂။ Cortex (အလယ်သားအလွှာ) - ဆံပင်၏ ၇၅% မှ ၈၀% အထိ ပါဝင်သည်။<br>၃။ Medulla (ဗဟိုဆံသားအလွှာ) - ဆံပင်၏ အတွင်းဆုံးဗဟိုချက် ဖြစ်သည်။</p><p><strong>ဆံပင်အမျိုးအစားနှင့် အလွှာ:</strong><br>ဆံပင်သား အထူ → ၃ လွှာ<br>ဆံပင်သား အလတ် → ၂ လွှာ မှ ၃ လွှာ<br>ဆံပင်သား အပါး → ၂ လွှာ</p>`, img: "img/i1.png" },
+     {
+    id: 1,
+    title: "Hair Anatomy & Hair Structure (Professional Edition)",
+    content: `
+<h2>Hair Anatomy & Hair Structure</h2>
+
+<hr style="margin:16px 0;border-color:#e5d8c8;">
+
+<p>
+Hair သည် <strong>Keratin Protein</strong> ဖြင့် အဓိကဖွဲ့စည်းထားသော
+Fibrous Structure ဖြစ်ပြီး Hair Root နှင့် Hair Shaft ဟူ၍
+အပိုင်း (၂) ပိုင်းဖြင့် ဖွဲ့စည်းထားသည်။
+</p>
+
+<div style="background:#f7f3ef;padding:14px;border-radius:12px;margin:16px 0;">
+<strong>Professional Fact</strong><br><br>
+
+Salon တွင် အသုံးပြုသော
+
+<ul>
+<li>Hair Coloring</li>
+<li>Bleaching</li>
+<li>Perming</li>
+<li>Straightening / Rebonding</li>
+</ul>
+
+တို့သည် Hair Shaft ပေါ်တွင်သာ
+အဓိကအလုပ်လုပ်ပြီး Hair Follicle အတွင်းရှိ
+အသက်ရှိဆဲလ်များကို မပြောင်းလဲစေပါ။
+</div>
+
+<h3>Hair Root</h3>
+
+<p>
+Hair Root သည် ဦးရေပြားအောက်ရှိ Hair Follicle အတွင်း
+တည်ရှိသော အသက်ရှိအစိတ်အပိုင်းဖြစ်သည်။
+</p>
+
+<table style="width:100%;border-collapse:collapse;margin:15px 0;">
+<thead>
+<tr>
+<th style="border:1px solid #ccc;padding:8px;">Structure</th>
+<th style="border:1px solid #ccc;padding:8px;">Function</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td style="border:1px solid #ccc;padding:8px;">Dermal Papilla</td>
+<td style="border:1px solid #ccc;padding:8px;">
+သွေးကြောများမှ အာဟာရနှင့် Oxygen ပို့ပေးသည်။
+</td>
+</tr>
+
+<tr>
+<td style="border:1px solid #ccc;padding:8px;">Hair Matrix</td>
+<td style="border:1px solid #ccc;padding:8px;">
+Keratin Cell အသစ်များ ထုတ်လုပ်သည်။
+</td>
+</tr>
+
+<tr>
+<td style="border:1px solid #ccc;padding:8px;">Melanocyte</td>
+<td style="border:1px solid #ccc;padding:8px;">
+Melanin Pigment ထုတ်လုပ်သည်။
+</td>
+</tr>
+
+</tbody>
+</table>
+
+<h3>Hair Shaft</h3>
+
+<p>
+Hair Shaft သည် အသက်မရှိသော အစိတ်အပိုင်းဖြစ်ပြီး
+Layer (၃) ခုဖြင့် ဖွဲ့စည်းထားသည်။
+</p>
+
+<table style="width:100%;border-collapse:collapse;margin:15px 0;">
+
+<thead>
+
+<tr>
+<th style="border:1px solid #ccc;padding:8px;">Layer</th>
+<th style="border:1px solid #ccc;padding:8px;">Function</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="border:1px solid #ccc;padding:8px;">Cuticle</td>
+
+<td style="border:1px solid #ccc;padding:8px;">
+အပြင်ဆုံးကာကွယ်ရေးအလွှာ
+</td>
+
+</tr>
+
+<tr>
+
+<td style="border:1px solid #ccc;padding:8px;">Cortex</td>
+
+<td style="border:1px solid #ccc;padding:8px;">
+Melanin နှင့် Keratin ပါဝင်ပြီး
+Chemical Service များ အဓိကအလုပ်လုပ်သောနေရာ
+</td>
+
+</tr>
+
+<tr>
+
+<td style="border:1px solid #ccc;padding:8px;">Medulla</td>
+
+<td style="border:1px solid #ccc;padding:8px;">
+အလယ်ဗဟိုအလွှာဖြစ်ပြီး
+Chemical Service များတွင် သက်ရောက်မှုနည်းသည်။
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<div style="background:#eef8ff;padding:15px;border-radius:12px;margin-top:18px;">
+
+<strong>Scientific Note</strong>
+
+<ul>
+
+<li>Chemical Services များသည် Cortex ကို အဓိကသက်ရောက်သည်။</li>
+
+<li>Cuticle ပျက်စီးလျှင် Color Retention လျော့ကျနိုင်သည်။</li>
+
+<li>Bleach မလုပ်မီ Elasticity Test ပြုလုပ်သင့်သည်။</li>
+
+<li>Color မဆိုးမီ Strand Test နှင့် Patch Test ပြုလုပ်သင့်သည်။</li>
+
+</ul>
+
+</div>
+
+<div style="background:#fff8e7;padding:15px;border-radius:12px;margin-top:20px;">
+
+<strong>Professional Tips</strong>
+
+<p>
+
+Hair Scientist များအဆိုအရ Hair Service မလုပ်မီ
+
+<strong>
+
+Hair Porosity +
+Elasticity +
+Scalp Condition
+
+</strong>
+
+တို့ကို စစ်ဆေးပြီးမှ Formula ရွေးချယ်သင့်သည်။
+
+</p>
+
+</div>
+`,
+    img: "img/i1.png"
+},
         { id: 2, title: "(၁) Cuticle အလွှာ၏ အလုပ်လုပ်ပုံ", content: `
         <p><strong>(၁) Cuticle အလွှာ၏ အလုပ်လုပ်ပုံ</strong></p>
         <p>Cuticle အလွှာဆိုတာ ဆံပင်တစ်ချောင်းရဲ့ ပထမဆုံး တွေ့ရတဲ့ အလွှာ ဖြစ်ပြီး ငါးအကြေးခွံလေးတွေလို အထပ်ထပ်နဲ့ အုပ်ထားကာ တံခါးတစ်ချပ်လို ဖွင့်ခြင်းနှင့် ပိတ်ခြင်း အလုပ်ကို အဓိက လုပ်ဆောင်လေ့ရှိပါတယ်။</p>
